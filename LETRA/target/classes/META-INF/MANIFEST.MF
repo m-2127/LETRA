@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: Letra
+Implementation-Version: 0.0.1
+Built-By: Shafi
+Implementation-Vendor-Id: com.bitrebels.letra
+Build-Jdk: 1.8.0_171
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/Letra
+Created-By: Maven Integration for Eclipse
+
