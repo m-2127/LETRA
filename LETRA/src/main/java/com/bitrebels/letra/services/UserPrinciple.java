@@ -1,4 +1,4 @@
-package com.bitrebels.letra.security.services;
+package com.bitrebels.letra.services;
 
 import com.bitrebels.letra.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

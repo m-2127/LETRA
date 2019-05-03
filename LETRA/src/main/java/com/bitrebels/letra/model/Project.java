@@ -18,6 +18,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 
 
 @Entity
@@ -45,10 +48,6 @@ public class Project {
             fetch = FetchType.LAZY,
             mappedBy = "project")
     private Set<Task> task = new HashSet<>();
-    
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name="project_id" , referencedColumnName = "project_id")
-//    private Set<Task> task = new HashSet<>();
     
     public Project() {}
 

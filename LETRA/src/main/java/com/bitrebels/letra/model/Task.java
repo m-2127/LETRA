@@ -17,6 +17,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "tasks")
@@ -46,10 +48,6 @@ public class Task {
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-    
-//    @Column(name ="project_id")
-//    private int projectId;
-    
 
 	public Task(String name, LocalDate startDate, LocalDate endDate,
 			String description) {
@@ -107,14 +105,6 @@ public class Task {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-//	public int getProjectId() {
-//		return projectId;
-//	}
-//	
-//	public void setProjectId(int projectId) {
-//		this.projectId = projectId;
-//	}
 	
 	public int getProgress() {
 		return progress;

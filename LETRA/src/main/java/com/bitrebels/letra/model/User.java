@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -56,6 +57,9 @@ public class User{
 	@NotBlank
     @Size(min = 4, max = 6)
     private String gender;
+	
+	@Column(name = "reset_token")
+	private String resetToken;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.ALL})
     @JoinTable(name = "user_roles", 
@@ -63,7 +67,15 @@ public class User{
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User() {}
+    public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+
+	public User() {}
 
     public User(String name,String email, String password, String mobilenumber, String gender) {
         this.name = name;

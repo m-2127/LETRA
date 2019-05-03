@@ -1,4 +1,4 @@
-package com.bitrebels.letra.security.services;
+package com.bitrebels.letra.services;
 
 import java.io.IOException;
 import java.time.LocalDate;

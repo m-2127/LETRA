@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.bitrebels.letra.model.Task;
-import com.bitrebels.letra.security.services.DateHandler;
+import com.bitrebels.letra.services.DateHandler;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class ProjectForm {

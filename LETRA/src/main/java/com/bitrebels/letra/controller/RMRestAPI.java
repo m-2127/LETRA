@@ -39,37 +39,17 @@ public class RMRestAPI {
 	public ResponseEntity<?> registerUser(@Valid @RequestBody ProjectForm projectForm) {
 
 		// add project details
-		Project project = new Project(projectForm.getName(), projectForm.getStartDate(), 
-				projectForm.getFinishDate());
-		
+		Project project = new Project(projectForm.getName(), projectForm.getStartDate(), projectForm.getFinishDate());
+
 		Set<Task> tasks = projectForm.getTasks();
-		
+
 		projectRepo.save(project);
-		
-		for(Task task : tasks ) {
+
+		for (Task task : tasks) {
 			task.setProject(project);
 			taskRepo.save(task);
 		}
-		
-		
 
 		return new ResponseEntity<>(new ResponseMessage("Project Details added successfully!"), HttpStatus.OK);
 	}
-
-	@PostMapping("/addproject/{projectId}/tasks")
-	public ResponseEntity<?> addTask(@PathVariable(value = "projectId") Long projectId,
-			@Valid @RequestBody TaskForm taskForm) {
-		Project project = projectRepo.findById(projectId).orElseThrow(
-				() -> new UsernameNotFoundException("Project not found with -> project Id : " + projectId));
-
-		Task task = new Task(taskForm.getName(), taskForm.getStartDate(), taskForm.getEndDate(),
-				taskForm.getDescription());
-
-		task.setProject(project);
-
-		taskRepo.save(task);
-
-		return new ResponseEntity<>(new ResponseMessage("Task Details added successfully!"), HttpStatus.OK);
-	}
-
 }

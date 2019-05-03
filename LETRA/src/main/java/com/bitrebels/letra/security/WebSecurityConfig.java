@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.bitrebels.letra.security.jwt.JwtAuthEntryPoint;
 import com.bitrebels.letra.security.jwt.JwtAuthTokenFilter;
-import com.bitrebels.letra.security.services.UserDetailsServiceImpl;
+import com.bitrebels.letra.services.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
