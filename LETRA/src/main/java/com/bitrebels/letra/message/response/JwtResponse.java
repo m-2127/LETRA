@@ -16,19 +16,19 @@ public class JwtResponse {
 		this.authorities = authorities;
 	}
 
-	public String getAccessToken() {
+	public String getToken() {
 		return token;
 	}
 
-	public void setAccessToken(String accessToken) {
+	public void setToken(String accessToken) {
 		this.token = accessToken;
 	}
 
-	public String getTokenType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setTokenType(String tokenType) {
+	public void setType(String tokenType) {
 		this.type = tokenType;
 	}
 
