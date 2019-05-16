@@ -42,7 +42,6 @@ public class PasswordResetRestAPI {
 
 	// Process form submission from forgotPassword page
 	@PostMapping("/forgot")
-//	public ResponseEntity<?> processForgotPasswordForm(@RequestParam("email") String userEmail,
 	public ResponseEntity<?> processForgotPasswordForm(@Valid @RequestBody RecoveryEmailForm useremail,
 			HttpServletRequest request) {
 
@@ -79,14 +78,24 @@ public class PasswordResetRestAPI {
 
 	}
 
+	// Display form to reset password
+	@RequestMapping(value = "/reset", method = RequestMethod.GET)
+	public ResponseEntity<?> displayResetPasswordPage(@RequestParam("token") String token) {
+
+		Optional<User> user = userService.findUserByResetToken(token);
+
+		if (user.isPresent()) { // Token found in DB
+			return new ResponseEntity<>(new ResponseMessage(token), HttpStatus.OK);
+		} else { // Token not found in DB
+			return new ResponseEntity<>(new ResponseMessage("Oops!  This is an invalid password reset link."), HttpStatus.BAD_REQUEST);
+		} 
+	}
 
 	// Process reset password form
-	@RequestMapping(value = "/reset", method = RequestMethod.POST)
-//	public ResponseEntity<?> setNewPassword(@RequestParam Map<String, String> requestParams) {
+	@PostMapping("/reset")
 	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
 
 		// Find the user associated with the reset token
-//		Optional<User> user = userService.findUserByResetToken(requestParams.get("token"));
 		Optional<User> user = userService.findUserByResetToken(resetform.getToken());
 
 		// This should always be non-null but we check just in case
@@ -95,7 +104,6 @@ public class PasswordResetRestAPI {
 			User resetUser = user.get();
 
 			// Set new password
-//			resetUser.setPassword(bCryptPasswordEncoder.encode(requestParams.get("password")));
 			resetUser.setPassword(bCryptPasswordEncoder.encode(resetform.getPassword()));
 
 			// Set the reset token to null so it cannot be used again

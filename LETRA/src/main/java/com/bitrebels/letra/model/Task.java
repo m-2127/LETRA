@@ -45,9 +45,9 @@ public class Task {
 	@NotNull
     private int progress;
     
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project;
+//	@ManyToOne
+//	@JoinColumn(name="project_id")
+//    private Project project;
 
 	public Task(String name, LocalDate startDate, LocalDate endDate,
 			String description) {
@@ -58,13 +58,15 @@ public class Task {
 		this.description = description;
 	}
 	
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
-	}
+	public Task() {}
+	
+//	public Project getProject() {
+//		return project;
+//	}
+//
+//	public void setProject(Project project) {
+//		this.project = project;
+//	}
 
 	public Long getId() {
 		return id;

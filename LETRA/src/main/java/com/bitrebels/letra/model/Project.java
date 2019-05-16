@@ -12,7 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -44,16 +46,17 @@ public class Project {
     @NotNull
     private int progress;
     
-    @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            mappedBy = "project")
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="project_id")
     private Set<Task> task = new HashSet<>();
     
-    public Project() {}
-
- 
+	@OneToOne
+	@JoinColumn(name="rm_id")
+	private ReportingManager rm;
     
-	public Project(String name, LocalDate startDate, LocalDate endDate) {
+    public Project() {}
+    
+    public Project(String name, LocalDate startDate, LocalDate endDate) {
 		super();
 		this.name = name;
 		this.startDate = startDate;
@@ -61,6 +64,14 @@ public class Project {
 	}
 
 
+
+	public ReportingManager getRm() {
+		return rm;
+	}
+
+	public void setRm(ReportingManager rm) {
+		this.rm = rm;
+	}
 
 	public Long getId() {
 		return id;
@@ -109,5 +120,7 @@ public class Project {
 	public void setTask(Set<Task> task) {
 		this.task = task;
 	}
+
+	
     
 }

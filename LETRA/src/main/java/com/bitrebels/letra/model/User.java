@@ -1,18 +1,23 @@
-package com.bitrebels.letra.model;
+ package com.bitrebels.letra.model;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -20,6 +25,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NaturalId;
+
+import com.bitrebels.letra.model.leavequota.LeaveQuota;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -33,6 +40,7 @@ import org.hibernate.annotations.NaturalId;
 public class User{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="user_id")
     private Long id;
 
     @NotBlank
@@ -66,14 +74,10 @@ public class User{
     	joinColumns = @JoinColumn(name = "user_id"), 
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-
-    public String getResetToken() {
-		return resetToken;
-	}
-
-	public void setResetToken(String resetToken) {
-		this.resetToken = resetToken;
-	}
+    
+    @OneToOne
+	@JoinColumn(name="user_id ")
+	private LeaveQuota leaveQuota;
 
 	public User() {}
 
@@ -139,5 +143,21 @@ public class User{
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+    
+    public LeaveQuota getLeaveQuota() {
+    	return leaveQuota;
+    }
+    
+    public void setLeaveQuota(LeaveQuota leaveQuota) {
+    	this.leaveQuota = leaveQuota;
+    }
+    
+    public String getResetToken() {
+    	return resetToken;
+    }
+    
+    public void setResetToken(String resetToken) {
+    	this.resetToken = resetToken;
     }
 }

@@ -26,9 +26,6 @@ public class TaskForm {
 	
 	@NotBlank
 	private String description;
-	
-	
-
 
 	public String getName() {
 		return name;
