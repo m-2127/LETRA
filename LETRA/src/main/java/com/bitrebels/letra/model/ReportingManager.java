@@ -10,6 +10,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class ReportingManager {
 	
@@ -19,7 +21,7 @@ public class ReportingManager {
 	@ManyToMany
 	@JoinTable(name = "rm_employee",
 	joinColumns = @JoinColumn(name = "rm_id"),
-	inverseJoinColumns = @JoinColumn(name = "user_id")
+	inverseJoinColumns = @JoinColumn(name = "employee_id")
 	)
 	private Set<Employee> employees = new HashSet<>();
 	

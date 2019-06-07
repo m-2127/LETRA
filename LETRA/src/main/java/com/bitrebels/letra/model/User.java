@@ -17,6 +17,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -78,7 +79,7 @@ public class User{
     @OneToOne
 	@JoinColumn(name="user_id ")
 	private LeaveQuota leaveQuota;
-
+    
 	public User() {}
 
     public User(String name,String email, String password, String mobilenumber, String gender) {

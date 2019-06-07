@@ -43,6 +43,10 @@ public class Employee{
 	inverseJoinColumns = @JoinColumn(name = "task_id")
 	)
 	private Set<Task> tasks = new HashSet<>();
+	
+    @OneToMany
+    @JoinColumn(name="employee_id")
+    private Set<LeaveRequest> leaveRequest;
 
 	public Employee() {}
 	
@@ -77,5 +81,22 @@ public class Employee{
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
+
+	public Long getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public Set<LeaveRequest> getLeaveRequest() {
+		return leaveRequest;
+	}
+
+	public void setLeaveRequest(Set<LeaveRequest> leaveRequest) {
+		this.leaveRequest = leaveRequest;
+	}
 	
+
 }

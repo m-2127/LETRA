@@ -23,6 +23,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Entity
@@ -52,6 +54,7 @@ public class Project {
     
 	@OneToOne
 	@JoinColumn(name="rm_id")
+	@JsonIgnore
 	private ReportingManager rm;
     
     public Project() {}

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.bitrebels.letra.model.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -28,17 +29,18 @@ public class LeaveQuota {
 	
 	private int leavesTaken;
 	
-//	@OneToOne
-//	@JoinColumn(name="user_id ")
-//	private User user;
-//
-//	public User getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(User user) {
-//		this.user = user;
-//	}
+	@JsonIgnore
+	@OneToOne
+	@JoinColumn(name="user_id ")
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public Long getId() {
 		return id;
