@@ -2,6 +2,7 @@ package com.bitrebels.letra.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,7 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -34,6 +35,10 @@ public class LeaveRequest {
 	
 	@Column(name="description")
 	private String description;
+	
+//	@Column(name="leave")
+//	@OneToOne(cascade=CascadeType.PERSIST)
+//	private Leave leave;
 
 	public LeaveRequest() {
 		super();
@@ -98,6 +103,13 @@ public class LeaveRequest {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+//
+//	public Leave getLeave() {
+//		return leave;
+//	}
+//
+//	public void setLeave(Leave leave) {
+//		this.leave = leave;
+//	}
+
 }
