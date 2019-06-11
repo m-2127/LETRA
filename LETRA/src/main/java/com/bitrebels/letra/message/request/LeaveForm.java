@@ -21,6 +21,10 @@ public class LeaveForm {
 	@NotNull
 	@JsonDeserialize(using = DateHandler.class)
 	private LocalDate finishDate;
+	
+	@NotBlank
+	private String description;
+	
 
 	public String getLeaveType() {
 		return leaveType;
@@ -45,4 +49,13 @@ public class LeaveForm {
 	public void setFinishDate(LocalDate finishDate) {
 		this.finishDate = finishDate;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 }

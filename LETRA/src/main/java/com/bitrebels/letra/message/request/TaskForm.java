@@ -26,6 +26,9 @@ public class TaskForm {
 	
 	@NotBlank
 	private String description;
+	
+	@NotNull
+	private int phases;
 
 	public String getName() {
 		return name;
@@ -57,5 +60,13 @@ public class TaskForm {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public int getPhases() {
+		return phases;
+	}
+
+	public void setPhases(int phases) {
+		this.phases = phases;
 	}
 }

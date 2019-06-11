@@ -39,7 +39,7 @@ import com.bitrebels.letra.repository.RoleRepository;
 import com.bitrebels.letra.repository.UserRepository;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/hrm")
 public class HRMRestAPI {
 
 	@Autowired
@@ -61,7 +61,7 @@ public class HRMRestAPI {
 	ProjectRepository projectRepo;
 
 	@PostMapping("/registration")
-//	@PreAuthorize("hasRole('HRM')")
+	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm registrationRequest) {
 
 		if (userRepository.existsByEmail(registrationRequest.getEmail())) {
@@ -90,7 +90,7 @@ public class HRMRestAPI {
 	}
 
 	@PostMapping("/addquota")
-	@PreAuthorize("hasRole('RM')")
+	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> addLeaveQuota(@Valid @RequestBody LeaveQuotaForm leaveQuota) {
 
 		AnnualLeave annualLeave = leaveQuota.getAnnualLeave();
@@ -110,16 +110,17 @@ public class HRMRestAPI {
 	}
 
 	@GetMapping("/setmanager")
+	@PreAuthorize("hasRole('HRM')")
 	public void setManager(@RequestParam Map<String, String> requestParams) {
 
 		Long userId = Long.parseLong(requestParams.get("userId"));
 		
 		User user = userRepository.getOne(userId);
 		
-		Role userRole = roleRepository.findByName(RoleName.ROLE_USER).get();
+		Role userRole = roleRepository.findByName(RoleName.ROLE_RM).get();
 		user.getRoles().add(userRole);
 
-		ReportingManager manager = new ReportingManager(user.getId());
+		ReportingManager manager = new ReportingManager(user.getId());//passes the user id as a parameter
 
 		rmRepo.save(manager);
 		userRepository.save(user);

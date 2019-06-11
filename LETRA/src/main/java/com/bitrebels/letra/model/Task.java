@@ -40,14 +40,15 @@ public class Task {
     @NotBlank
     @Size(min=10, max = 50)
     private String description;
-    
 
 	@NotNull
     private int progress;
     
+	@NotNull
+	private int phases;
+	
 //	@ManyToOne
-//	@JoinColumn(name="project_id")
-//    private Project project;
+//	private Project project;
 
 	public Task(String name, LocalDate startDate, LocalDate endDate,
 			String description) {
@@ -59,14 +60,6 @@ public class Task {
 	}
 	
 	public Task() {}
-	
-//	public Project getProject() {
-//		return project;
-//	}
-//
-//	public void setProject(Project project) {
-//		this.project = project;
-//	}
 
 	public Long getId() {
 		return id;
@@ -111,11 +104,25 @@ public class Task {
 	public int getProgress() {
 		return progress;
 	}
-
-
+	
 	public void setProgress(int progress) {
 		this.progress = progress;
 	}
 
+	public int getPhases() {
+		return phases;
+	}
+
+	public void setPhases(int phases) {
+		this.phases = phases;
+	}
+
+//	public Project getProject() {
+//		return project;
+//	}
+//
+//	public void setProject(Project project) {
+//		this.project = project;
+//	}
 
 }

@@ -2,6 +2,7 @@ package com.bitrebels.letra.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +32,13 @@ public class LeaveRequest {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status")
 	private LeaveStatus status;
+	
+	@Column(name="description")
+	private String description;
+	
+//	@Column(name="leave")
+//	@OneToOne(cascade=CascadeType.PERSIST)
+//	private Leave leave;
 
 	public LeaveRequest() {
 		super();
@@ -37,11 +46,12 @@ public class LeaveRequest {
 
 	
 	
-	public LeaveRequest(String leaveType, LocalDate setDate, LocalDate finishDate) {
+	public LeaveRequest(String leaveType, LocalDate setDate, LocalDate finishDate , String description) {
 		super();
 		this.leaveType = leaveType;
 		this.setDate = setDate;
 		this.finishDate = finishDate;
+		this.description = description;
 	}
 
 
@@ -86,8 +96,20 @@ public class LeaveRequest {
 		this.status = status;
 	}
 
+	public String getDescription() {
+		return description;
+	}
 	
-	
-	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+//
+//	public Leave getLeave() {
+//		return leave;
+//	}
+//
+//	public void setLeave(Leave leave) {
+//		this.leave = leave;
+//	}
 
 }
