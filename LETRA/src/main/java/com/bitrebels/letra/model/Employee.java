@@ -47,6 +47,10 @@ public class Employee{
     @OneToMany
     @JoinColumn(name="employee_id")
     private Set<LeaveRequest> leaveRequest;
+    
+    @OneToMany
+    @JoinColumn(name="employee_id")
+    private Set<Leave> leave;
 
 	public Employee() {}
 	
@@ -97,6 +101,15 @@ public class Employee{
 	public void setLeaveRequest(Set<LeaveRequest> leaveRequest) {
 		this.leaveRequest = leaveRequest;
 	}
+
+	public Set<Leave> getLeave() {
+		return leave;
+	}
+
+	public void setLeave(Set<Leave> leave) {
+		this.leave = leave;
+	}
+	
 	
 
 }

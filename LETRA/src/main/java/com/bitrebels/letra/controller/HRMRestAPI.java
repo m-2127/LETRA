@@ -39,7 +39,7 @@ import com.bitrebels.letra.repository.RoleRepository;
 import com.bitrebels.letra.repository.UserRepository;
 
 @RestController
-@RequestMapping("/api/hrm")
+@RequestMapping("/api/auth")
 public class HRMRestAPI {
 
 	@Autowired
@@ -61,7 +61,7 @@ public class HRMRestAPI {
 	ProjectRepository projectRepo;
 
 	@PostMapping("/registration")
-	@PreAuthorize("hasRole('HRM')")
+//	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm registrationRequest) {
 
 		if (userRepository.existsByEmail(registrationRequest.getEmail())) {
@@ -110,7 +110,7 @@ public class HRMRestAPI {
 	}
 
 	@GetMapping("/setmanager")
-	@PreAuthorize("hasRole('HRM')")
+//	@PreAuthorize("hasRole('HRM')")
 	public void setManager(@RequestParam Map<String, String> requestParams) {
 
 		Long userId = Long.parseLong(requestParams.get("userId"));

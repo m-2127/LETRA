@@ -2,6 +2,8 @@ package com.bitrebels.letra.services;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.bitrebels.letra.model.User;
@@ -27,6 +29,17 @@ public class UserServiceImpl implements UserService {
 	public void save(User user) {
 		userRepository.save(user);
 	}
+
+	@Override
+	public Long authenticatedUser() {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Long userId = userRepository.findByEmail(auth.getName()).get().getId();
+		
+		return userId;
+	}
+	
+	
 }
 
 
