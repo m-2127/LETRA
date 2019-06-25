@@ -78,7 +78,7 @@ public class EmployeeRestAPI {
 		
 	}
 	
-	@GetMapping("/leavequota")
+	@RequestMapping("/leavequota")
 	@PreAuthorize("hasRole('USER')")
 	public List<?> viewDetails(){
 		

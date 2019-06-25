@@ -57,6 +57,7 @@ public class RMRestAPI {
 	
 	@Autowired
 	UserService userService;
+	
 	@Autowired
 	private LeaveRequestRepository leaveRequestRepository;
 
