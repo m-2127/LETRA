@@ -2,23 +2,14 @@ package com.bitrebels.letra.model;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "tasks")
@@ -45,7 +36,7 @@ public class Task {
     private int progress;
     
 	@NotNull
-	private int phases;
+	private int hours;
 	
 //	@ManyToOne
 //	private Project project;
@@ -109,12 +100,12 @@ public class Task {
 		this.progress = progress;
 	}
 
-	public int getPhases() {
-		return phases;
+	public int getHours() {
+		return hours;
 	}
 
-	public void setPhases(int phases) {
-		this.phases = phases;
+	public void setHours(int hours) {
+		this.hours = hours;
 	}
 
 //	public Project getProject() {

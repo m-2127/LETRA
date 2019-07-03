@@ -76,10 +76,10 @@ public class User{
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
     
-    @OneToOne
-	@JoinColumn(name="user_id ")
-	private LeaveQuota leaveQuota;
-    
+//    @OneToOne
+//	@JoinColumn(name="user_id")
+//	private LeaveQuota leaveQuota;
+
 	public User() {}
 
     public User(String name,String email, String password, String mobilenumber, String gender) {
@@ -146,18 +146,18 @@ public class User{
         this.roles = roles;
     }
     
-    public LeaveQuota getLeaveQuota() {
-    	return leaveQuota;
-    }
-    
-    public void setLeaveQuota(LeaveQuota leaveQuota) {
-    	this.leaveQuota = leaveQuota;
-    }
-    
+//    public LeaveQuota getLeaveQuota() {
+//    	return leaveQuota;
+//    }
+//
+//    public void setLeaveQuota(LeaveQuota leaveQuota) {
+//    	this.leaveQuota = leaveQuota;
+//    }
+
     public String getResetToken() {
     	return resetToken;
     }
-    
+
     public void setResetToken(String resetToken) {
     	this.resetToken = resetToken;
     }

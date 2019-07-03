@@ -1,88 +1,79 @@
 package com.bitrebels.letra.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
-public class Leave {
-	
-	
-	@Column(name = "start_date")
-	private LocalDate startDate;
-	
-	@Column(name = "finish_date")
-	private LocalDate finishDate;
-	
-	@Id
-	@OneToOne
-	@Column(name="request_id")
-	private LeaveRequest leaveRequest;
-	
-	private int duration;
-	
-	@Column(name="responded_by")
-	private Set<User> responders;
-	
-	@Column(name="employee_id")
-	@ManyToOne
-	private Employee employee;
+@Entity
+@Table(name = "approved_leave")
+public class Leave implements Serializable {
+    @Id
+    private long id;
 
-	public LocalDate getStartDate() {
-		return startDate;
-	}
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
-	}
+    @Column(name = "finish_date")
+    private LocalDate finishDate;
 
-	public LocalDate getFinishDate() {
-		return finishDate;
-	}
 
-	public void setFinishDate(LocalDate finishDate) {
-		this.finishDate = finishDate;
-	}
+    @OneToOne
+    @JoinColumn(name = "id")
+    @MapsId
+    private LeaveRequest leaveRequest;
 
-	public LeaveRequest getLeaveRequest() {
-		return leaveRequest;
-	}
+    private int duration;
 
-	public void setLeaveRequest(LeaveRequest leaveRequest) {
-		this.leaveRequest = leaveRequest;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public int getDuration() {
-		return duration;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setDuration(int duration) {
-		this.duration = duration;
-	}
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
-	public Set<User> getResponders() {
-		return responders;
-	}
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
-	public void setResponders(Set<User> responders) {
-		this.responders = responders;
-	}
+    public LocalDate getFinishDate() {
+        return finishDate;
+    }
 
-	public Employee getEmployee() {
-		return employee;
-	}
+    public void setFinishDate(LocalDate finishDate) {
+        this.finishDate = finishDate;
+    }
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
-	
-	
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public LeaveRequest getLeaveRequest() {
+        return leaveRequest;
+    }
+
+    public void setLeaveRequest(LeaveRequest leaveRequest) {
+        this.leaveRequest = leaveRequest;
+    }
+
+
 }
