@@ -1,45 +1,23 @@
   package com.bitrebels.letra.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.validation.Valid;
-
+import com.bitrebels.letra.message.request.EmployeeAllocation;
+import com.bitrebels.letra.message.request.ProjectForm;
+import com.bitrebels.letra.message.response.ProjectStatus;
+import com.bitrebels.letra.message.response.ResponseMessage;
+import com.bitrebels.letra.model.*;
+import com.bitrebels.letra.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.bitrebels.letra.message.request.EmployeeAllocation;
-import com.bitrebels.letra.message.request.ProjectForm;
-import com.bitrebels.letra.message.request.TaskForm;
-import com.bitrebels.letra.message.response.JwtResponse;
-import com.bitrebels.letra.message.response.ProjectStatus;
-import com.bitrebels.letra.message.response.ResponseMessage;
-import com.bitrebels.letra.model.Employee;
-import com.bitrebels.letra.model.Project;
-import com.bitrebels.letra.model.ReportingManager;
-import com.bitrebels.letra.model.Role;
-import com.bitrebels.letra.model.RoleName;
-import com.bitrebels.letra.model.Task;
-import com.bitrebels.letra.model.User;
-import com.bitrebels.letra.repository.EmployeeRepository;
-import com.bitrebels.letra.repository.ProjectRepository;
-import com.bitrebels.letra.repository.RMRepository;
-import com.bitrebels.letra.repository.RoleRepository;
-import com.bitrebels.letra.repository.TaskRepository;
-import com.bitrebels.letra.repository.UserRepository;
+import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @RequestMapping("/api/rm")
 @RestController
