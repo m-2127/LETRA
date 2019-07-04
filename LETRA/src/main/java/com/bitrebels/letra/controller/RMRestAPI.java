@@ -75,10 +75,6 @@ public class RMRestAPI {
 		}
 		project.setTask(tasks);
 
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		Optional<User> optional = userRepo.findByEmail(auth.getName());
-//		Long rmId = optional.get().getId();
-
 		Long rmId = userService.authenticatedUser();
 		
 		ReportingManager manager = rmRepo.getOne(rmId);
@@ -100,9 +96,6 @@ public class RMRestAPI {
 	@PostMapping("/allocateemployee")
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> allocateEmployee(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
-
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		Long rmId = userRepo.findByEmail(auth.getName()).get().getId();
 		
 		Long rmId = userService.authenticatedUser();
 		
@@ -140,7 +133,7 @@ public class RMRestAPI {
 
 		}
 
-		//if the user is currently workiing on a project
+		//if the user is currently working on a project
 		else {
 			if (optionalemployee.isPresent()) {
 				Employee employee = optionalemployee.get();
@@ -164,9 +157,7 @@ public class RMRestAPI {
 	@GetMapping("/viewproject")
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> viewproject(){
-		
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		Long userId = userRepo.findByEmail(auth.getName()).get().getId();
+
 		Long userId = userService.authenticatedUser();
 		
 		ReportingManager rm = rmRepo.findById(userId).get();
@@ -179,7 +170,6 @@ public class RMRestAPI {
 
 	@MessageMapping("/view")
 	@SendTo("rmtemplate/rm")
-//    @GetMapping("/rmshome")
 	@PreAuthorize("hasRole('RM')")
 	public List<LeaveRequest> home(){
 		Long userId = userService.authenticatedUser();

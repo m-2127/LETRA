@@ -30,7 +30,7 @@ import com.bitrebels.letra.model.leavequota.AnnualLeave;
 import com.bitrebels.letra.model.leavequota.LeaveQuota;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/employee")
 public class EmployeeRestAPI {
 	
 	@Autowired
@@ -52,7 +52,7 @@ public class EmployeeRestAPI {
 	private EmployeeRepository employeeRepository;
 
 	@PostMapping("/applyleave")
-//	@PreAuthorize("hasRole('EMPLOYEE')")
+	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
 		
 		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
@@ -78,7 +78,7 @@ public class EmployeeRestAPI {
 		
 	}
 	
-	@RequestMapping("/leavequota")
+	@GetMapping("/leavequota")
 	@PreAuthorize("hasRole('USER')")
 	public List<?> viewDetails(){
 		
