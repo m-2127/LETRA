@@ -10,7 +10,6 @@ import com.bitrebels.letra.model.Project;
 import com.bitrebels.letra.model.Task;
 
 public interface TaskRepository extends JpaRepository<Task , Long> {
-	
 
-	//Page<Comment> findByPostId(Long postId, Pageable pageable);
+    //Page<Comment> findByPostId(Long postId, Pageable pageable);
 }

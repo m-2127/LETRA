@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 public class Task {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @NotBlank
     @Size(min=3, max = 50)
@@ -33,10 +33,10 @@ public class Task {
     private String description;
 
 	@NotNull
-    private int progress;
+    private long progress;
     
 	@NotNull
-	private int hours;
+	private long hours;
 	
 //	@ManyToOne
 //	private Project project;
@@ -52,11 +52,11 @@ public class Task {
 	
 	public Task() {}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -92,19 +92,19 @@ public class Task {
 		this.description = description;
 	}
 	
-	public int getProgress() {
+	public long getProgress() {
 		return progress;
 	}
 	
-	public void setProgress(int progress) {
+	public void setProgress(long progress) {
 		this.progress = progress;
 	}
 
-	public int getHours() {
+	public long getHours() {
 		return hours;
 	}
 
-	public void setHours(int hours) {
+	public void setHours(long hours) {
 		this.hours = hours;
 	}
 

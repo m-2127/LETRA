@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ReportingManager {
 	
 	@Id
-	private Long rmId ;
+	private long rmId ;
 	
 	@ManyToMany
 	@JoinTable(name = "rm_employee",
@@ -32,7 +32,7 @@ public class ReportingManager {
 	
 	public ReportingManager() {}
 
-	public ReportingManager(Long rmId) {
+	public ReportingManager(long rmId) {
 		super();
 		this.rmId = rmId;
 	}

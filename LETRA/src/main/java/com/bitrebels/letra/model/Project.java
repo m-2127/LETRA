@@ -34,7 +34,7 @@ public class Project {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="project_id")
-    private Long id;
+    private long id;
 
     @NotBlank
     private String name;
@@ -46,7 +46,7 @@ public class Project {
     private LocalDate endDate;
     
     @NotNull
-    private int progress;
+    private long progress;
     
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
@@ -76,11 +76,11 @@ public class Project {
 		this.rm = rm;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -108,11 +108,11 @@ public class Project {
 		this.endDate = endDate;
 	}
 
-	public int getProgress() {
+	public long getProgress() {
 		return progress;
 	}
 
-	public void setProgress(int progress) {
+	public void setProgress(long progress) {
 		this.progress = progress;
 	}
 
@@ -124,6 +124,4 @@ public class Project {
 		this.task = task;
 	}
 
-	
-    
 }

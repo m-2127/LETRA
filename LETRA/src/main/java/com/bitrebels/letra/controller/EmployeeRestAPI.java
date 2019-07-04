@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.services.LeaveTracker;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,11 +50,19 @@ public class EmployeeRestAPI {
 	UserService userService;
 
 	@Autowired
+	ProgressRepo progressRepo;
+
+	@Autowired
 	private EmployeeRepository employeeRepository;
+
+	@Autowired
+	LeaveTracker leaveTracker;
 
 	@PostMapping("/applyleave")
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
+
+
 		
 		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
 				leaveForm.getFinishDate() , leaveForm.getDescription());
@@ -74,7 +83,30 @@ public class EmployeeRestAPI {
         employee.getLeaveRequest().add(leaveRequest);
 		employeeRepository.save(employee);
 
-		return new ResponseEntity<>(new ResponseMessage("Leave applied succesfully"), HttpStatus.OK);
+		String leaveType = leaveForm.getLeaveType();
+
+		Set<Task> tasks = employee.getTasks();
+
+		if(leaveType.equalsIgnoreCase("annual" ) || leaveType.equalsIgnoreCase("casual")
+		|| leaveType.equalsIgnoreCase("sick")){
+
+			for (Task task: tasks) {
+				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
+
+				long requiredProgress = leaveTracker.requiredOrRemainingWork(task.getStartDate());
+				long currentProgress = leaveTracker.currentProgress(task.getHours());
+				long remainingWork = leaveTracker.requiredOrRemainingWork(task.getEndDate());
+				Progress progress = new Progress(currentProgress,requiredProgress,remainingWork);
+
+				progressRepo.save(progress);
+
+				leaveRequest.getProgressSet().add(progress);
+			}
+
+		}
+
+
+		return new ResponseEntity<>(new ResponseMessage("Leave applied successfully"), HttpStatus.OK);
 		
 	}
 	

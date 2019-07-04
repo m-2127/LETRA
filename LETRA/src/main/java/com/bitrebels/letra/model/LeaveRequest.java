@@ -3,6 +3,7 @@ package com.bitrebels.letra.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,8 @@ public class LeaveRequest {
 	@Column(name="description")
 	private String description;
 
+	private LocalDateTime time;
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.ALL})
 	@JoinTable(name = "request_rm",
 			joinColumns = @JoinColumn(name = "leave_id"),
@@ -38,14 +41,20 @@ public class LeaveRequest {
 	@JsonIgnore
 	private Set<ReportingManager> reportingManagers = new HashSet<>();
 
+	@OneToMany
+	@JoinColumn(name="leave_id")
+	private Set<Progress> progressSet;
+
 	public LeaveRequest() {
 		super();
 	}
 
-	
-	
+	public LeaveRequest(LocalDateTime time) {
+		this.time = time;
+	}
+
 	public LeaveRequest(String leaveType, LocalDate setDate, LocalDate finishDate , String description) {
-		super();
+		this(LocalDateTime.now());
 		this.leaveType = leaveType;
 		this.setDate = setDate;
 		this.finishDate = finishDate;
@@ -107,5 +116,21 @@ public class LeaveRequest {
 
 	public void setReportingManagers(Set<ReportingManager> reportingManagers) {
 		this.reportingManagers = reportingManagers;
+	}
+
+	public Set<Progress> getProgressSet() {
+		return progressSet;
+	}
+
+	public void setProgressSet(Set<Progress> progressSet) {
+		this.progressSet = progressSet;
+	}
+
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
 	}
 }
