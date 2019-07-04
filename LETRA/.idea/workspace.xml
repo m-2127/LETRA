@@ -1,46 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="49c9adfc-3ae7-4c19-aca9-05f1e42e97dc" name="Default Changelist" comment="return type of websocket changed to string for testing">
+    <list default="true" id="49c9adfc-3ae7-4c19-aca9-05f1e42e97dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/LeaveRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/LeaveRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/ReportingManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/ReportingManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Task.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/repository/TaskRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/repository/TaskRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveTracker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveTracker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/EmployeeRestAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/EmployeeRestAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/HRMRestAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/HRMRestAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/PasswordResetRestAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/PasswordResetRestAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/RMRestAPI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/controller/RMRestAPI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/message/request/ProjectForm.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/message/request/ProjectForm.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/message/response/ProjectStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/message/response/ProjectStatus.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Employee.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Employee.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Leave.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Leave.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/LeaveRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/LeaveRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Project.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Project.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/ReportingManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/ReportingManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Role.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Task.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/Task.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/leavequota/LeaveQuota.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/model/leavequota/LeaveQuota.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/LeaveQuotaRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/LeaveQuotaRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/LeaveRequestRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/LeaveRequestRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/ProjectRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/ProjectRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/RoleRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/RoleRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/repository/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserDetailsServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserDetailsServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserPrinciple.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserPrinciple.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bitrebels/letra/services/UserServiceImpl.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -66,7 +29,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="1338" />
+          <entry key="java" value="1438" />
           <entry key="properties" value="18" />
           <entry key="txt" value="74" />
           <entry key="xml" value="6" />
@@ -74,7 +37,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="1338" />
+          <entry key="JAVA" value="1438" />
           <entry key="PLAIN_TEXT" value="74" />
           <entry key="Properties" value="18" />
           <entry key="XML" value="6" />
@@ -82,14 +45,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="110" />
+          <entry key="java" value="112" />
           <entry key="properties" value="5" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="110" />
+          <entry key="JAVA" value="112" />
           <entry key="Properties" value="5" />
           <entry key="XML" value="2" />
         </counts>
@@ -116,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="43" column="12" lean-forward="true" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
+            <state relative-caret-position="246">
+              <caret line="47" column="20" lean-forward="true" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -134,24 +97,6 @@
                 <element signature="e#1178#1179#0" expanded="true" />
                 <element signature="e#1201#1202#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="63" lean-forward="true" selection-start-line="63" selection-end-line="63" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/PasswordResetRestAPI.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
             </state>
           </provider>
         </entry>
@@ -186,11 +131,44 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="208" column="37" lean-forward="true" selection-start-line="208" selection-start-column="37" selection-end-line="208" selection-end-column="37" />
+            <state relative-caret-position="271">
+              <caret line="208" column="48" selection-start-line="208" selection-start-column="48" selection-end-line="208" selection-end-column="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Email.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+              <folding>
+                <element signature="e#115#116#0" expanded="true" />
+                <element signature="e#149#150#0" expanded="true" />
+                <element signature="e#209#210#0" expanded="true" />
+                <element signature="e#251#252#0" expanded="true" />
+                <element signature="e#285#286#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Hello.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="22">
+              <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+              <folding>
+                <element signature="e#149#150#0" expanded="true" />
+                <element signature="e#189#190#0" expanded="true" />
+                <element signature="e#224#225#0" expanded="true" />
+                <element signature="e#255#256#0" expanded="true" />
+                <element signature="e#303#304#0" expanded="true" />
+                <element signature="e#343#344#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -240,6 +218,8 @@
         <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveTracker.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/LeaveRequest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Hello.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Email.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" />
       </list>
     </option>
@@ -411,7 +391,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1562221500852" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1562224304565" />
     <property name="last_opened_file_path" value="D:/help-master" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -509,7 +489,14 @@
       <option name="project" value="LOCAL" />
       <updated>1562200816953</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="return type of websocket changed to string for testing">
+      <created>1562221740298</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1562221740298</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -536,7 +523,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46544000" />
+    <option name="totallyTimeSpent" value="48384000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -549,6 +536,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49591836" visible="true" weight="0.22147651" />
       <window_info id="Structure" order="1" sideWeight="0.5040816" side_tool="true" weight="0.22147651" />
@@ -596,20 +584,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="return type of websocket changed to string for testing" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/leavequota/CasualLeave.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/leavequota/LeaveQuota.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="32" column="13" lean-forward="true" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UserServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -941,13 +915,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="208" column="37" lean-forward="true" selection-start-line="208" selection-start-column="37" selection-end-line="208" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
@@ -957,8 +924,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="43" column="12" lean-forward="true" selection-start-line="43" selection-start-column="12" selection-end-line="43" selection-end-column="12" />
+        <state relative-caret-position="246">
+          <caret line="47" column="20" lean-forward="true" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Hello.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+          <folding>
+            <element signature="e#149#150#0" expanded="true" />
+            <element signature="e#189#190#0" expanded="true" />
+            <element signature="e#224#225#0" expanded="true" />
+            <element signature="e#255#256#0" expanded="true" />
+            <element signature="e#303#304#0" expanded="true" />
+            <element signature="e#343#344#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Email.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+          <folding>
+            <element signature="e#115#116#0" expanded="true" />
+            <element signature="e#149#150#0" expanded="true" />
+            <element signature="e#209#210#0" expanded="true" />
+            <element signature="e#251#252#0" expanded="true" />
+            <element signature="e#285#286#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="208" column="48" selection-start-line="208" selection-start-column="48" selection-end-line="208" selection-end-column="48" />
         </state>
       </provider>
     </entry>

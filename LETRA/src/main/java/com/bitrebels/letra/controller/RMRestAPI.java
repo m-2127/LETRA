@@ -199,13 +199,13 @@ public class RMRestAPI {
 	@SendTo("rmtemplate/rm")
 	@PreAuthorize("hasRole('RM')")
 	//public List<LeaveRequest> home(){
-		public String home(){
+		public Hello home(Email email){
 		long userId = userService.authenticatedUser();
 
 		ReportingManager rm = rmRepo.findById(userId).get();
 
 		List<LeaveRequest> leaveRequest = leaveRequestRepository.findByReportingManagers(rm);
 
-		return Long.toString(userId);
+		return new Hello("Hi" + email.getEmail());
 	}
 }
