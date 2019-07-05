@@ -40,8 +40,8 @@ import com.bitrebels.letra.services.UserService;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-@RequestMapping("/api/rm")
 @RestController
+@RequestMapping("/api/rm")
 public class RMRestAPI {
 
 	@Autowired
@@ -196,16 +196,17 @@ public class RMRestAPI {
 	}
 
 	@MessageMapping("/view")
-	@SendTo("rmtemplate/rm")
-	@PreAuthorize("hasRole('RM')")
+	@SendTo("/rmtemplate/rm")
+//	@PreAuthorize("hasRole('HRM')")
 	//public List<LeaveRequest> home(){
-		public Hello home(Email email){
-		long userId = userService.authenticatedUser();
+		public Hello greeting(Email email) throws Exception{
+//		long userId = userService.authenticatedUser();
+//
+//		ReportingManager rm = rmRepo.findById(userId).get();
+//
+//		List<LeaveRequest> leaveRequest = leaveRequestRepository.findByReportingManagers(rm);
 
-		ReportingManager rm = rmRepo.findById(userId).get();
 
-		List<LeaveRequest> leaveRequest = leaveRequestRepository.findByReportingManagers(rm);
-
-		return new Hello("Hi" + email.getEmail());
+		return new Hello("Hi " + email.getEmail());
 	}
 }
