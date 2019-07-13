@@ -1,42 +1,24 @@
   package com.bitrebels.letra.controller;
 
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import javax.validation.Valid;
-
+import com.bitrebels.letra.message.request.EmployeeAllocation;
+import com.bitrebels.letra.message.request.ProjectForm;
 import com.bitrebels.letra.message.request.UpdateTask;
+import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
-import org.hibernate.hql.spi.id.persistent.UpdateHandlerImpl;
+import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.bitrebels.letra.message.request.EmployeeAllocation;
-import com.bitrebels.letra.message.request.ProjectForm;
-import com.bitrebels.letra.message.request.TaskForm;
-import com.bitrebels.letra.message.response.JwtResponse;
-import com.bitrebels.letra.message.response.ProjectStatus;
-import com.bitrebels.letra.message.response.ResponseMessage;
-import com.bitrebels.letra.services.UserService;
+import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -183,17 +165,21 @@ public class RMRestAPI {
 	
 	@GetMapping("/viewproject")
 	@PreAuthorize("hasRole('RM')")
-	public ResponseEntity<?> viewproject(){
-
-		Long userId = userService.authenticatedUser();
-		
-		ReportingManager rm = rmRepo.findById(userId).get();
-		
-		Project project = projectRepo.findByRm(rm).get();
-
-	 
-		return ResponseEntity.ok(new ProjectStatus(project));
+//	public ResponseEntity<?> viewproject(){
+//
+//		Long userId = userService.authenticatedUser();
+//
+//		ReportingManager rm = rmRepo.findById(userId).get();
+//
+//		Project project = projectRepo.findByRm(rm).get();
+//
+//
+//		return ResponseEntity.ok(new ProjectStatus(project));
+//	}
+	public String viewproject(){
+		return "success";
 	}
+
 
 	@MessageMapping("/view")
 	@SendTo("/rmtemplate/rm")
