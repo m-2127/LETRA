@@ -1,9 +1,6 @@
 package com.bitrebels.letra.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Progress {
@@ -12,16 +9,27 @@ public class Progress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long currentProgress;
+    private double currentProgress;
 
-    private long requiredProgress;
+    private double requiredProgress;
 
-    private long remainingWork;
+    private double remainingWork;
 
-    public Progress(long currentProgress, long requiredProgress, long remainingWork) { 
+    private double availableHoursOfWork;
+
+    private int availableDaysForLeave;
+
+    @ManyToOne
+    @JoinColumn(name="leave_id")
+    private LeaveRequest leaveRequest;
+
+    public Progress(double currentProgress, double requiredProgress, double remainingWork,
+                    double availableHoursOfWork, int availableDaysForLeave) {
         this.currentProgress = currentProgress;
         this.requiredProgress = requiredProgress;
         this.remainingWork = remainingWork;
+        this.availableDaysForLeave = availableDaysForLeave;
+        this.availableHoursOfWork = availableHoursOfWork;
     }
 
     public long getId() {
@@ -32,27 +40,51 @@ public class Progress {
         this.id = id;
     }
 
-    public long getCurrentProgress() {
-        return currentProgress;
+    public double getCurrentProgress() {
+        return Math.round(currentProgress*10)/10.0;
     }
 
-    public void setCurrentProgress(long currentProgress) {
+    public void setCurrentProgress(double currentProgress) {
         this.currentProgress = currentProgress;
     }
 
-    public long getRequiredProgress() {
-        return requiredProgress;
+    public double getRequiredProgress() {
+        return Math.round(requiredProgress*10)/10.0;
     }
 
-    public void setRequiredProgress(long requiredProgress) {
+    public void setRequiredProgress(double requiredProgress) {
         this.requiredProgress = requiredProgress;
     }
 
-    public long getRemainingWork() {
-        return remainingWork;
+    public double getRemainingWork() {
+        return Math.round(remainingWork*10)/10.0;
     }
 
-    public void setRemainingWork(long remainingWork) {
+    public void setRemainingWork(double remainingWork) {
         this.remainingWork = remainingWork;
+    }
+
+    public int getAvailableDaysForLeave() {
+        return availableDaysForLeave;
+    }
+
+    public void setAvailableDaysForLeave(int availableDaysForLeave) {
+        this.availableDaysForLeave = availableDaysForLeave;
+    }
+
+    public LeaveRequest getLeaveRequest() {
+        return leaveRequest;
+    }
+
+    public void setLeaveRequest(LeaveRequest leaveRequest) {
+        this.leaveRequest = leaveRequest;
+    }
+
+    public double getAvailableHoursOfWork() {
+        return Math.round(availableHoursOfWork*10)/10.0;
+    }
+
+    public void setAvailableHoursOfWork(double availableHoursOfWork) {
+        this.availableHoursOfWork = availableHoursOfWork;
     }
 }

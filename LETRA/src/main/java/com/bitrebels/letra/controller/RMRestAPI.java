@@ -1,33 +1,32 @@
   package com.bitrebels.letra.controller;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.*;
 
 import javax.validation.Valid;
 
+import com.bitrebels.letra.message.request.UpdateTask;
+import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.services.UpdateTask.AllocateEmployee;
+import com.bitrebels.letra.services.UpdateTask.EndDateDetector;
+import com.bitrebels.letra.services.UpdateTask.ProgressDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.bitrebels.letra.message.request.EmployeeAllocation;
 import com.bitrebels.letra.message.request.ProjectForm;
-import com.bitrebels.letra.message.request.TaskForm;
-import com.bitrebels.letra.message.response.JwtResponse;
-import com.bitrebels.letra.message.response.ProjectStatus;
+import com.bitrebels.letra.model.Status;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.services.UserService;
 
-@RequestMapping("/api/rm")
+@RequestMapping("/api/auth")
 @RestController
 public class RMRestAPI {
 
@@ -36,6 +35,9 @@ public class RMRestAPI {
 	
 	@Autowired
 	ProjectRepository projectRepo;
+
+	@Autowired
+	AllocateEmployee allocateEmployee;
 
 	@Autowired
 	TaskRepository taskRepo;
@@ -55,6 +57,12 @@ public class RMRestAPI {
 	@Autowired
 	private LeaveRequestRepository leaveRequestRepository;
 
+	@Autowired
+	EndDateDetector endDateDetector;
+
+	@Autowired
+	ProgressDetector progressDetector;
+
 	@PostMapping("/addproject")
 //	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody ProjectForm projectForm) {
@@ -65,9 +73,12 @@ public class RMRestAPI {
 		Set<Task> tasks = projectForm.getTasks();
 
 		for (Task task : tasks) {
+			Timestamp timestamp = new Timestamp(new Date().getTime());
+			task.setUpdateTime(timestamp);
 			taskRepo.save(task);
 		}
 		project.setTask(tasks);
+		project.setStatus(Status.DEVELOPMENT);
 
 		Long rmId = userService.authenticatedUser();
 		
@@ -80,72 +91,31 @@ public class RMRestAPI {
 
 		return new ResponseEntity<>(new ResponseMessage("Project Details added successfully!"), HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/updatetask")
 	@PreAuthorize("hasRole('RM')")
-	public void updatetask() {
-		
-	}
-	
-	@PostMapping("/allocateemployee")
-	@PreAuthorize("hasRole('RM')")
-	public ResponseEntity<?> allocateEmployee(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
-		
-		Long rmId = userService.authenticatedUser();
-		
-		Project actualProject = projectRepo.getOne(employeeAllocation.getProjectId());
+	public ResponseEntity<?> updatetask(@ Valid @RequestBody UpdateTask updateTask) {
+		Task task;
 
-		Set<Project> project = new HashSet<Project>();
-		project.add(actualProject);
+        task = taskRepo.findById(updateTask.getTaskId()).get();
 
-		Task actualTask = taskRepo.findById(employeeAllocation.getTaskId()).get();
-		Set<Task> task = new HashSet<Task>();
-		task.add(actualTask);
+        if(Objects.isNull(task.getEmployee())){
+            Employee employee = allocateEmployee.allocateEmployee(updateTask);
+            LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),taskRepo,
+                    updateTask.getProjectId(), projectRepo,employee);
+            task.setEndDate(endDate);
 
-		ReportingManager actualManager = rmRepo.getOne(rmId);
-		Set<ReportingManager> manager = new HashSet<>();
-		manager.add(actualManager);
+        }
 
-		Optional<Employee> optionalemployee = employeeRepo.findById(employeeAllocation.getEmployeeId());
-		//if the user is not currently working on a project
+        task = progressDetector.updateProgress(updateTask, task);
 
-		if (!optionalemployee.isPresent()) {
-			Optional<User> optionaluser = userRepo.findById(employeeAllocation.getEmployeeId());
-			if (optionaluser.isPresent()) {
-				User user = optionaluser.get();
-				Role userRole = roleRepo.findByName(RoleName.ROLE_EMPLOYEE).get();
-				user.getRoles().add(userRole);
-				Employee employee = new Employee(project, manager, task, user.getId());
-
-				employeeRepo.save(employee);
-				actualManager.getEmployees().add(employee);//adding the employee to RM
-
-				userRepo.save(user);
-			} else {
-				return new ResponseEntity<>(new ResponseMessage("Invalid User."), HttpStatus.BAD_REQUEST);
-			}
-
+		if(updateTask.getStatus().equalsIgnoreCase("COMPLETED")){
+			task.setStatus(Status.COMPLETED);
 		}
+		taskRepo.save(task);
 
-		//if the user is currently working on a project
-		else {
-			if (optionalemployee.isPresent()) {
-				Employee employee = optionalemployee.get();
-				employee.getProject().add(actualProject);
-				employee.getManagers().add(actualManager);
-				employee.getTasks().add(actualTask);
+		return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
 
-				employeeRepo.save(employee);
-
-				actualManager.getEmployees().add(employee);//adding the employee to RM
-
-			} else {
-				return new ResponseEntity<>(new ResponseMessage("Invalid User."), HttpStatus.BAD_REQUEST);
-			}
-	
-		}
-
-		return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
 	}
 	
 	@GetMapping("/viewproject")
@@ -158,8 +128,7 @@ public class RMRestAPI {
 		
 		Project project = projectRepo.findByRm(rm).get();
 
-	 
-		return ResponseEntity.ok(new ProjectStatus(project));
+		return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);
 	}
 
 	@MessageMapping("/view")
@@ -174,4 +143,6 @@ public class RMRestAPI {
 
 		return leaveRequest;
 	}
+
+
 }

@@ -1,14 +1,11 @@
 package com.bitrebels.letra.message.request;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.bitrebels.letra.model.Task;
-import com.bitrebels.letra.services.DateHandler;
+import com.bitrebels.letra.services.Date.DateHandler;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class TaskForm {
@@ -26,9 +23,10 @@ public class TaskForm {
 	
 	@NotBlank
 	private String description;
-	
+
+	//total duration of the task
 	@NotNull
-	private int phases;
+	private long hours;
 
 	public String getName() {
 		return name;
@@ -62,11 +60,11 @@ public class TaskForm {
 		this.description = description;
 	}
 
-	public int getPhases() {
-		return phases;
+	public long getHours() {
+		return hours;
 	}
 
-	public void setPhases(int phases) {
-		this.phases = phases;
+	public void setHours(long hours) {
+		this.hours = hours;
 	}
 }

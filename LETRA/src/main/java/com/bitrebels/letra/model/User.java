@@ -42,7 +42,7 @@ public class User{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="user_id")
-    private Long id;
+    private long id;
 
     @NotBlank
     @Size(min=3, max = 50)
@@ -90,11 +90,11 @@ public class User{
         this.gender = gender;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

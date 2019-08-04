@@ -1,12 +1,10 @@
 package com.bitrebels.letra.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -32,14 +30,21 @@ public class Task {
     @Size(min=10, max = 50)
     private String description;
 
+    //current progress in hours
 	@NotNull
     private int progress;
-    
+
+	//task duration in hours
 	@NotNull
 	private int hours;
-	
-//	@ManyToOne
-//	private Project project;
+
+	private Status status;
+
+	private Timestamp updateTime;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employee_id")
+	private Employee employee;
 
 	public Task(String name, LocalDate startDate, LocalDate endDate,
 			String description) {
@@ -108,12 +113,29 @@ public class Task {
 		this.hours = hours;
 	}
 
-//	public Project getProject() {
-//		return project;
-//	}
-//
-//	public void setProject(Project project) {
-//		this.project = project;
-//	}
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
 
 }
