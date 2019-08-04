@@ -1,62 +1,65 @@
 package com.bitrebels.letra.model;
 
-import java.time.LocalDate;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tasks")
 public class Task {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @NotBlank
-    @Size(min=3, max = 50)
-    private String name;
-
-    @NotNull
-    private LocalDate startDate;
-
-    @NotNull
-    private LocalDate endDate;
-    
-    @NotBlank
-    @Size(min=10, max = 50)
-    private String description;
+	@NotBlank
+	@Size(min=3, max = 50)
+	private String name;
 
 	@NotNull
-    private long progress;
-    
+	private LocalDate startDate;
+
 	@NotNull
-	private long hours;
-	
-//	@ManyToOne
-//	private Project project;
+	private LocalDate endDate;
+
+	@NotBlank
+	@Size(min=10, max = 50)
+	private String description;
+
+	//current progress in hours
+	@NotNull
+	private int progress;
+
+	//task duration in hours
+	@NotNull
+	private int hours;
+
+	private Status status;
+
+	private Timestamp updateTime;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employee_id")
+	private Employee employee;
 
 	public Task(String name, LocalDate startDate, LocalDate endDate,
-			String description) {
+				String description) {
 		super();
 		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = description;
 	}
-	
+
 	public Task() {}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -87,33 +90,50 @@ public class Task {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	public long getProgress() {
+
+	public int getProgress() {
 		return progress;
 	}
-	
-	public void setProgress(long progress) {
+
+	public void setProgress(int progress) {
 		this.progress = progress;
 	}
 
-	public long getHours() {
+	public int getHours() {
 		return hours;
 	}
 
-	public void setHours(long hours) {
+	public void setHours(int hours) {
 		this.hours = hours;
 	}
 
-//	public Project getProject() {
-//		return project;
-//	}
-//
-//	public void setProject(Project project) {
-//		this.project = project;
-//	}
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+
 
 }
