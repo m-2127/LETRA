@@ -16,7 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -84,23 +86,35 @@ public class RMRestAPI {
 
 		return new ResponseEntity<>(new ResponseMessage("Project Details added successfully!"), HttpStatus.OK);
 	}
-	
-	@PostMapping("/updatetask")
-	@PreAuthorize("hasRole('RM')")
-	public void updatetask(@RequestBody UpdateTask updateTask) {
 
-		Long rmId = userService.authenticatedUser();
-		ReportingManager rm = rmRepo.findById(rmId).get();
-		Set<Task> tasks = projectRepo.findByRm(rm).get().getTask();
+    @PostMapping("/updatetask")
+    @PreAuthorize("hasRole('RM')")
+    public ResponseEntity<?> updatetask(@ Valid @RequestBody UpdateTask updateTask) {
+        Task task;
+
+        task = taskRepo.findById(updateTask.getTaskId()).get();
+
+        if(Objects.isNull(task.getEmployee())){
+            Employee employee = allocateEmployee.allocateEmployee(updateTask);
+            LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),taskRepo,
+                    updateTask.getProjectId(), projectRepo,employee);
+            task.setEndDate(endDate);
+
+        }
+
+        task = progressDetector.updateProgress(updateTask, task);
+
+        if(updateTask.getStatus().equalsIgnoreCase("COMPLETED")){
+            task.setStatus(Status.COMPLETED);
+        }
+        taskRepo.save(task);
+
+        return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
+
+    }
 
 
-		for (Task task: tasks) {
-			Integer taskId = updateTask.getUpdatedTask().get(task.getId());
-			task.setProgress(task.getProgress()+ taskId);
-			taskRepo.save(task);
-		}
-
-	}
+}
 	
 	@PostMapping("/allocateemployee")
 	@PreAuthorize("hasRole('RM')")
