@@ -1,8 +1,7 @@
 package com.bitrebels.letra.controller;
 
-import java.util.List;
-import java.util.Set;
-import javax.validation.Valid;
+import com.bitrebels.letra.message.request.LeaveForm;
+import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
@@ -14,17 +13,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.bitrebels.letra.message.request.LeaveForm;
-import com.bitrebels.letra.message.response.ResponseMessage;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Set;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/employee")
 public class EmployeeRestAPI {
 
 	@Autowired
@@ -61,8 +57,6 @@ public class EmployeeRestAPI {
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
 
-
-
 		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
 				leaveForm.getFinishDate() , leaveForm.getDescription(), leaveForm.getNoOfDays());
 
@@ -94,6 +88,7 @@ public class EmployeeRestAPI {
 			int workingDays = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
 
 			for (Task task: tasks) {
+				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
 
 				Progress progress = acnTypeLeaves.calculateRecommendation(task, workingDays,leaveRequest );
 				if(progress!=null){
