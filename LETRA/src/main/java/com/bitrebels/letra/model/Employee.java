@@ -37,12 +37,8 @@ public class Employee{
 	)
 	private Set<ReportingManager> managers = new HashSet<>();
 	
-	@ManyToMany
-	@JoinTable(name = "employee_tasks",
-	joinColumns = @JoinColumn(name = "employee_id"),
-	inverseJoinColumns = @JoinColumn(name = "task_id")
-	)
-	private Set<Task> tasks = new HashSet<>();
+	@OneToMany(mappedBy = "employee", orphanRemoval = true)
+	private Set<Task> tasks;
 	
     @OneToMany
     @JoinColumn(name="employee_id")

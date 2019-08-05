@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.bitrebels.letra.services.DateHandler;
+import com.bitrebels.letra.services.Date.DateHandler;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class LeaveForm {
@@ -24,6 +24,9 @@ public class LeaveForm {
 	
 	@NotBlank
 	private String description;
+
+	@NotNull
+	private int noOfDays;
 	
 
 	public String getLeaveType() {
@@ -57,5 +60,12 @@ public class LeaveForm {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
+	public int getNoOfDays() {
+		return noOfDays;
+	}
+
+	public void setNoOfDays(int noOfDays) {
+		this.noOfDays = noOfDays;
+	}
 }

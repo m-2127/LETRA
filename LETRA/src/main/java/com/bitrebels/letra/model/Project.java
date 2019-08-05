@@ -4,24 +4,9 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -44,10 +29,14 @@ public class Project {
 
     @NotNull
     private LocalDate endDate;
-    
+
+    //current progress in hours
     @NotNull
-    private long progress;
-    
+    private int progress;
+
+	@Enumerated(EnumType.STRING)
+	private Status status;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name="project_id")
     private Set<Task> task = new HashSet<>();
@@ -108,11 +97,19 @@ public class Project {
 		this.endDate = endDate;
 	}
 
-	public long getProgress() {
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public int getProgress() {
 		return progress;
 	}
 
-	public void setProgress(long progress) {
+	public void setProgress(int progress) {
 		this.progress = progress;
 	}
 
@@ -124,4 +121,6 @@ public class Project {
 		this.task = task;
 	}
 
+	
+    
 }

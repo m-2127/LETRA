@@ -1,5 +1,10 @@
 package com.bitrebels.letra.model;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.Set;
+
+import javax.persistence.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -11,26 +16,26 @@ import java.time.LocalDate;
 @Table(name = "tasks")
 public class Task {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@NotBlank
-	@Size(min=3, max = 50)
-	private String name;
+    @NotBlank
+    @Size(min=3, max = 50)
+    private String name;
 
+    @NotNull
+    private LocalDate startDate;
+
+    @NotNull
+    private LocalDate endDate;
+    
+    @NotBlank
+    @Size(min=10, max = 50)
+    private String description;
+
+    //current progress in hours
 	@NotNull
-	private LocalDate startDate;
-
-	@NotNull
-	private LocalDate endDate;
-
-	@NotBlank
-	@Size(min=10, max = 50)
-	private String description;
-
-	//current progress in hours
-	@NotNull
-	private int progress;
+    private int progress;
 
 	//task duration in hours
 	@NotNull
@@ -45,14 +50,14 @@ public class Task {
 	private Employee employee;
 
 	public Task(String name, LocalDate startDate, LocalDate endDate,
-				String description) {
+			String description) {
 		super();
 		this.name = name;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.description = description;
 	}
-
+	
 	public Task() {}
 
 	public Long getId() {
@@ -90,15 +95,15 @@ public class Task {
 	public String getDescription() {
 		return description;
 	}
-
+	
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
 	public int getProgress() {
 		return progress;
 	}
-
+	
 	public void setProgress(int progress) {
 		this.progress = progress;
 	}

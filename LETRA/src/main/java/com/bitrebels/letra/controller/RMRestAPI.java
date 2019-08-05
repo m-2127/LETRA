@@ -3,9 +3,13 @@
 import com.bitrebels.letra.message.request.EmployeeAllocation;
 import com.bitrebels.letra.message.request.ProjectForm;
 import com.bitrebels.letra.message.request.UpdateTask;
+import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.services.UpdateTask.AllocateEmployee;
+import com.bitrebels.letra.services.UpdateTask.EndDateDetector;
+import com.bitrebels.letra.services.UpdateTask.ProgressDetector;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +20,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
-import static java.time.temporal.ChronoUnit.DAYS;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/rm")
@@ -33,6 +33,9 @@ public class RMRestAPI {
 	
 	@Autowired
 	ProjectRepository projectRepo;
+
+	@Autowired
+	AllocateEmployee allocateEmployee;
 
 	@Autowired
 	TaskRepository taskRepo;
@@ -52,11 +55,15 @@ public class RMRestAPI {
 	@Autowired
 	private LeaveRequestRepository leaveRequestRepository;
 
+	@Autowired
+	EndDateDetector endDateDetector;
+
+	@Autowired
+	ProgressDetector progressDetector;
+
 	@PostMapping("/addproject")
 //	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody ProjectForm projectForm) {
-
-		int dur;
 
 		// add project details
 		Project project = new Project(projectForm.getName(), projectForm.getStartDate(), projectForm.getFinishDate());
@@ -64,11 +71,12 @@ public class RMRestAPI {
 		Set<Task> tasks = projectForm.getTasks();
 
 		for (Task task : tasks) {
-			long diff = (DAYS.between(task.getStartDate(),task.getEndDate()))*24;
-			task.setHours(diff);
+			Timestamp timestamp = new Timestamp(new Date().getTime());
+			task.setUpdateTime(timestamp);
 			taskRepo.save(task);
 		}
 		project.setTask(tasks);
+		project.setStatus(Status.DEVELOPMENT);
 
 		Long userId = userService.authenticatedUser();
 
@@ -80,6 +88,7 @@ public class RMRestAPI {
 		
 		ReportingManager manager = rmRepo.getOne(rmId);
 		manager.setProject(project);
+		project.setRm(manager);
 
 	//	projectRepo.save(project);
 		rmRepo.save(manager);
@@ -87,10 +96,10 @@ public class RMRestAPI {
 		return new ResponseEntity<>(new ResponseMessage("Project Details added successfully!"), HttpStatus.OK);
 	}
 
-    @PostMapping("/updatetask")
-    @PreAuthorize("hasRole('RM')")
-    public ResponseEntity<?> updatetask(@ Valid @RequestBody UpdateTask updateTask) {
-        Task task;
+	@PostMapping("/updatetask")
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> updatetask(@ Valid @RequestBody UpdateTask updateTask) {
+		Task task;
 
         task = taskRepo.findById(updateTask.getTaskId()).get();
 
@@ -104,18 +113,18 @@ public class RMRestAPI {
 
         task = progressDetector.updateProgress(updateTask, task);
 
-        if(updateTask.getStatus().equalsIgnoreCase("COMPLETED")){
-            task.setStatus(Status.COMPLETED);
-        }
-        taskRepo.save(task);
+		if(updateTask.getStatus().equalsIgnoreCase("COMPLETED")){
+			task.setStatus(Status.COMPLETED);
+		}
+		taskRepo.save(task);
 
-        return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
 
-    }
+	}
 
 
-}
-	
+
+
 	@PostMapping("/allocateemployee")
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> allocateEmployee(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
@@ -179,32 +188,20 @@ public class RMRestAPI {
 	
 	@GetMapping("/viewproject")
 	@PreAuthorize("hasRole('RM')")
-//	public ResponseEntity<?> viewproject(){
-//
-//		Long userId = userService.authenticatedUser();
-//
-//		ReportingManager rm = rmRepo.findById(userId).get();
-//
-//		Project project = projectRepo.findByRm(rm).get();
-//
-//
-//		return ResponseEntity.ok(new ProjectStatus(project));
-//	}
-	public String viewproject(){
-		return "success";
-	}
+	public ResponseEntity<?> viewproject(){
 
+		Long userId = userService.authenticatedUser();
+		
+		ReportingManager rm = rmRepo.findById(userId).get();
+		
+		Project project = projectRepo.findByRm(rm).get();
+
+		return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);
+	}
 
 	@MessageMapping("/view")
 	@SendTo("/rmtemplate/rm")
-//	@PreAuthorize("hasRole('HRM')")
-	//public List<LeaveRequest> home(){
 		public Hello greeting(Email email) throws Exception{
-//		long userId = userService.authenticatedUser();
-//
-//		ReportingManager rm = rmRepo.findById(userId).get();
-//
-//		List<LeaveRequest> leaveRequest = leaveRequestRepository.findByReportingManagers(rm);
 
 
 		return new Hello("Hi " + email.getEmail());
