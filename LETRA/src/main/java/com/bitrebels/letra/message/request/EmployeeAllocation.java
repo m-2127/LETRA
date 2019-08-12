@@ -3,49 +3,47 @@ package com.bitrebels.letra.message.request;
 import javax.validation.constraints.NotNull;
 
 public class EmployeeAllocation {
-	
-	@NotNull
-	private Long projectId;
-	
-	@NotNull
-	private Long taskId;
-	
-	@NotNull
-	private Long employeeId;
-	
-	@NotNull
-	private Long rmId;
-	
-	public Long getRmId() {
-		return rmId;
-	}
+    @NotNull
+    private Long projectId;
+    @NotNull
+    private Long taskId;
+    @NotNull
+    private Long employeeId;
+    @NotNull
+    private Long rmId;
 
-	public void setRmId(Long rmId) {
-		this.rmId = rmId;
-	}
+    public EmployeeAllocation() {
+    }
 
-	public Long getProjectId() {
-		return projectId;
-	}
+    public Long getRmId() {
+        return this.rmId;
+    }
 
-	public void setProjectId(Long projectId) {
-		this.projectId = projectId;
-	}
+    public void setRmId(Long rmId) {
+        this.rmId = rmId;
+    }
 
-	public Long getTaskId() {
-		return taskId;
-	}
+    public Long getProjectId() {
+        return this.projectId;
+    }
 
-	public void setTaskId(Long taskId) {
-		this.taskId = taskId;
-	}
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 
-	public Long getEmployeeId() {
-		return employeeId;
-	}
+    public Long getTaskId() {
+        return this.taskId;
+    }
 
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
-	}
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
 
+    public Long getEmployeeId() {
+        return this.employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
 }

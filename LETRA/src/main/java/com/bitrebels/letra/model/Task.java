@@ -1,24 +1,16 @@
 package com.bitrebels.letra.model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
+import javax.persistence.*;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tasks")
@@ -40,14 +32,22 @@ public class Task {
     @NotBlank
     @Size(min=10, max = 50)
     private String description;
-    
 
+    //current progress in hours
 	@NotNull
     private int progress;
-    
-//	@ManyToOne
-//	@JoinColumn(name="project_id")
-//    private Project project;
+
+	//task duration in hours
+	@NotNull
+	private int hours;
+
+	private Status status;
+
+	private Timestamp updateTime;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employee_id")
+	private Employee employee;
 
 	public Task(String name, LocalDate startDate, LocalDate endDate,
 			String description) {
@@ -59,14 +59,6 @@ public class Task {
 	}
 	
 	public Task() {}
-	
-//	public Project getProject() {
-//		return project;
-//	}
-//
-//	public void setProject(Project project) {
-//		this.project = project;
-//	}
 
 	public Long getId() {
 		return id;
@@ -111,10 +103,41 @@ public class Task {
 	public int getProgress() {
 		return progress;
 	}
-
-
+	
 	public void setProgress(int progress) {
 		this.progress = progress;
+	}
+
+	public int getHours() {
+		return hours;
+	}
+
+	public void setHours(int hours) {
+		this.hours = hours;
+	}
+
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 

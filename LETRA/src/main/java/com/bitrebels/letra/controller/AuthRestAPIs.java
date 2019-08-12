@@ -1,7 +1,12 @@
 package com.bitrebels.letra.controller;
 
-import javax.validation.Valid;
-
+import com.bitrebels.letra.message.request.GoogleLogin;
+import com.bitrebels.letra.message.request.LoginForm;
+import com.bitrebels.letra.message.response.JwtResponse;
+import com.bitrebels.letra.security.jwt.JwtProvider;
+import com.bitrebels.letra.services.UserDetailsServiceImpl;
+import com.bitrebels.letra.services.UserPrinciple;
+import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,15 +14,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.bitrebels.letra.message.request.LoginForm;
-import com.bitrebels.letra.message.response.JwtResponse;
-import com.bitrebels.letra.security.jwt.JwtProvider;
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -29,6 +28,12 @@ public class AuthRestAPIs {
 
 	@Autowired
 	JwtProvider jwtProvider;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	UserDetailsServiceImpl userDetailsServiceImpl;
 
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
@@ -42,5 +47,18 @@ public class AuthRestAPIs {
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
 		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
+	}
+
+	@PostMapping("/google")
+	public ResponseEntity<?> googleLogin(@Valid @RequestBody GoogleLogin googleLogin) {
+
+
+		UserPrinciple userPrinciple = (UserPrinciple) userDetailsServiceImpl.loadUserByUsername(googleLogin.getEmail());
+
+
+
+		String jwt = jwtProvider.generateJwtToken(userPrinciple);
+
+		return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(), userPrinciple.getAuthorities()));
 	}
 }

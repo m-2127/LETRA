@@ -21,7 +21,7 @@ import javax.persistence.OneToOne;
 public class Employee{
 	
 	@Id
-	private Long employeeId;
+	private long employeeId;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinTable(name = "employee_project",
@@ -37,12 +37,16 @@ public class Employee{
 	)
 	private Set<ReportingManager> managers = new HashSet<>();
 	
-	@ManyToMany
-	@JoinTable(name = "employee_tasks",
-	joinColumns = @JoinColumn(name = "employee_id"),
-	inverseJoinColumns = @JoinColumn(name = "task_id")
-	)
-	private Set<Task> tasks = new HashSet<>();
+	@OneToMany(mappedBy = "employee", orphanRemoval = true)
+	private Set<Task> tasks;
+	
+    @OneToMany
+    @JoinColumn(name="employee_id")
+    private Set<LeaveRequest> leaveRequest;
+    
+    @OneToMany
+    @JoinColumn(name="employee_id")
+    private Set<Leave> leave;
 
 	public Employee() {}
 	
@@ -52,6 +56,31 @@ public class Employee{
 		this.managers = managers;
 		this.tasks = tasks;
 		this.employeeId=employeeId;
+	}
+
+
+	public long getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(long employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public Set<LeaveRequest> getLeaveRequest() {
+		return leaveRequest;
+	}
+
+	public void setLeaveRequest(Set<LeaveRequest> leaveRequest) {
+		this.leaveRequest = leaveRequest;
+	}
+
+	public Set<Leave> getLeave() {
+		return leave;
+	}
+
+	public void setLeave(Set<Leave> leave) {
+		this.leave = leave;
 	}
 
 	public Set<Project> getProject() {
@@ -77,5 +106,6 @@ public class Employee{
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
-	
+
+
 }

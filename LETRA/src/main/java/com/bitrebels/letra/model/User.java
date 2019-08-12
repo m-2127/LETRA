@@ -17,6 +17,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -41,7 +42,7 @@ public class User{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="user_id")
-    private Long id;
+    private long id;
 
     @NotBlank
     @Size(min=3, max = 50)
@@ -75,9 +76,9 @@ public class User{
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
     
-    @OneToOne
-	@JoinColumn(name="user_id ")
-	private LeaveQuota leaveQuota;
+//    @OneToOne
+//	@JoinColumn(name="user_id")
+//	private LeaveQuota leaveQuota;
 
 	public User() {}
 
@@ -89,11 +90,11 @@ public class User{
         this.gender = gender;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -145,18 +146,18 @@ public class User{
         this.roles = roles;
     }
     
-    public LeaveQuota getLeaveQuota() {
-    	return leaveQuota;
-    }
-    
-    public void setLeaveQuota(LeaveQuota leaveQuota) {
-    	this.leaveQuota = leaveQuota;
-    }
-    
+//    public LeaveQuota getLeaveQuota() {
+//    	return leaveQuota;
+//    }
+//
+//    public void setLeaveQuota(LeaveQuota leaveQuota) {
+//    	this.leaveQuota = leaveQuota;
+//    }
+
     public String getResetToken() {
     	return resetToken;
     }
-    
+
     public void setResetToken(String resetToken) {
     	this.resetToken = resetToken;
     }

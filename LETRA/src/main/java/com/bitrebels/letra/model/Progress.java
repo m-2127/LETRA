@@ -1,0 +1,90 @@
+package com.bitrebels.letra.model;
+
+import javax.persistence.*;
+
+@Entity
+public class Progress {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private double currentProgress;
+
+    private double requiredProgress;
+
+    private double remainingWork;
+
+    private double availableHoursOfWork;
+
+    private int availableDaysForLeave;
+
+    @ManyToOne
+    @JoinColumn(name="leave_id")
+    private LeaveRequest leaveRequest;
+
+    public Progress(double currentProgress, double requiredProgress, double remainingWork,
+                    double availableHoursOfWork, int availableDaysForLeave) {
+        this.currentProgress = currentProgress;
+        this.requiredProgress = requiredProgress;
+        this.remainingWork = remainingWork;
+        this.availableDaysForLeave = availableDaysForLeave;
+        this.availableHoursOfWork = availableHoursOfWork;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public double getCurrentProgress() {
+        return Math.round(currentProgress*10)/10.0;
+    }
+
+    public void setCurrentProgress(double currentProgress) {
+        this.currentProgress = currentProgress;
+    }
+
+    public double getRequiredProgress() {
+        return Math.round(requiredProgress*10)/10.0;
+    }
+
+    public void setRequiredProgress(double requiredProgress) {
+        this.requiredProgress = requiredProgress;
+    }
+
+    public double getRemainingWork() {
+        return Math.round(remainingWork*10)/10.0;
+    }
+
+    public void setRemainingWork(double remainingWork) {
+        this.remainingWork = remainingWork;
+    }
+
+    public int getAvailableDaysForLeave() {
+        return availableDaysForLeave;
+    }
+
+    public void setAvailableDaysForLeave(int availableDaysForLeave) {
+        this.availableDaysForLeave = availableDaysForLeave;
+    }
+
+    public LeaveRequest getLeaveRequest() {
+        return leaveRequest;
+    }
+
+    public void setLeaveRequest(LeaveRequest leaveRequest) {
+        this.leaveRequest = leaveRequest;
+    }
+
+    public double getAvailableHoursOfWork() {
+        return Math.round(availableHoursOfWork*10)/10.0;
+    }
+
+    public void setAvailableHoursOfWork(double availableHoursOfWork) {
+        this.availableHoursOfWork = availableHoursOfWork;
+    }
+}

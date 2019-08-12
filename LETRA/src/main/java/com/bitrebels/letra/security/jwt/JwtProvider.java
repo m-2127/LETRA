@@ -1,17 +1,16 @@
 package com.bitrebels.letra.security.jwt;
 
+import com.bitrebels.letra.services.UserPrinciple;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.bitrebels.letra.services.UserPrinciple;
-
-import static com.bitrebels.letra.security.jwt.SecurityConstraints.*;
-
 import java.util.Date;
+
+import static com.bitrebels.letra.security.jwt.SecurityConstraints.EXPIRATION_TIME;
+import static com.bitrebels.letra.security.jwt.SecurityConstraints.SECRET;
 
 @Component
 public class JwtProvider {
@@ -29,6 +28,18 @@ public class JwtProvider {
 		                .setExpiration(new Date((new Date()).getTime() + EXPIRATION_TIME))
 		                .signWith(SignatureAlgorithm.HS512, SECRET)
 		                .compact();
+    }
+
+    public String generateJwtToken(UserPrinciple userPrincipal) {
+
+
+        return Jwts.builder()
+                .setSubject((userPrincipal.getUsername())) //getUsername returns the email
+                .claim("id",userPrincipal.getId() )
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .compact();
     }
     
     public boolean validateJwtToken(String authToken) {

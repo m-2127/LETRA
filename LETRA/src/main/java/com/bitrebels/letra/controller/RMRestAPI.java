@@ -1,44 +1,31 @@
-package com.bitrebels.letra.controller;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+  package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.EmployeeAllocation;
 import com.bitrebels.letra.message.request.ProjectForm;
-import com.bitrebels.letra.message.request.TaskForm;
+import com.bitrebels.letra.message.request.UpdateTask;
+import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.message.response.ResponseMessage;
-import com.bitrebels.letra.model.Employee;
-import com.bitrebels.letra.model.Project;
-import com.bitrebels.letra.model.ReportingManager;
-import com.bitrebels.letra.model.Role;
-import com.bitrebels.letra.model.RoleName;
-import com.bitrebels.letra.model.Task;
-import com.bitrebels.letra.model.User;
-import com.bitrebels.letra.repository.EmployeeRepository;
-import com.bitrebels.letra.repository.ProjectRepository;
-import com.bitrebels.letra.repository.RMRepository;
-import com.bitrebels.letra.repository.RoleRepository;
-import com.bitrebels.letra.repository.TaskRepository;
-import com.bitrebels.letra.repository.UserRepository;
+import com.bitrebels.letra.model.*;
+import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.services.UpdateTask.AllocateEmployee;
+import com.bitrebels.letra.services.UpdateTask.EndDateDetector;
+import com.bitrebels.letra.services.UpdateTask.ProgressDetector;
+import com.bitrebels.letra.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/rm")
+import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.*;
+
 @RestController
+@RequestMapping("/api/rm")
 public class RMRestAPI {
 
 	@Autowired
@@ -46,6 +33,9 @@ public class RMRestAPI {
 	
 	@Autowired
 	ProjectRepository projectRepo;
+
+	@Autowired
+	AllocateEmployee allocateEmployee;
 
 	@Autowired
 	TaskRepository taskRepo;
@@ -58,9 +48,21 @@ public class RMRestAPI {
 
 	@Autowired
 	EmployeeRepository employeeRepo;
+	
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	private LeaveRequestRepository leaveRequestRepository;
+
+	@Autowired
+	EndDateDetector endDateDetector;
+
+	@Autowired
+	ProgressDetector progressDetector;
 
 	@PostMapping("/addproject")
-	@PreAuthorize("hasRole('RM')")
+//	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody ProjectForm projectForm) {
 
 		// add project details
@@ -69,37 +71,71 @@ public class RMRestAPI {
 		Set<Task> tasks = projectForm.getTasks();
 
 		for (Task task : tasks) {
+			Timestamp timestamp = new Timestamp(new Date().getTime());
+			task.setUpdateTime(timestamp);
 			taskRepo.save(task);
 		}
 		project.setTask(tasks);
+		project.setStatus(Status.DEVELOPMENT);
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Long userId = userService.authenticatedUser();
 
-		Optional<User> optional = userRepo.findByEmail(auth.getName());
+		ReportingManager rm = rmRepo.findById(userId).get();
 
-		Long rmId = optional.get().getId();
+		project.setRm(rm);
+
+		Long rmId = userService.authenticatedUser();
+		
 		ReportingManager manager = rmRepo.getOne(rmId);
 		manager.setProject(project);
 		project.setRm(manager);
 
-		projectRepo.save(project);
+	//	projectRepo.save(project);
 		rmRepo.save(manager);
 
 		return new ResponseEntity<>(new ResponseMessage("Project Details added successfully!"), HttpStatus.OK);
 	}
 
+	@PostMapping("/updatetask")
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> updatetask(@ Valid @RequestBody UpdateTask updateTask) {
+		Task task;
+
+        task = taskRepo.findById(updateTask.getTaskId()).get();
+
+        if(Objects.isNull(task.getEmployee())){
+            Employee employee = allocateEmployee.allocateEmployee(updateTask);
+            LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),taskRepo,
+                    updateTask.getProjectId(), projectRepo,employee);
+            task.setEndDate(endDate);
+
+        }
+
+        task = progressDetector.updateProgress(updateTask, task);
+
+		if(updateTask.getStatus().equalsIgnoreCase("COMPLETED")){
+			task.setStatus(Status.COMPLETED);
+		}
+		taskRepo.save(task);
+
+		return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
+
+	}
+
+
+
+
 	@PostMapping("/allocateemployee")
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> allocateEmployee(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Long rmId = userRepo.findByEmail(auth.getName()).get().getId();
-
+		
+		Long rmId = userService.authenticatedUser();
+		
 		Project actualProject = projectRepo.getOne(employeeAllocation.getProjectId());
 
 		Set<Project> project = new HashSet<Project>();
 		project.add(actualProject);
-		
+
 		Task actualTask = taskRepo.findById(employeeAllocation.getTaskId()).get();
 		Set<Task> task = new HashSet<Task>();
 		task.add(actualTask);
@@ -109,6 +145,7 @@ public class RMRestAPI {
 		manager.add(actualManager);
 
 		Optional<Employee> optionalemployee = employeeRepo.findById(employeeAllocation.getEmployeeId());
+		//if the user is not currently working on a project
 
 		if (!optionalemployee.isPresent()) {
 			Optional<User> optionaluser = userRepo.findById(employeeAllocation.getEmployeeId());
@@ -119,11 +156,16 @@ public class RMRestAPI {
 				Employee employee = new Employee(project, manager, task, user.getId());
 
 				employeeRepo.save(employee);
+				actualManager.getEmployees().add(employee);//adding the employee to RM
+
 				userRepo.save(user);
 			} else {
 				return new ResponseEntity<>(new ResponseMessage("Invalid User."), HttpStatus.BAD_REQUEST);
 			}
-		} 
+
+		}
+
+		//if the user is currently working on a project
 		else {
 			if (optionalemployee.isPresent()) {
 				Employee employee = optionalemployee.get();
@@ -132,6 +174,9 @@ public class RMRestAPI {
 				employee.getTasks().add(actualTask);
 
 				employeeRepo.save(employee);
+
+				actualManager.getEmployees().add(employee);//adding the employee to RM
+
 			} else {
 				return new ResponseEntity<>(new ResponseMessage("Invalid User."), HttpStatus.BAD_REQUEST);
 			}
@@ -139,5 +184,26 @@ public class RMRestAPI {
 		}
 
 		return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
+	}
+	
+	@GetMapping("/viewproject")
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> viewproject(){
+
+		Long userId = userService.authenticatedUser();
+		
+		ReportingManager rm = rmRepo.findById(userId).get();
+		
+		Project project = projectRepo.findByRm(rm).get();
+
+		return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);
+	}
+
+	@MessageMapping("/view")
+	@SendTo("/rmtemplate/rm")
+		public Hello greeting(Email email) throws Exception{
+
+
+		return new Hello("Hi " + email.getEmail());
 	}
 }
