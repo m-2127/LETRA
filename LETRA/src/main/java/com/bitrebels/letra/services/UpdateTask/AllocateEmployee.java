@@ -1,13 +1,10 @@
 package com.bitrebels.letra.services.UpdateTask;
 
 import com.bitrebels.letra.message.request.UpdateTask;
-import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -70,7 +67,7 @@ public class AllocateEmployee {
                 User user = optionaluser.get();
                 Role userRole = roleRepo.findByName(RoleName.ROLE_EMPLOYEE).get();
                 user.getRoles().add(userRole);
-                employee = new Employee(project, manager, task, user.getId());
+                employee = new Employee(project, manager, user.getId());
 
                 employeeRepo.save(employee);
                 actualManager.getEmployees().add(employee);//adding the employee to RM

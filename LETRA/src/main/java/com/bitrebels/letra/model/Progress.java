@@ -5,9 +5,11 @@ import javax.persistence.*;
 @Entity
 public class Progress {
 
+//    @EmbeddedId
+//    ProgressKey id;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long progressId;
 
     private double currentProgress;
 
@@ -20,8 +22,20 @@ public class Progress {
     private int availableDaysForLeave;
 
     @ManyToOne
+    @JoinColumn(name="manager_id")
+    private ReportingManager manager;
+
+    @ManyToOne
     @JoinColumn(name="leave_id")
+ //   @MapsId("leaveRequestId")
     private LeaveRequest leaveRequest;
+
+    @ManyToOne
+    @JoinColumn(name="hrManager_id")
+    private HRManager hrManager;
+
+    public Progress() {
+    }
 
     public Progress(double currentProgress, double requiredProgress, double remainingWork,
                     double availableHoursOfWork, int availableDaysForLeave) {
@@ -32,13 +46,13 @@ public class Progress {
         this.availableHoursOfWork = availableHoursOfWork;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+//    public ProgressKey getId() {
+//        return id;
+//    }
+//
+//    public void setId(ProgressKey id) {
+//        this.id = id;
+//    }
 
     public double getCurrentProgress() {
         return Math.round(currentProgress*10)/10.0;
@@ -72,6 +86,22 @@ public class Progress {
         this.availableDaysForLeave = availableDaysForLeave;
     }
 
+    public double getAvailableHoursOfWork() {
+        return Math.round(availableHoursOfWork*10)/10.0;
+    }
+
+    public void setAvailableHoursOfWork(double availableHoursOfWork) {
+        this.availableHoursOfWork = availableHoursOfWork;
+    }
+
+    public ReportingManager getManager() {
+        return manager;
+    }
+
+    public void setManager(ReportingManager manager) {
+        this.manager = manager;
+    }
+
     public LeaveRequest getLeaveRequest() {
         return leaveRequest;
     }
@@ -80,11 +110,11 @@ public class Progress {
         this.leaveRequest = leaveRequest;
     }
 
-    public double getAvailableHoursOfWork() {
-        return Math.round(availableHoursOfWork*10)/10.0;
+    public HRManager getHrManager() {
+        return hrManager;
     }
 
-    public void setAvailableHoursOfWork(double availableHoursOfWork) {
-        this.availableHoursOfWork = availableHoursOfWork;
+    public void setHrManager(HRManager hrManager) {
+        this.hrManager = hrManager;
     }
 }

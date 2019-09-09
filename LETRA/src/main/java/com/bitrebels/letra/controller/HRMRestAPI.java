@@ -1,42 +1,24 @@
 package com.bitrebels.letra.controller;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.validation.Valid;
-
+import com.bitrebels.letra.message.request.LeaveQuotaForm;
+import com.bitrebels.letra.message.request.RegistrationForm;
+import com.bitrebels.letra.message.response.ResponseMessage;
+import com.bitrebels.letra.model.*;
+import com.bitrebels.letra.model.leavequota.*;
+import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
+import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.bitrebels.letra.message.request.LeaveQuotaForm;
-import com.bitrebels.letra.message.request.RegistrationForm;
-import com.bitrebels.letra.message.response.ResponseMessage;
-import com.bitrebels.letra.model.Project;
-import com.bitrebels.letra.model.ReportingManager;
-import com.bitrebels.letra.model.Role;
-import com.bitrebels.letra.model.RoleName;
-import com.bitrebels.letra.model.User;
-import com.bitrebels.letra.model.leavequota.AnnualLeave;
-import com.bitrebels.letra.model.leavequota.CasualLeave;
-import com.bitrebels.letra.model.leavequota.LeaveQuota;
-import com.bitrebels.letra.model.leavequota.MaternityLeave;
-import com.bitrebels.letra.model.leavequota.NoPayLeave;
-import com.bitrebels.letra.model.leavequota.SickLeave;
-import com.bitrebels.letra.repository.LeaveQuotaRepository;
-import com.bitrebels.letra.repository.ProjectRepository;
-import com.bitrebels.letra.repository.RMRepository;
-import com.bitrebels.letra.repository.RoleRepository;
-import com.bitrebels.letra.repository.UserRepository;
+import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/hrm")
@@ -60,6 +42,15 @@ public class HRMRestAPI {
 	@Autowired
 	ProjectRepository projectRepo;
 
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	HRMRepo hrmRepo;
+
+	@Autowired
+	LeaveQuotaCal leaveQuotaCal;
+
 	@PostMapping("/registration")
 	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm registrationRequest) {
@@ -73,17 +64,23 @@ public class HRMRestAPI {
 					HttpStatus.BAD_REQUEST);
 		}
 
+		long userId = userService.authenticatedUser();
+		HRManager hrManager = hrmRepo.findById(userId).get();
+
 		// Creating user's account
 		User user = new User(registrationRequest.getName(), registrationRequest.getEmail(),
 				encoder.encode(registrationRequest.getPassword()), registrationRequest.getMobilenumber(),
 				registrationRequest.getGender());
-
+		user.setHrManager(hrManager);
 		Set<Role> roles = new HashSet<>();
 		Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
 				.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
 		roles.add(userRole);
 
 		user.setRoles(roles);
+
+		user = leaveQuotaCal.updateQuotaOnRegistration(user);
+
 		userRepository.save(user);
 
 		return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
@@ -94,13 +91,13 @@ public class HRMRestAPI {
 	public ResponseEntity<?> addLeaveQuota(@Valid @RequestBody LeaveQuotaForm leaveQuota) {
 
 		AnnualLeave annualLeave = leaveQuota.getAnnualLeave();
-		CasualLeave casulaLeave = leaveQuota.getCasualLeave();
+		CasualLeave casualLeave = leaveQuota.getCasualLeave();
 		SickLeave sickLeave = leaveQuota.getSickLeave();
 		MaternityLeave maternityLeave = leaveQuota.getMaternityLeave();
 		NoPayLeave noPayLeave = leaveQuota.getNoPayLeave();
 
 		leaveQuotaRepo.save(annualLeave);
-		leaveQuotaRepo.save(casulaLeave);
+		leaveQuotaRepo.save(casualLeave);
 		leaveQuotaRepo.save(sickLeave);
 		leaveQuotaRepo.save(maternityLeave);
 		leaveQuotaRepo.save(noPayLeave);
@@ -125,4 +122,6 @@ public class HRMRestAPI {
 		rmRepo.save(manager);
 		userRepository.save(user);
 	}
+
+
 }

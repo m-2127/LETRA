@@ -7,4 +7,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue("NoPay")
 public class NoPayLeave extends LeaveQuota {
 
+    public void addTaken(int x){
+        setLeavesTaken(getLeavesTaken() + x);
+    }
 }

@@ -55,7 +55,7 @@ public class ACNTypeLeaves {
          }
 
         //number of hours remaining to complete the task from the leave end date
-        double hoursOfWorkAvailable = leaveTracker.leftWorkHours(leaveEndDate,taskEndDate,
+        double hoursOfWorkAvailable = leaveTracker.leftWorkHours(taskEndDate,
                 leaveEndDate,task.getStatus());
 
         //actual work left from the day of the leave

@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/employee")
+@RequestMapping("/api/auth")
 public class EmployeeRestAPI {
 	
 	@Autowired
@@ -56,7 +54,9 @@ public class EmployeeRestAPI {
 	@PostMapping("/applyleave")
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
-		
+
+		Progress progress;
+
 		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
 				leaveForm.getFinishDate() , leaveForm.getDescription(), leaveForm.getNoOfDays());
 
@@ -66,14 +66,6 @@ public class EmployeeRestAPI {
 		Long employeeId = userService.authenticatedUser();
 		Employee employee = employeeRepository.findById(employeeId).get();
 
-		Set<ReportingManager> managers = employee.getManagers();
-
-		for (ReportingManager manager : managers ) {
-			leaveRequest.getReportingManagers().add(manager);//to create request_rm table
-		}
-
-		leaveReqRepo.save(leaveRequest);
-
         employee.getLeaveRequest().add(leaveRequest);
 		employeeRepository.save(employee);
 
@@ -81,45 +73,59 @@ public class EmployeeRestAPI {
 
 		Set<Task> tasks = employee.getTasks();
 
-		if(leaveType.equalsIgnoreCase("annual") || leaveType.equalsIgnoreCase("casual")
-		|| leaveType.equalsIgnoreCase("nopay")){
+		//			working days between leave start date and leave end date
+		int workingDays = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
 
-//			working days between leave start date and leave end date
-			int workingDays = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
+
+		if(!(leaveType.equalsIgnoreCase("maternity"))){
+
 
 			for (Task task: tasks) {
 				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
 
-				Progress progress = acnTypeLeaves.calculateRecommendation(task, workingDays,leaveRequest );
-				if(progress!=null){
-					progressRepo.save(progress);
-					leaveRequest.getProgressSet().add(progress);}
+				if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
+
+					continue;
+				}
+				ReportingManager manager = task.getProject().getRm();
+
+				if(leaveType.equalsIgnoreCase("annual") || leaveType.equalsIgnoreCase("casual")
+						|| leaveType.equalsIgnoreCase("nopay")) {
+
+					progress = acnTypeLeaves.calculateRecommendation(task, workingDays, leaveRequest);
+					if(progress==null){
+						continue;
+					}
+				}
+				else {
+						progress = new Progress();
+				}
+					progress.setManager(manager);
+					progress.setLeaveRequest(leaveRequest);
+					progressRepo.save(progress);//i think it is not necessary to save this because when leave request is saved, the progress is also saved automatically
+					leaveRequest.getProgressSet().add(progress);
+					leaveReqRepo.save(leaveRequest);
 			}
-
-		}
-		else if(leaveType.equalsIgnoreCase("maternity" ) ){
-
 		}
 		else{
-
+				progress = new Progress();
+				HRManager hrManager = userRepo.findById(employee.getEmployeeId()).get().getHrManager();
+				progress.setHrManager(hrManager);
+				progress.setLeaveRequest(leaveRequest);
+				progressRepo.save(progress);
+				leaveRequest.getProgressSet().add(progress);
+				leaveReqRepo.save(leaveRequest);
 		}
-
-
-
-
 		return new ResponseEntity<>(new ResponseMessage("Leave applied successfully"), HttpStatus.OK);
-
 	}
 	
 	@GetMapping("/leavequota")
-	@PreAuthorize("hasRole('USER')")
+//	@PreAuthorize("hasRole('USER')")
 	public List<?> viewDetails(){
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepo.findByEmail(auth.getName()).get();
 
-		
-		return leaveQuotaRepo.findByUser(user);
+		long employeeId = userService.authenticatedUser();
+		Employee employee = employeeRepository.findById(employeeId).get();
+		return leaveQuotaRepo.findByUser(new User());
 	}
 
 }

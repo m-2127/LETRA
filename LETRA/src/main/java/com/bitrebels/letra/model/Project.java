@@ -1,14 +1,11 @@
 package com.bitrebels.letra.model;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 
 
@@ -37,14 +34,14 @@ public class Project {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name="project_id")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "project",cascade = CascadeType.ALL)
     private Set<Task> task = new HashSet<>();
     
-	@OneToOne
-	@JoinColumn(name="rm_id")
-	@JsonIgnore
+	@OneToOne(mappedBy = "project")
 	private ReportingManager rm;
+
+	@ManyToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	private Set<Employee> employeeSet = new HashSet<>();
     
     public Project() {}
     
@@ -121,6 +118,11 @@ public class Project {
 		this.task = task;
 	}
 
-	
-    
+	public Set<Employee> getEmployeeSet() {
+		return employeeSet;
+	}
+
+	public void setEmployeeSet(Set<Employee> employeeSet) {
+		this.employeeSet = employeeSet;
+	}
 }

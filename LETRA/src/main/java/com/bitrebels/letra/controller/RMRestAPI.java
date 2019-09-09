@@ -1,12 +1,15 @@
   package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.EmployeeAllocation;
+import com.bitrebels.letra.message.request.LeaveResponse;
 import com.bitrebels.letra.message.request.ProjectForm;
 import com.bitrebels.letra.message.request.UpdateTask;
 import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
+import com.bitrebels.letra.services.UpdateProject;
 import com.bitrebels.letra.services.UpdateTask.AllocateEmployee;
 import com.bitrebels.letra.services.UpdateTask.EndDateDetector;
 import com.bitrebels.letra.services.UpdateTask.ProgressDetector;
@@ -24,12 +27,15 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
 
-@RestController
-@RequestMapping("/api/rm")
+  @RestController
+@RequestMapping("/api/auth")
 public class RMRestAPI {
 
 	@Autowired
 	RoleRepository roleRepo;
+
+	@Autowired
+	UpdateQuota updateQuota;
 	
 	@Autowired
 	ProjectRepository projectRepo;
@@ -60,6 +66,18 @@ public class RMRestAPI {
 
 	@Autowired
 	ProgressDetector progressDetector;
+
+	@Autowired
+	UpdateProject updateProject;
+
+	@Autowired
+	LeaveDatesRepo leaveDatesRepo;
+
+	@Autowired
+	LeaveRepo leaveRepo;
+
+	@Autowired
+	LeaveQuotaRepository leaveQuotaRepo;
 
 	@PostMapping("/addproject")
 //	@PreAuthorize("hasRole('RM')")
@@ -119,69 +137,57 @@ public class RMRestAPI {
 		taskRepo.save(task);
 
 		return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
+	}
+
+	@PostMapping("/leaveresponse")
+//	@PreAuthorize("hasRole('RM')")
+	public void respondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
+
+		List<String> dates = leaveResponse.getDates();
+		List<LeaveDates> leaveDates = new ArrayList<>();
+
+		Leave leave = new Leave(leaveResponse.getLeaveType(), leaveResponse.getDescription(),
+				dates.size(), leaveResponse.isApproval());
+
+		leave.setDates(leaveDates);
+
+		Long userId = leaveResponse.getEmployeeID();
+		User user = userRepo.findById(userId).get();
+
+		Employee employee = employeeRepo.findById(leaveResponse.getEmployeeID()).get();
+		leave.setEmployee(employee);
+
+		leaveRepo.save(leave);
+
+		for(String date : dates) {
+			LocalDate localDate = LocalDate.parse(date);
+			LeaveDates temp = new LeaveDates(localDate);
+			leaveDates.add(temp);
+			leaveDatesRepo.save(temp);
+		}
+
+		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
+
+		leaveRepo.save(leave);
 
 	}
 
-
-
-
-	@PostMapping("/allocateemployee")
+	@PostMapping("/updateProject")
 	@PreAuthorize("hasRole('RM')")
-	public ResponseEntity<?> allocateEmployee(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
+	public ResponseEntity<?> updateProject(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
 		
 		Long rmId = userService.authenticatedUser();
-		
-		Project actualProject = projectRepo.getOne(employeeAllocation.getProjectId());
 
-		Set<Project> project = new HashSet<Project>();
-		project.add(actualProject);
+		ReportingManager reportingManager = rmRepo.findById(rmId).get();
 
-		Task actualTask = taskRepo.findById(employeeAllocation.getTaskId()).get();
-		Set<Task> task = new HashSet<Task>();
-		task.add(actualTask);
+		Project project = projectRepo.findByRm(reportingManager).get();
 
-		ReportingManager actualManager = rmRepo.getOne(rmId);
-		Set<ReportingManager> manager = new HashSet<>();
-		manager.add(actualManager);
+		List<Long> addedEmployees = employeeAllocation.getAddedEmp();
+		List<Long> deletedEmployess = employeeAllocation.getDeletedEmp();
 
-		Optional<Employee> optionalemployee = employeeRepo.findById(employeeAllocation.getEmployeeId());
-		//if the user is not currently working on a project
+		updateProject.addEmployees(reportingManager, project, addedEmployees);
 
-		if (!optionalemployee.isPresent()) {
-			Optional<User> optionaluser = userRepo.findById(employeeAllocation.getEmployeeId());
-			if (optionaluser.isPresent()) {
-				User user = optionaluser.get();
-				Role userRole = roleRepo.findByName(RoleName.ROLE_EMPLOYEE).get();
-				user.getRoles().add(userRole);
-				Employee employee = new Employee(project, manager, task, user.getId());
 
-				employeeRepo.save(employee);
-				actualManager.getEmployees().add(employee);//adding the employee to RM
-
-				userRepo.save(user);
-			} else {
-				return new ResponseEntity<>(new ResponseMessage("Invalid User."), HttpStatus.BAD_REQUEST);
-			}
-
-		}
-
-		//if the user is currently working on a project
-		else {
-			if (optionalemployee.isPresent()) {
-				Employee employee = optionalemployee.get();
-				employee.getProject().add(actualProject);
-				employee.getManagers().add(actualManager);
-				employee.getTasks().add(actualTask);
-
-				employeeRepo.save(employee);
-
-				actualManager.getEmployees().add(employee);//adding the employee to RM
-
-			} else {
-				return new ResponseEntity<>(new ResponseMessage("Invalid User."), HttpStatus.BAD_REQUEST);
-			}
-	
-		}
 
 		return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
 	}
@@ -193,7 +199,7 @@ public class RMRestAPI {
 		Long userId = userService.authenticatedUser();
 		
 		ReportingManager rm = rmRepo.findById(userId).get();
-		
+		 
 		Project project = projectRepo.findByRm(rm).get();
 
 		return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);

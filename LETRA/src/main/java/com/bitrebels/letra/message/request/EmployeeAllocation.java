@@ -1,49 +1,36 @@
 package com.bitrebels.letra.message.request;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EmployeeAllocation {
+public class EmployeeAllocation{
+
     @NotNull
-    private Long projectId;
-    @NotNull
-    private Long taskId;
-    @NotNull
-    private Long employeeId;
-    @NotNull
-    private Long rmId;
+    private String status;
+
+    private List<Long> addedEmp = new ArrayList<>();
+
+    private List<Long> deletedEmp = new ArrayList<>();
 
     public EmployeeAllocation() {
     }
+    
 
-    public Long getRmId() {
-        return this.rmId;
+    public List<Long> getAddedEmp() {
+        return addedEmp;
     }
 
-    public void setRmId(Long rmId) {
-        this.rmId = rmId;
+    public void setAddedEmp(List<Long> addedEmp) {
+        this.addedEmp = addedEmp;
     }
 
-    public Long getProjectId() {
-        return this.projectId;
+    public List<Long> getDeletedEmp() {
+        return deletedEmp;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Long getTaskId() {
-        return this.taskId;
-    }
-
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
-    }
-
-    public Long getEmployeeId() {
-        return this.employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setDeletedEmp(List<Long> deletedEmp) {
+        this.deletedEmp = deletedEmp;
     }
 }
+

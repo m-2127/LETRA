@@ -1,39 +1,40 @@
 package com.bitrebels.letra.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "approved_leave")
 public class Leave implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @Column(name = "start_date")
-    private LocalDate startDate;
+    private String LeaveType;
 
-    @Column(name = "finish_date")
-    private LocalDate finishDate;
-
-
-    @OneToOne
-    @JoinColumn(name = "id")
-    @MapsId
-    private LeaveRequest leaveRequest;
+    private String description;
 
     private int duration;
+
+    private boolean approval;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "leave_leaveDate",
+            joinColumns = @JoinColumn(name = "approved_leave"),
+            inverseJoinColumns = @JoinColumn(name = "leave_date"))
+    private List<LeaveDates> dates;
+
+    @ManyToOne
+    @JoinColumn(name="employee_id")
+    private Employee employee;
+
+    public Leave(String leaveType, String description, int duration, boolean approval) {
+        LeaveType = leaveType;
+        this.description = description;
+        this.duration = duration;
+        this.approval = approval;
+    }
 
     public long getId() {
         return id;
@@ -43,20 +44,36 @@ public class Leave implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public List<LeaveDates> getDates() {
+        return dates;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setDates(List<LeaveDates> dates) {
+        this.dates = dates;
     }
 
-    public LocalDate getFinishDate() {
-        return finishDate;
+    public String getLeaveType() {
+        return LeaveType;
     }
 
-    public void setFinishDate(LocalDate finishDate) {
-        this.finishDate = finishDate;
+    public void setLeaveType(String leaveType) {
+        LeaveType = leaveType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     public int getDuration() {
@@ -67,13 +84,11 @@ public class Leave implements Serializable {
         this.duration = duration;
     }
 
-    public LeaveRequest getLeaveRequest() {
-        return leaveRequest;
+    public boolean isApproval() {
+        return approval;
     }
 
-    public void setLeaveRequest(LeaveRequest leaveRequest) {
-        this.leaveRequest = leaveRequest;
+    public void setApproval(boolean approval) {
+        this.approval = approval;
     }
-
-
 }

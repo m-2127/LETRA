@@ -1,10 +1,5 @@
 package com.bitrebels.letra.model;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.Set;
-
-import javax.persistence.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -45,17 +40,24 @@ public class Task {
 
 	private Timestamp updateTime;
 
+	@ManyToOne
+	@JoinColumn(name="project_id")
+	private Project project;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "employee_id")
 	private Employee employee;
 
-	public Task(String name, LocalDate startDate, LocalDate endDate,
-			String description) {
+	public Task(String name, LocalDate startDate, String description, int duration) {
 		super();
 		this.name = name;
 		this.startDate = startDate;
-		this.endDate = endDate;
 		this.description = description;
+		this.hours = duration;
+	}
+
+	public void removeTask(){
+
 	}
 	
 	public Task() {}
@@ -140,5 +142,11 @@ public class Task {
 		this.employee = employee;
 	}
 
+	public Project getProject() {
+		return project;
+	}
 
+	public void setProject(Project project) {
+		this.project = project;
+	}
 }

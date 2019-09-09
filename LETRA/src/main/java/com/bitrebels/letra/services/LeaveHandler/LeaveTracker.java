@@ -45,7 +45,7 @@ public class LeaveTracker {
         return countHours(workingDays, status);
     }
 
-    public double leftWorkHours(LocalDate firstDate , LocalDate taskEndDate,
+    public double leftWorkHours( LocalDate taskEndDate,
                                 LocalDate leaveEndDate, Status status){
         //firstDate= leave end date
 
@@ -57,7 +57,7 @@ public class LeaveTracker {
             workingDays = 0;
         }
         else if(taskEndDate.isAfter(leaveEndDate)){
-            workingDays = countWorkingDays(firstDate,taskEndDate);
+            workingDays = countWorkingDays(leaveEndDate,taskEndDate);
         }
 
         return countHours(workingDays, status);

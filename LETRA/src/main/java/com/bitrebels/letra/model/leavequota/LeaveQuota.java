@@ -1,19 +1,9 @@
 package com.bitrebels.letra.model.leavequota;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 import com.bitrebels.letra.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -28,7 +18,7 @@ public class LeaveQuota {
 	private Long id;
 	
 	private int leavesTaken;
-	
+
 	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name="user_id ")

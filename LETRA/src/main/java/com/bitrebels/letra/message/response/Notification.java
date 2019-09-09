@@ -1,78 +1,35 @@
 package com.bitrebels.letra.message.response;
 
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import com.bitrebels.letra.model.LeaveStatus;
+import com.bitrebels.letra.model.LeaveRequest;
+import com.sun.javaws.progress.Progress;
 
 public class Notification {
 
-	private long leaveId;
-	
-	private String leaveType;
-	
-	private LocalDate setDate;
-	
-	private LocalDate finishDate;
-	
-	private LeaveStatus status;
-	
-	private String description;
+	private Progress progress;
 
-	public long getLeaveId() {
-		return leaveId;
+	private LeaveRequest leaveRequest;
+
+	public Notification() {
 	}
 
-	public void setLeaveId(long leaveId) {
-		this.leaveId = leaveId;
+	public Notification(Progress progress, LeaveRequest leaveRequest) {
+		this.progress = progress;
+		this.leaveRequest = leaveRequest;
 	}
 
-	public String getLeaveType() {
-		return leaveType;
+	public Progress getProgress() {
+		return progress;
 	}
 
-	public void setLeaveType(String leaveType) {
-		this.leaveType = leaveType;
+	public void setProgress(Progress progress) {
+		this.progress = progress;
 	}
 
-	public LocalDate getSetDate() {
-		return setDate;
+	public LeaveRequest getLeaveRequest() {
+		return leaveRequest;
 	}
 
-	public void setSetDate(LocalDate setDate) {
-		this.setDate = setDate;
+	public void setLeaveRequest(LeaveRequest leaveRequest) {
+		this.leaveRequest = leaveRequest;
 	}
-
-	public LocalDate getFinishDate() {
-		return finishDate;
-	}
-
-	public void setFinishDate(LocalDate finishDate) {
-		this.finishDate = finishDate;
-	}
-
-	public LeaveStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(LeaveStatus status) {
-		this.status = status;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	
-
 }

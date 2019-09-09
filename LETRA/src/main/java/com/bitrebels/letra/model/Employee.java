@@ -1,21 +1,8 @@
 package com.bitrebels.letra.model;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Employee{
@@ -23,18 +10,14 @@ public class Employee{
 	@Id
 	private long employeeId;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "employee_project",
 	joinColumns = @JoinColumn(name = "employee_id"),
 	inverseJoinColumns = @JoinColumn(name = "project_id")
 	)
-	private Set<Project> project = new HashSet<>();
+	private Set<Project> project;
 	
-	@ManyToMany
-	@JoinTable(name = "employee_rm",
-	joinColumns = @JoinColumn(name = "employee_id"),
-	inverseJoinColumns = @JoinColumn(name = "rm_id")
-	)
+	@ManyToMany(mappedBy = "employees")
 	private Set<ReportingManager> managers = new HashSet<>();
 	
 	@OneToMany(mappedBy = "employee", orphanRemoval = true)
@@ -44,17 +27,15 @@ public class Employee{
     @JoinColumn(name="employee_id")
     private Set<LeaveRequest> leaveRequest;
     
-    @OneToMany
-    @JoinColumn(name="employee_id")
+    @OneToMany(mappedBy = "employee")
     private Set<Leave> leave;
 
 	public Employee() {}
 	
-	public Employee(Set<Project> project, Set<ReportingManager> managers, Set<Task> tasks, Long employeeId ) {
+	public Employee(Set<Project> project, Set<ReportingManager> managers, Long employeeId ) {
 		super();
 		this.project = project;
 		this.managers = managers;
-		this.tasks = tasks;
 		this.employeeId=employeeId;
 	}
 
@@ -106,6 +87,5 @@ public class Employee{
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
-
 
 }

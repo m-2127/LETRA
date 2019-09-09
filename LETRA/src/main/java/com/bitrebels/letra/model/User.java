@@ -1,33 +1,14 @@
  package com.bitrebels.letra.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.bitrebels.letra.model.leavequota.*;
+import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.NaturalId;
-
-import com.bitrebels.letra.model.leavequota.LeaveQuota;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -75,10 +56,25 @@ public class User{
     	joinColumns = @JoinColumn(name = "user_id"), 
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-    
-//    @OneToOne
-//	@JoinColumn(name="user_id")
-//	private LeaveQuota leaveQuota;
+
+    @ManyToOne
+    @JoinColumn(name = "hrManagerId")
+    private HRManager hrManager;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+	private AnnualLeave annualQuota ;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+    private CasualLeave casualQuota ;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+    private SickLeave sickQuota ;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+    private NoPayLeave noPayQuota ;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+    private MaternityLeave maternityQuota ;
 
 	public User() {}
 
@@ -145,14 +141,14 @@ public class User{
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-    
-//    public LeaveQuota getLeaveQuota() {
-//    	return leaveQuota;
-//    }
-//
-//    public void setLeaveQuota(LeaveQuota leaveQuota) {
-//    	this.leaveQuota = leaveQuota;
-//    }
+
+    public HRManager getHrManager() {
+        return hrManager;
+    }
+
+    public void setHrManager(HRManager hrManager) {
+        this.hrManager = hrManager;
+    }
 
     public String getResetToken() {
     	return resetToken;
@@ -161,4 +157,45 @@ public class User{
     public void setResetToken(String resetToken) {
     	this.resetToken = resetToken;
     }
+
+    public AnnualLeave getAnnualQuota() {
+        return annualQuota;
+    }
+
+    public void setAnnualQuota(AnnualLeave annualQuota) {
+        this.annualQuota = annualQuota;
+    }
+
+    public CasualLeave getCasualQuota() {
+        return casualQuota;
+    }
+
+    public void setCasualQuota(CasualLeave casualQuota) {
+        this.casualQuota = casualQuota;
+    }
+
+    public SickLeave getSickQuota() {
+        return sickQuota;
+    }
+
+    public void setSickQuota(SickLeave sickQuota) {
+        this.sickQuota = sickQuota;
+    }
+
+    public NoPayLeave getNoPayQuota() {
+        return noPayQuota;
+    }
+
+    public void setNoPayQuota(NoPayLeave noPayQuota) {
+        this.noPayQuota = noPayQuota;
+    }
+
+    public MaternityLeave getMaternityQuota() {
+        return maternityQuota;
+    }
+
+    public void setMaternityQuota(MaternityLeave maternityQuota) {
+        this.maternityQuota = maternityQuota;
+    }
 }
+
