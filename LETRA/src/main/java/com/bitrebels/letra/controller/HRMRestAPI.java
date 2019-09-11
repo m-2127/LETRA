@@ -1,5 +1,6 @@
 package com.bitrebels.letra.controller;
 
+import com.bitrebels.letra.message.request.HolidaySet;
 import com.bitrebels.letra.message.request.LeaveQuotaForm;
 import com.bitrebels.letra.message.request.RegistrationForm;
 import com.bitrebels.letra.message.response.ResponseMessage;
@@ -16,12 +17,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
-@RequestMapping("/api/hrm")
+@RequestMapping("/api/auth")
 public class HRMRestAPI {
 
 	@Autowired
@@ -123,5 +122,18 @@ public class HRMRestAPI {
 		userRepository.save(user);
 	}
 
+	@PostMapping("/setholidays")
+//	@PreAuthorize("hasRole('HRM'))")
+	public void setHolidays(@RequestBody HolidaySet holidaySet){
+		List<Holiday> holidays = holidaySet.getHolidays();
+
+		Iterator<Holiday> iterable = holidays.iterator();
+
+		while(iterable.hasNext()){
+			Holiday holiday = iterable.next();
+			System.out.println(holiday.getDate() + " " + holiday.getDescription()
+								+ " " + holiday.getHolidayId());
+		}
+	}
 
 }
