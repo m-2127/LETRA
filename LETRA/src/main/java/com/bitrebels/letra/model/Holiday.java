@@ -1,6 +1,8 @@
 package com.bitrebels.letra.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
 
@@ -8,9 +10,12 @@ import java.time.LocalDate;
 public class Holiday {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long holidayId;
 
     private LocalDate date;
+
+    private String description;
 
     public long getHolidayId() {
         return holidayId;
@@ -26,5 +31,13 @@ public class Holiday {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
