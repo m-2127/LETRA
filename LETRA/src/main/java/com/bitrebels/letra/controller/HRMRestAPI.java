@@ -50,6 +50,9 @@ public class HRMRestAPI {
 	@Autowired
 	LeaveQuotaCal leaveQuotaCal;
 
+	@Autowired
+	HolidayRepo holidayRepo;
+
 	@PostMapping("/registration")
 	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm registrationRequest) {
@@ -131,8 +134,13 @@ public class HRMRestAPI {
 
 		while(iterable.hasNext()){
 			Holiday holiday = iterable.next();
-			System.out.println(holiday.getDate() + " " + holiday.getDescription()
-								+ " " + holiday.getHolidayId());
+			if(holiday.equals(holidays.get(0)))
+			{
+				continue;
+			}
+			holiday = new Holiday(holiday.getDate(), holiday.getDescription());
+
+			holidayRepo.save(holiday);
 		}
 	}
 
