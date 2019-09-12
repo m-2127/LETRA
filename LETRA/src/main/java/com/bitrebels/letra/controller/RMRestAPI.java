@@ -212,4 +212,29 @@ public class RMRestAPI {
 
 		return new Hello("Hi " + email.getEmail());
 	}
+
+      @GetMapping("/holidayreport")
+ //     @PreAuthorize("hasRole('RM')")
+      public void holidayReport(){
+
+        //  Long userId = userService.authenticatedUser();
+
+          ReportingManager rm = rmRepo.findById(1l).get();
+          Project project = rm.getProject();
+
+          List<Employee> employeeList = employeeRepo.findByProject(project);
+          Iterator<Employee> employeeIterator = employeeList.iterator();
+
+          while(employeeIterator.hasNext()){
+              Employee employee = employeeIterator.next();
+              Long id = employee.getEmployeeId();
+              if(id==2) {
+                  User user = userRepo.findById(id).get();
+                  System.out.println(user.getAnnualQuota().getLeavesTaken());
+              }
+
+          }
+
+         // return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);
+      }
 }
