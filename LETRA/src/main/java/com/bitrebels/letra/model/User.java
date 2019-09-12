@@ -42,7 +42,6 @@ public class User{
     @NotBlank
     @Size(min = 3, max = 20)
     private String mobilenumber;
-    
 
 	@NotBlank
     @Size(min = 4, max = 6)
@@ -61,20 +60,8 @@ public class User{
     @JoinColumn(name = "hrManagerId")
     private HRManager hrManager;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-	private AnnualLeave annualQuota ;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    private CasualLeave casualQuota ;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    private SickLeave sickQuota ;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    private NoPayLeave noPayQuota ;
-
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    private MaternityLeave maternityQuota ;
+    @OneToMany(mappedBy = "user")
+    private Set<LeaveQuota> leaveQuotas;
 
 	public User() {}
 
@@ -158,44 +145,12 @@ public class User{
     	this.resetToken = resetToken;
     }
 
-    public AnnualLeave getAnnualQuota() {
-        return annualQuota;
+    public Set<LeaveQuota> getLeaveQuotas() {
+        return leaveQuotas;
     }
 
-    public void setAnnualQuota(AnnualLeave annualQuota) {
-        this.annualQuota = annualQuota;
-    }
-
-    public CasualLeave getCasualQuota() {
-        return casualQuota;
-    }
-
-    public void setCasualQuota(CasualLeave casualQuota) {
-        this.casualQuota = casualQuota;
-    }
-
-    public SickLeave getSickQuota() {
-        return sickQuota;
-    }
-
-    public void setSickQuota(SickLeave sickQuota) {
-        this.sickQuota = sickQuota;
-    }
-
-    public NoPayLeave getNoPayQuota() {
-        return noPayQuota;
-    }
-
-    public void setNoPayQuota(NoPayLeave noPayQuota) {
-        this.noPayQuota = noPayQuota;
-    }
-
-    public MaternityLeave getMaternityQuota() {
-        return maternityQuota;
-    }
-
-    public void setMaternityQuota(MaternityLeave maternityQuota) {
-        this.maternityQuota = maternityQuota;
+    public void setLeaveQuotas(Set<LeaveQuota> leaveQuotas) {
+        this.leaveQuotas = leaveQuotas;
     }
 }
 
