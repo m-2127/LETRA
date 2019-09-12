@@ -1,6 +1,7 @@
 package com.bitrebels.letra.services.LeaveResponse;
 
 import com.bitrebels.letra.model.HRManager;
+import com.bitrebels.letra.model.Leave;
 import com.bitrebels.letra.model.User;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,6 +21,7 @@ public class LeaveQuotaCal {
 
     int month, quarter;
 
+    Set<LeaveQuota> leaveQuotas = null;
     AnnualLeave annualLeave;
     CasualLeave casualLeave;
     MaternityLeave maternityLeave;
@@ -28,14 +31,24 @@ public class LeaveQuotaCal {
     public User updateQuotaOnRegistration(User user){
 
         month = LocalDate.now().getMonthValue();
-        quarter = month-1/3 + 1;
+        System.out.println(month);
+        quarter = ((month-1)/3 )+ 1;
+        System.out.println(quarter);
+
+
 
          annualLeave = new AnnualLeave();
          casualLeave = new CasualLeave();
          maternityLeave = new MaternityLeave();
          noPayLeave = new NoPayLeave();
          sickLeave = new SickLeave();
+         leaveQuotas = new HashSet<>();
 
+         leaveQuotas.add(annualLeave);
+         leaveQuotas.add(sickLeave);
+         leaveQuotas.add(noPayLeave);
+         leaveQuotas.add(maternityLeave);
+         leaveQuotas.add(casualLeave);
 
         if(quarter == 1){
             setQuota(15,12);
@@ -50,13 +63,13 @@ public class LeaveQuotaCal {
             setQuota(3,3);
         }
 
-        setAdjustedQuotaToUser(user);
+        user.setLeaveQuotas(leaveQuotas);
 
         return user;
 
         }
 
-    public void updateQuotaAnnually(HRManager hrManager){
+    public User updateQuotaAnnually(HRManager hrManager){
 
         Set<User> userSet = hrManager.getUserSet();
 
@@ -67,20 +80,44 @@ public class LeaveQuotaCal {
         while(iterator.hasNext()) {
             currentUser = iterator.next();
 
+            Set<LeaveQuota> currentUserLeaveQuotas = currentUser.getLeaveQuotas();
 
-            annualLeave = currentUser.getAnnualQuota();
-            casualLeave = currentUser.getCasualQuota();
-            maternityLeave = currentUser.getMaternityQuota();
-            noPayLeave = currentUser.getNoPayQuota();
-            sickLeave = currentUser.getSickQuota();
+            Iterator<LeaveQuota> leaveQuotaIterator = currentUserLeaveQuotas.iterator();
+
+            while(leaveQuotaIterator.hasNext()){
+                LeaveQuota leaveQuota = leaveQuotaIterator.next();
+                if(leaveQuota instanceof AnnualLeave){
+                    annualLeave = (AnnualLeave) leaveQuota;
+                }
+                else if(leaveQuota instanceof CasualLeave){
+                    casualLeave = (CasualLeave) leaveQuota;
+                }
+                else if(leaveQuota instanceof MaternityLeave){
+                    maternityLeave = (MaternityLeave) leaveQuota;
+                }
+                else if(leaveQuota instanceof NoPayLeave){
+                    noPayLeave = (NoPayLeave) leaveQuota;
+                }
+                else{
+                    sickLeave = (SickLeave) leaveQuota;
+                }
+            }
+
+
+//            annualLeave = currentUser.getAnnualQuota();
+//            casualLeave = currentUser.getCasualQuota();
+//            maternityLeave = currentUser.getMaternityQuota();
+//            noPayLeave = currentUser.getNoPayQuota();
+//            sickLeave = currentUser.getSickQuota();
 
             setQuota(15, 12);
 
-            setAdjustedQuotaToUser(currentUser);
 
-            userRepo.save(currentUser);
+         //   userRepo.save(currentUser);
+
 
         }
+        return currentUser;
     }
 
 
@@ -102,13 +139,14 @@ public class LeaveQuotaCal {
         maternityLeave.setLeavesTaken(0);
     }
 
-    public void setAdjustedQuotaToUser(User user){
-
-        user.setAnnualQuota(annualLeave);
-        user.setCasualQuota(casualLeave);
-        user.setMaternityQuota(maternityLeave);
-        user.setNoPayQuota(noPayLeave);
-        user.setSickQuota(sickLeave);
-    }
+//    public void setAdjustedQuotaToUser(User user,Set<LeaveQuota> leaveQuotas){
+//
+////        user.setAnnualQuota(annualLeave);
+////        user.setCasualQuota(casualLeave);
+////        user.setMaternityQuota(maternityLeave);
+////        user.setNoPayQuota(noPayLeave);
+////        user.setSickQuota(sickLeave);
+//        user.setLeaveQuotas(leaveQuotas);
+//    }
     }
 
