@@ -17,6 +17,11 @@ public class Holiday {
 
     private String description;
 
+    public Holiday(LocalDate date, String description) {
+        this.date = date;
+        this.description = description;
+    }
+
     public long getHolidayId() {
         return holidayId;
     }
