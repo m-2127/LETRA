@@ -8,7 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.bitrebels.letra.model.Project;
 import com.bitrebels.letra.model.ReportingManager;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ProjectRepository extends JpaRepository< Project, Long> {
 	Optional<Project> findById(Long id);
 	
