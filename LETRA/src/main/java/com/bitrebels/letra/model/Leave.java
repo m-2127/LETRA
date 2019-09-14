@@ -2,6 +2,7 @@ package com.bitrebels.letra.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,11 +24,20 @@ public class Leave implements Serializable {
     @JoinTable(name = "leave_leaveDate",
             joinColumns = @JoinColumn(name = "approved_leave"),
             inverseJoinColumns = @JoinColumn(name = "leave_date"))
-    private List<LeaveDates> dates;
+    private List<LeaveDates> leaveDates;
 
     @ManyToOne
     @JoinColumn(name="employee_id")
     private Employee employee;
+
+    @ManyToMany
+    @JoinTable(name = "leave_reportingManager",
+            joinColumns = @JoinColumn(name = "approved_leave"),
+            inverseJoinColumns = @JoinColumn(name = "reporting_manager"))
+    private List<ReportingManager> reportingManagerList = new ArrayList<>();
+
+    public Leave() {
+    }
 
     public Leave(String leaveType, String description, int duration, boolean approval) {
         LeaveType = leaveType;
@@ -44,12 +54,12 @@ public class Leave implements Serializable {
         this.id = id;
     }
 
-    public List<LeaveDates> getDates() {
-        return dates;
+    public List<LeaveDates> getLeaveDates() {
+        return leaveDates;
     }
 
-    public void setDates(List<LeaveDates> dates) {
-        this.dates = dates;
+    public void setLeaveDates(List<LeaveDates> leaveDates) {
+        this.leaveDates = leaveDates;
     }
 
     public String getLeaveType() {
@@ -90,5 +100,13 @@ public class Leave implements Serializable {
 
     public void setApproval(boolean approval) {
         this.approval = approval;
+    }
+
+    public List<ReportingManager> getReportingManager() {
+        return reportingManagerList;
+    }
+
+    public void setReportingManager(List<ReportingManager> reportingManager) {
+        this.reportingManagerList = reportingManager;
     }
 }

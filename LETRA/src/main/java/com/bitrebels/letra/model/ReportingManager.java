@@ -1,7 +1,10 @@
 package com.bitrebels.letra.model;
 
+import org.hibernate.validator.constraints.EAN;
+
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +26,10 @@ public class ReportingManager {
 
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "manager")
 	private Set<Progress> progressSet;
+
+	@ManyToMany(cascade = CascadeType.ALL,mappedBy = "reportingManagerList")
+	private List<Leave> leaveList;
+
 	
 	public ReportingManager() {}
 
@@ -61,5 +68,13 @@ public class ReportingManager {
 
 	public void setProgressSet(Set<Progress> progressSet) {
 		this.progressSet = progressSet;
+	}
+
+	public List<Leave> getLeaveList() {
+		return leaveList;
+	}
+
+	public void setLeaveList(List<Leave> leaveList) {
+		this.leaveList = leaveList;
 	}
 }

@@ -14,7 +14,7 @@ public class LeaveDates {
 
     private LocalDate date;
 
-    @ManyToMany(mappedBy = "dates", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "leaveDates", cascade = CascadeType.ALL)
     private List<Leave> leaves = new ArrayList<>();
 
     public LeaveDates(LocalDate date) {

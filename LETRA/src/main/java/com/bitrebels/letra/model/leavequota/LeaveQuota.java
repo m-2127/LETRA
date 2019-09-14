@@ -20,7 +20,7 @@ public class LeaveQuota {
 	private int leavesTaken;
 
 	@JsonIgnore
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name="user_id ")
 	private User user;
 
