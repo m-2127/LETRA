@@ -24,6 +24,7 @@ public class JwtProvider {
         return Jwts.builder()
 		                .setSubject((userPrincipal.getUsername())) //getUsername returns the email
 		                .claim("id",userPrincipal.getId() )
+                        .claim("name",userPrincipal.getName())
 		                .setIssuedAt(new Date())
 		                .setExpiration(new Date((new Date()).getTime() + EXPIRATION_TIME))
 		                .signWith(SignatureAlgorithm.HS512, SECRET)
@@ -36,6 +37,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername())) //getUsername returns the email
                 .claim("id",userPrincipal.getId() )
+                .claim("name",userPrincipal.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET)
