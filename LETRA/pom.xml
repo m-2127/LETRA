@@ -44,6 +44,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!--firebase admin sdk-->
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>6.10.0</version>
+		</dependency>
+
 		<!-- For Working with Json Web Tokens (JWT) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
