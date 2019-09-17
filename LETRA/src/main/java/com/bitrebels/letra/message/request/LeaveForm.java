@@ -27,6 +27,8 @@ public class LeaveForm {
 
 	@NotNull
 	private int noOfDays;
+
+	private String deviceToken;
 	
 
 	public String getLeaveType() {
@@ -67,5 +69,13 @@ public class LeaveForm {
 
 	public void setNoOfDays(int noOfDays) {
 		this.noOfDays = noOfDays;
+	}
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
 	}
 }

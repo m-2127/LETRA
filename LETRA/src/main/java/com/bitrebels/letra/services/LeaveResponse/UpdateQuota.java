@@ -28,9 +28,7 @@ public class UpdateQuota {
                     break;
                 }
             }
-//            AnnualLeave x = user.getAnnualQuota();
-//            x.addTaken(noOfDays);
-//            x.reduceRemaining(noOfDays);
+
         }
         else if(leaveType.equalsIgnoreCase("casual")){
             Iterator<LeaveQuota> leaveQuotaIterator = user.getLeaveQuotas().iterator();
@@ -43,9 +41,7 @@ public class UpdateQuota {
                     break;
                 }
             }
-//            CasualLeave x = user.getCasualQuota();
-//            x.addTaken(noOfDays);
-//            x.reduceRemaining(noOfDays);
+
         }
         else if(leaveType.equalsIgnoreCase("sick")){
             Iterator<LeaveQuota> leaveQuotaIterator = user.getLeaveQuotas().iterator();
@@ -58,9 +54,6 @@ public class UpdateQuota {
                     break;
                 }
             }
-//            SickLeave x = user.getSickQuota();
-//            x.addTaken(noOfDays);
-//            x.reduceRemaining(noOfDays);
         }
         else{
             Iterator<LeaveQuota> leaveQuotaIterator = user.getLeaveQuotas().iterator();
@@ -72,8 +65,7 @@ public class UpdateQuota {
                     break;
                 }
             }
-//            NoPayLeave x = user.getNoPayQuota();
-//            x.addTaken(noOfDays);
+
         }
         user.setLeaveQuotas(leaveQuotas);
         userRepo.save(user);

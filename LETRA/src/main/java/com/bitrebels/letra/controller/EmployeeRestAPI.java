@@ -4,6 +4,8 @@ import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.repository.leavequotarepo.AnnualRepo;
+import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
 import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
 import com.bitrebels.letra.services.UserService;
@@ -66,6 +68,14 @@ public class EmployeeRestAPI {
 		Long employeeId = userService.authenticatedUser();
 		Employee employee = employeeRepository.findById(employeeId).get();
 
+		//setting the device token to user and subscribing to the topic of current manager
+		User user = userRepo.findById(employeeId).get();
+		if(user.getDeviceToken() == null){
+			user.setDeviceToken(leaveForm.getDeviceToken());
+		}
+
+		String deviceToken = user.getDeviceToken();
+
         employee.getLeaveRequest().add(leaveRequest);
 		employeeRepository.save(employee);
 
@@ -82,6 +92,9 @@ public class EmployeeRestAPI {
 
 			for (Task task: tasks) {
 				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
+
+				Long rmID = task.getProject().getRm().getRmId();
+				String topic = "topicRM"+rmID;
 
 				if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
 
@@ -126,6 +139,13 @@ public class EmployeeRestAPI {
 		long employeeId = userService.authenticatedUser();
 		Employee employee = employeeRepository.findById(employeeId).get();
 		return leaveQuotaRepo.findByUser(new User());
+	}
+
+	@GetMapping("/holidayreport")
+	@PreAuthorize("hasRole('RM')")
+	public void holidayReport(){
+
+
 	}
 
 }

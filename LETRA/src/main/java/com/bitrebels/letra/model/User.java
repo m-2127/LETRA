@@ -1,5 +1,6 @@
  package com.bitrebels.letra.model;
 
+import com.bitrebels.letra.model.Firebase.Topic;
 import com.bitrebels.letra.model.leavequota.*;
 import org.hibernate.annotations.NaturalId;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -50,6 +52,8 @@ public class User{
 	@Column(name = "reset_token")
 	private String resetToken;
 
+    private String deviceToken;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.ALL})
     @JoinTable(name = "user_roles", 
     	joinColumns = @JoinColumn(name = "user_id"), 
@@ -62,6 +66,9 @@ public class User{
 
     @OneToMany(mappedBy = "user")
     private Set<LeaveQuota> leaveQuotas;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Topic> topics;
 
 	public User() {}
 
@@ -151,6 +158,22 @@ public class User{
 
     public void setLeaveQuotas(Set<LeaveQuota> leaveQuotas) {
         this.leaveQuotas = leaveQuotas;
+    }
+
+    public List<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }
 

@@ -1,4 +1,4 @@
-package com.bitrebels.letra.repository;
+package com.bitrebels.letra.repository.leavequotarepo;
 
 import java.util.List;
 
@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.bitrebels.letra.model.leavequota.AnnualLeave;
-import com.bitrebels.letra.model.leavequota.CasualLeave;
+import com.bitrebels.letra.model.leavequota.SickLeave;
 
 @Repository
-public interface CasualRepo extends JpaRepository<CasualLeave, Long> {
+public interface SickRepo extends JpaRepository<SickLeave, Long> {
 	
-	@Query("from CasualLeave")
-    public List<CasualLeave> getLeaves();
+	@Query("from SickLeave")
+    public List<SickLeave> getLeaves();
 
     //consider noOfLeave is member of AnnualLeave.java class
 //    public List<AnnualLeave> findByNoOfLeave(int noOfLeave); 

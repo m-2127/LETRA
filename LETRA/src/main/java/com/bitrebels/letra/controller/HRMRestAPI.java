@@ -7,6 +7,7 @@ import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,20 +129,67 @@ public class HRMRestAPI {
 	@PostMapping("/setholidays")
 //	@PreAuthorize("hasRole('HRM'))")
 	public void setHolidays(@RequestBody HolidaySet holidaySet){
-		List<Holiday> holidays = holidaySet.getHolidays();
+//		List<Holiday> holidays = holidaySet.getHolidays();
+//
+//		Iterator<Holiday> iterable = holidays.iterator();
+//
+//		while(iterable.hasNext()){
+//			Holiday holiday = iterable.next();
+//			if(holiday.equals(holidays.get(0)))
+//			{
+//				continue;
+//			}
+//			holiday = new Holiday(holiday.getDate(), holiday.getDescription());
+//
+//			holidayRepo.save(holiday);
+//
+//		}
+//
+//		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
+		User user;
+		user = userRepository.findById(4l).get();
+		user = leaveQuotaCal.updateQuotaOnRegistration(user);
 
-		Iterator<Holiday> iterable = holidays.iterator();
+		HRManager hrManager = hrmRepo.findById(3l).get();
+		user = leaveQuotaCal.updateQuotaAnnually(hrManager);
 
-		while(iterable.hasNext()){
-			Holiday holiday = iterable.next();
-			if(holiday.equals(holidays.get(0)))
-			{
-				continue;
+	//	userRepository.save(user);
+		Set<LeaveQuota> currentUserLeaveQuotas = user.getLeaveQuotas();
+
+		Iterator<LeaveQuota> leaveQuotaIterator = currentUserLeaveQuotas.iterator();
+
+		while(leaveQuotaIterator.hasNext()){
+			LeaveQuota leaveQuota = leaveQuotaIterator.next();
+			if(leaveQuota instanceof AnnualLeave){
+				AnnualLeave annualLeave = (AnnualLeave) leaveQuota;
+				System.out.println(annualLeave.getTotalLeaves()+" " +annualLeave.getRemainingLeaves()
+				+" "+ annualLeave.getLeavesTaken());
 			}
-			holiday = new Holiday(holiday.getDate(), holiday.getDescription());
+			else if(leaveQuota instanceof CasualLeave){
+				CasualLeave casualLeave = (CasualLeave) leaveQuota;
+				System.out.println(casualLeave.getTotalLeaves()+" " +casualLeave.getRemainingLeaves()
+						+" "+ casualLeave.getLeavesTaken());
+			}
+			else if(leaveQuota instanceof MaternityLeave){
+				MaternityLeave maternityLeave = (MaternityLeave) leaveQuota;
+				System.out.println(maternityLeave.getTotalLeaves()+" " +
+						 maternityLeave.getLeavesTaken());
+			}
+			else if(leaveQuota instanceof NoPayLeave){
+				NoPayLeave noPayLeave = (NoPayLeave) leaveQuota;
+				System.out.println(
+						noPayLeave.getLeavesTaken());
+			}
+			else{
+				SickLeave sickLeave = (SickLeave) leaveQuota;
+				System.out.println(sickLeave.getTotalLeaves()+" " + sickLeave.getRemainingLeaves()
+						+" "+ sickLeave.getLeavesTaken());
+			}
 
-			holidayRepo.save(holiday);
 		}
+
+
+
 	}
 
 }

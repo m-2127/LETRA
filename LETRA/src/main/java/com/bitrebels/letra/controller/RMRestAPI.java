@@ -8,6 +8,8 @@ import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.LeaveQuota.ManagerPDF;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
 import com.bitrebels.letra.services.UpdateProject;
 import com.bitrebels.letra.services.UpdateTask.AllocateEmployee;
@@ -63,6 +65,9 @@ public class RMRestAPI {
 
 	@Autowired
 	EndDateDetector endDateDetector;
+
+	@Autowired
+	ManagerPDF managerPDF;
 
 	@Autowired
 	ProgressDetector progressDetector;
@@ -143,13 +148,18 @@ public class RMRestAPI {
 //	@PreAuthorize("hasRole('RM')")
 	public void respondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
 
+		Long rmId = userService.authenticatedUser();
+		ReportingManager reportingManager = rmRepo.findById(rmId).get();
+
 		List<String> dates = leaveResponse.getDates();
 		List<LeaveDates> leaveDates = new ArrayList<>();
 
 		Leave leave = new Leave(leaveResponse.getLeaveType(), leaveResponse.getDescription(),
 				dates.size(), leaveResponse.isApproval());
 
-		leave.setDates(leaveDates);
+		leave.getReportingManager().add(reportingManager);
+
+		leave.setLeaveDates(leaveDates);
 
 		Long userId = leaveResponse.getEmployeeID();
 		User user = userRepo.findById(userId).get();
@@ -167,8 +177,6 @@ public class RMRestAPI {
 		}
 
 		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
-
-		leaveRepo.save(leave);
 
 	}
 
@@ -217,24 +225,25 @@ public class RMRestAPI {
  //     @PreAuthorize("hasRole('RM')")
       public void holidayReport(){
 
-        //  Long userId = userService.authenticatedUser();
-
+//          Long userId = userService.authenticatedUser();
+//
           ReportingManager rm = rmRepo.findById(1l).get();
           Project project = rm.getProject();
 
           List<Employee> employeeList = employeeRepo.findByProject(project);
-          Iterator<Employee> employeeIterator = employeeList.iterator();
+		  Employee employee = employeeRepo.findById(2l).get();
 
-          while(employeeIterator.hasNext()){
-              Employee employee = employeeIterator.next();
-              Long id = employee.getEmployeeId();
-              if(id==2) {
-                  User user = userRepo.findById(id).get();
-                  System.out.println(user.getAnnualQuota().getLeavesTaken());
-              }
+          managerPDF.pdfGenerator(employeeList,userRepo,rm , project);
 
-          }
 
-         // return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);
+          //List<Leave> leave = leaveRepo.findByEmployeeAndDatesBetween(employee,LocalDate.of(2019,5,10),LocalDate.of(2019,7,13));
+          List<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManager(
+          		LocalDate.of(2019,5,10), LocalDate.of(2019,7,13),employee,rm);
+          Iterator<Leave> leaveIterator = leave.iterator();
+				 while(leaveIterator.hasNext()) {
+				 	Leave leave1 = leaveIterator.next();
+			  System.out.println(leave1.getDescription() + "\n " + leave1.getLeaveType() +" \n" + leave1.getEmployee().getEmployeeId());
+		  }
+
       }
 }

@@ -1,4 +1,4 @@
-package com.bitrebels.letra.repository;
+package com.bitrebels.letra.repository.leavequotarepo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.bitrebels.letra.repository;
+package com.bitrebels.letra.repository.leavequotarepo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
