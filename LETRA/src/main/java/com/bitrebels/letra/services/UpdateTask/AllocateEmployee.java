@@ -3,6 +3,7 @@ package com.bitrebels.letra.services.UpdateTask;
 import com.bitrebels.letra.message.request.UpdateTask;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.repository.*;
+import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,9 @@ public class AllocateEmployee {
 
     @Autowired
     EndDateDetector endDateDetector;
+
+    @Autowired
+    TopicService topicService;
 
     public Employee allocateEmployee(UpdateTask updateTask) {
 
@@ -87,6 +91,11 @@ public class AllocateEmployee {
                 actualManager.getEmployees().add(employee);//adding the employee to RM
 
         }
+        //find user
+        User user = userRepo.findById(employee.getEmployeeId()).get();
+        //subscribing RM to employees topic
+        String topic = "EmpTopic" + employee.getEmployeeId() + "RM"+ rmId ;
+        topicService.subscribe(updateTask.getDeviceToken(),topic,user);
 
         return employee;
         //return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
