@@ -1,9 +1,11 @@
 package com.bitrebels.letra.security.jwt;
 
+import com.bitrebels.letra.repository.UserRepository;
 import com.bitrebels.letra.services.UserPrinciple;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +17,20 @@ import static com.bitrebels.letra.security.jwt.SecurityConstraints.SECRET;
 @Component
 public class JwtProvider {
 
+    @Autowired
+    UserRepository userRepo;
+
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
     public String generateJwtToken(Authentication authentication) {
 
         UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+        String name = userRepo.findById(userPrincipal.getId()).get().getName();
 
         return Jwts.builder()
 		                .setSubject((userPrincipal.getUsername())) //getUsername returns the email
 		                .claim("id",userPrincipal.getId() )
-                        .claim("name",userPrincipal.getName())
+                        .claim("name",name)
 		                .setIssuedAt(new Date())
 		                .setExpiration(new Date((new Date()).getTime() + EXPIRATION_TIME))
 		                .signWith(SignatureAlgorithm.HS512, SECRET)
@@ -33,11 +39,12 @@ public class JwtProvider {
 
     public String generateJwtToken(UserPrinciple userPrincipal) {
 
+        String name = userRepo.findById(userPrincipal.getId()).get().getName();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername())) //getUsername returns the email
                 .claim("id",userPrincipal.getId() )
-                .claim("name",userPrincipal.getName())
+                .claim("name",name)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET)
