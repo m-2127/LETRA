@@ -4,7 +4,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Notification {
 
@@ -14,9 +13,22 @@ public class Notification {
     private String title;
     private String topic;
     private String body;
-    private String empName;
+    private String name;
     private LocalDate date;
+    private boolean approval;
     private long tTL;
+
+    public Notification(String topic, String name, LocalDate date) {
+        this.topic = topic;
+        this.name = name;
+        this.date = date;
+    }
+
+    public Notification(String topic, String name, boolean approval) {
+        this.topic = topic;
+        this.name = name;
+        this.approval = approval;
+    }
 
     public long getId() {
         return id;
@@ -50,12 +62,12 @@ public class Notification {
         this.body = body;
     }
 
-    public String getEmpName() {
-        return empName;
+    public String getName() {
+        return name;
     }
 
-    public void setEmpName(String empName) {
-        this.empName = empName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDate getDate() {
@@ -72,5 +84,13 @@ public class Notification {
 
     public void settTL(long tTL) {
         this.tTL = tTL;
+    }
+
+    public boolean isApproval() {
+        return approval;
+    }
+
+    public void setApproval(boolean approval) {
+        this.approval = approval;
     }
 }
