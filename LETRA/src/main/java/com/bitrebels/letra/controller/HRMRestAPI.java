@@ -8,6 +8,7 @@ import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,9 @@ public class HRMRestAPI {
 	@Autowired
 	HolidayRepo holidayRepo;
 
+	@Autowired
+    TopicService topicService;
+
 	@PostMapping("/registration")
 	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm registrationRequest) {
@@ -67,8 +71,8 @@ public class HRMRestAPI {
 					HttpStatus.BAD_REQUEST);
 		}
 
-		long userId = userService.authenticatedUser();
-		HRManager hrManager = hrmRepo.findById(userId).get();
+		long hrmId = userService.authenticatedUser();
+		HRManager hrManager = hrmRepo.findById(hrmId).get();
 
 		// Creating user's account
 		User user = new User(registrationRequest.getName(), registrationRequest.getEmail(),
@@ -83,6 +87,10 @@ public class HRMRestAPI {
 		user.setRoles(roles);
 
 		user = leaveQuotaCal.updateQuotaOnRegistration(user);
+
+		//subscribing HRM to user topic
+        String topic = "UserTopic" + user.getId() + "HRM"+ hrmId  ;
+        topicService.subscribe(registrationRequest.getDeviceToken(),topic,user);
 
 		userRepository.save(user);
 

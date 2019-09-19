@@ -3,9 +3,12 @@ package com.bitrebels.letra.controller;
 import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
+import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.AnnualRepo;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.FireBase.NotificationService;
+import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
 import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
 import com.bitrebels.letra.services.UserService;
@@ -16,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -52,6 +56,12 @@ public class EmployeeRestAPI {
 
 	@Autowired
 	LeaveTracker leaveTracker;
+
+	@Autowired
+    TopicService topicService;
+
+	@Autowired
+    NotificationService notificationService;
 
 	@PostMapping("/applyleave")
 	@PreAuthorize("hasRole('EMPLOYEE')")
@@ -94,7 +104,8 @@ public class EmployeeRestAPI {
 				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
 
 				Long rmID = task.getProject().getRm().getRmId();
-				String topic = "topicRM"+rmID;
+				String subsTopic = "topicRM"+ rmID + "EMP" +employeeId;
+				topicService.subscribe(deviceToken,subsTopic,user);
 
 				if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
 
@@ -118,17 +129,34 @@ public class EmployeeRestAPI {
 					progressRepo.save(progress);//i think it is not necessary to save this because when leave request is saved, the progress is also saved automatically
 					leaveRequest.getProgressSet().add(progress);
 					leaveReqRepo.save(leaveRequest);
+
+                //notification received by RM
+                    String sendingTopic = "EmpTopic" + employee.getEmployeeId() + "RM"+ rmID ;
+                    Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now());
+                    notificationService.sendToEmployeesTopic(notification);
 			}
 		}
 		else{
-				progress = new Progress();
-				HRManager hrManager = userRepo.findById(employee.getEmployeeId()).get().getHrManager();
-				progress.setHrManager(hrManager);
-				progress.setLeaveRequest(leaveRequest);
-				progressRepo.save(progress);
-				leaveRequest.getProgressSet().add(progress);
-				leaveReqRepo.save(leaveRequest);
+
+		    //subscribing user to HRM's topic
+            String subsTopic = "topicHRM"+ user.getHrManager().getHrmId() + "EMP" +employeeId;
+            topicService.subscribe(deviceToken,subsTopic,user);
+
+            progress = new Progress();
+            HRManager hrManager = userRepo.findById(employee.getEmployeeId()).get().getHrManager();
+            progress.setHrManager(hrManager);
+            progress.setLeaveRequest(leaveRequest);
+            progressRepo.save(progress);
+            leaveRequest.getProgressSet().add(progress);
+            leaveReqRepo.save(leaveRequest);
+
+            //notification received by HRM
+            String sendingTopic = "UserTopic" + user.getId() + "HRM"+ user.getHrManager().getHrmId();
+            Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now());
+            notificationService.sendToEmployeesTopic(notification);
 		}
+
+
 		return new ResponseEntity<>(new ResponseMessage("Leave applied successfully"), HttpStatus.OK);
 	}
 	
