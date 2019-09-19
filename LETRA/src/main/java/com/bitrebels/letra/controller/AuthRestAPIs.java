@@ -3,6 +3,7 @@ package com.bitrebels.letra.controller;
 import com.bitrebels.letra.message.request.GoogleLogin;
 import com.bitrebels.letra.message.request.LoginForm;
 import com.bitrebels.letra.message.response.JwtResponse;
+import com.bitrebels.letra.repository.UserRepository;
 import com.bitrebels.letra.security.jwt.JwtProvider;
 import com.bitrebels.letra.services.UserDetailsServiceImpl;
 import com.bitrebels.letra.services.UserPrinciple;
@@ -35,6 +36,9 @@ public class AuthRestAPIs {
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 
+	@Autowired
+	UserRepository userRepo;
+
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
@@ -45,8 +49,10 @@ public class AuthRestAPIs {
 
 		String jwt = jwtProvider.generateJwtToken(authentication);
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+		String name = userRepo.findById(userPrincipal.getId()).get().getName();
 
-		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
+		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities(),name));
 	}
 
 	@PostMapping("/google")
@@ -55,10 +61,10 @@ public class AuthRestAPIs {
 
 		UserPrinciple userPrinciple = (UserPrinciple) userDetailsServiceImpl.loadUserByUsername(googleLogin.getEmail());
 
-
+		String name = userRepo.findById(userPrinciple.getId()).get().getName();
 
 		String jwt = jwtProvider.generateJwtToken(userPrinciple);
 
-		return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(), userPrinciple.getAuthorities()));
+		return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(), userPrinciple.getAuthorities(),name));
 	}
 }
