@@ -25,6 +25,9 @@ public class RegistrationForm {
     @Size(min = 4, max = 6)
     private String gender;
 
+    //hrm's devicetoken
+    private String deviceToken;
+
     
     public String getName() {
         return name;
@@ -65,5 +68,13 @@ public class RegistrationForm {
     
     public void setGender(String gender) {
     	this.gender = gender;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

@@ -19,6 +19,8 @@ public class UpdateTask {
 
     private String status;
 
+    private String deviceToken;
+
     Map<Long, Long> updatedTask = new HashMap<>();
 
     public Long getProjectId() {
@@ -67,5 +69,13 @@ public class UpdateTask {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

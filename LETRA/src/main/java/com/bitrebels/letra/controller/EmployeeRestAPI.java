@@ -169,11 +169,11 @@ public class EmployeeRestAPI {
 		return leaveQuotaRepo.findByUser(new User());
 	}
 
-	@GetMapping("/holidayreport")
-	@PreAuthorize("hasRole('RM')")
-	public void holidayReport(){
-
-
-	}
+//	@GetMapping("/holidayreport")
+//	@PreAuthorize("hasRole('RM')")
+//	public void holidayReport(){
+//
+//
+//	}
 
 }

@@ -34,7 +34,7 @@ public class Leave implements Serializable {
     @JoinTable(name = "leave_reportingManager",
             joinColumns = @JoinColumn(name = "approved_leave"),
             inverseJoinColumns = @JoinColumn(name = "reporting_manager"))
-    private List<ReportingManager> reportingManagerList = new ArrayList<>();
+    private List<ReportingManager> reportingManager = new ArrayList<>();
 
     public Leave() {
     }
@@ -103,10 +103,10 @@ public class Leave implements Serializable {
     }
 
     public List<ReportingManager> getReportingManager() {
-        return reportingManagerList;
+        return reportingManager;
     }
 
     public void setReportingManager(List<ReportingManager> reportingManager) {
-        this.reportingManagerList = reportingManager;
+        this.reportingManager = reportingManager;
     }
 }

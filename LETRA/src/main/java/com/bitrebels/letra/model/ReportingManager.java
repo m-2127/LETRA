@@ -27,7 +27,7 @@ public class ReportingManager {
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "manager")
 	private Set<Progress> progressSet;
 
-	@ManyToMany(cascade = CascadeType.ALL,mappedBy = "reportingManagerList")
+	@ManyToMany(cascade = CascadeType.ALL,mappedBy = "reportingManager")
 	private List<Leave> leaveList;
 
 	
