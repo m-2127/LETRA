@@ -1,9 +1,11 @@
 package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.LeaveForm;
+import com.bitrebels.letra.message.response.LeaveValidation;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
+import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.AnnualRepo;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -32,9 +35,6 @@ public class EmployeeRestAPI {
 	
 	@Autowired
 	LeaveRequestRepository leaveReqRepo;
-
-//	@Autowired
-//	LeaveQuota leaveQuota;
 
 	@Autowired
 	ACNTypeLeaves acnTypeLeaves;
@@ -175,5 +175,33 @@ public class EmployeeRestAPI {
 //
 //
 //	}
+
+	@GetMapping("/leavevalidation")
+//	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> leaveValidator(){
+
+		long employeeId = userService.authenticatedUser();
+		User user = userRepo.findById(employeeId).get();
+		Set<LeaveQuota> leaveQuotas = user.getLeaveQuotas();
+		Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+
+		int annual = 0,casual = 0, sick =0;
+
+
+		while(leaveQuotaIterator.hasNext()){
+			LeaveQuota currentQuota = leaveQuotaIterator.next();
+			if(currentQuota instanceof AnnualLeave){
+				annual = ((AnnualLeave) currentQuota).getRemainingLeaves();
+			}
+			if(currentQuota instanceof CasualLeave){
+				casual = ((CasualLeave) currentQuota).getRemainingLeaves();
+			}
+			if(currentQuota instanceof SickLeave){
+				sick = ((SickLeave) currentQuota).getRemainingLeaves();
+			}
+		}
+
+		return new ResponseEntity<>(new LeaveValidation(annual,casual,sick, user.getGender()),HttpStatus.OK);
+	}
 
 }
