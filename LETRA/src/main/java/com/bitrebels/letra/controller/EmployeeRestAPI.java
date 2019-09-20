@@ -147,7 +147,7 @@ public class EmployeeRestAPI {
             progress.setHrManager(hrManager);
             progress.setLeaveRequest(leaveRequest);
             progressRepo.save(progress);
-            leaveRequest.getProgressSet().add(progress);
+            leaveRequest.getProgressSet().add(progress);//Here it is a progress SET because 1 leave can have at most two progresses(i.e. employee working in two projects)
             leaveReqRepo.save(leaveRequest);
 
             //notification received by HRM
@@ -177,7 +177,7 @@ public class EmployeeRestAPI {
 //	}
 
 	@GetMapping("/leavevalidation")
-//	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> leaveValidator(){
 
 		long employeeId = userService.authenticatedUser();

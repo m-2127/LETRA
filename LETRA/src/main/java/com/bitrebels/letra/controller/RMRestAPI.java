@@ -11,6 +11,7 @@ import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.FireBase.NotificationService;
+import com.bitrebels.letra.services.LeaveHandler.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveQuota.ManagerPDF;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
 import com.bitrebels.letra.services.UpdateProject;
@@ -87,7 +88,10 @@ public class RMRestAPI {
 	LeaveQuotaRepository leaveQuotaRepo;
 
 	@Autowired
-      NotificationService notificationService;
+	NotificationService notificationService;
+
+	@Autowired
+	LeaveResponseService leaveResponseService;
 
 	@PostMapping("/addproject")
 //	@PreAuthorize("hasRole('RM')")
@@ -172,14 +176,9 @@ public class RMRestAPI {
 		Employee employee = employeeRepo.findById(leaveResponse.getEmployeeID()).get();
 		leave.setEmployee(employee);
 
-		leaveRepo.save(leave);
+		leave = leaveResponseService.saveLeaveDates(dates,leave);
 
-		for(String date : dates) {
-			LocalDate localDate = LocalDate.parse(date);
-			LeaveDates temp = new LeaveDates(localDate);
-			leaveDates.add(temp);
-			leaveDatesRepo.save(temp);
-		}
+		leaveRepo.save(leave);
 
 		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
 

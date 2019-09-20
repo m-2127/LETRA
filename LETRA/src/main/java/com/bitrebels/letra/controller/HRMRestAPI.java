@@ -2,14 +2,19 @@ package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.HolidaySet;
 import com.bitrebels.letra.message.request.LeaveQuotaForm;
+import com.bitrebels.letra.message.request.LeaveResponse;
 import com.bitrebels.letra.message.request.RegistrationForm;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
+import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
+import com.bitrebels.letra.services.LeaveHandler.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
+import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -57,6 +63,27 @@ public class HRMRestAPI {
 
 	@Autowired
     TopicService topicService;
+
+	@Autowired
+	UserRepository userRepo;
+
+	@Autowired
+	EmployeeRepository employeeRepo;
+
+	@Autowired
+	LeaveRepo leaveRepo;
+
+	@Autowired
+	LeaveDatesRepo leaveDatesRepo;
+
+	@Autowired
+	UpdateQuota updateQuota;
+
+	@Autowired
+	NotificationService notificationService;
+
+	@Autowired
+	LeaveResponseService leaveResponseService;
 
 	@PostMapping("/registration")
 	@PreAuthorize("hasRole('HRM')")
@@ -137,67 +164,58 @@ public class HRMRestAPI {
 	@PostMapping("/setholidays")
 //	@PreAuthorize("hasRole('HRM'))")
 	public void setHolidays(@RequestBody HolidaySet holidaySet){
-//		List<Holiday> holidays = holidaySet.getHolidays();
-//
-//		Iterator<Holiday> iterable = holidays.iterator();
-//
-//		while(iterable.hasNext()){
-//			Holiday holiday = iterable.next();
-//			if(holiday.equals(holidays.get(0)))
-//			{
-//				continue;
-//			}
-//			holiday = new Holiday(holiday.getDate(), holiday.getDescription());
-//
-//			holidayRepo.save(holiday);
-//
-//		}
-//
-//		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
-		User user;
-		user = userRepository.findById(4l).get();
-		user = leaveQuotaCal.updateQuotaOnRegistration(user);
+		List<Holiday> holidays = holidaySet.getHolidays();
 
-		HRManager hrManager = hrmRepo.findById(3l).get();
-		user = leaveQuotaCal.updateQuotaAnnually(hrManager);
+		Iterator<Holiday> iterable = holidays.iterator();
 
-	//	userRepository.save(user);
-		Set<LeaveQuota> currentUserLeaveQuotas = user.getLeaveQuotas();
+		while(iterable.hasNext()){
+			Holiday holiday = iterable.next();
+			if(holiday.equals(holidays.get(0)))
+			{
+				continue;
+			}
+			holiday = new Holiday(holiday.getDate(), holiday.getDescription());
 
-		Iterator<LeaveQuota> leaveQuotaIterator = currentUserLeaveQuotas.iterator();
-
-		while(leaveQuotaIterator.hasNext()){
-			LeaveQuota leaveQuota = leaveQuotaIterator.next();
-			if(leaveQuota instanceof AnnualLeave){
-				AnnualLeave annualLeave = (AnnualLeave) leaveQuota;
-				System.out.println(annualLeave.getTotalLeaves()+" " +annualLeave.getRemainingLeaves()
-				+" "+ annualLeave.getLeavesTaken());
-			}
-			else if(leaveQuota instanceof CasualLeave){
-				CasualLeave casualLeave = (CasualLeave) leaveQuota;
-				System.out.println(casualLeave.getTotalLeaves()+" " +casualLeave.getRemainingLeaves()
-						+" "+ casualLeave.getLeavesTaken());
-			}
-			else if(leaveQuota instanceof MaternityLeave){
-				MaternityLeave maternityLeave = (MaternityLeave) leaveQuota;
-				System.out.println(maternityLeave.getTotalLeaves()+" " +
-						 maternityLeave.getLeavesTaken());
-			}
-			else if(leaveQuota instanceof NoPayLeave){
-				NoPayLeave noPayLeave = (NoPayLeave) leaveQuota;
-				System.out.println(
-						noPayLeave.getLeavesTaken());
-			}
-			else{
-				SickLeave sickLeave = (SickLeave) leaveQuota;
-				System.out.println(sickLeave.getTotalLeaves()+" " + sickLeave.getRemainingLeaves()
-						+" "+ sickLeave.getLeavesTaken());
-			}
+			holidayRepo.save(holiday);
 
 		}
 
-
-
+//		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
 	}
 
+	@PostMapping("/leaveresponse")
+//	@PreAuthorize("hasRole('RM')")
+	public void respondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
+
+		Long hrmId = userService.authenticatedUser();
+		HRManager hrManager = hrmRepo.findById(hrmId).get();
+
+		List<String> dates = leaveResponse.getDates();
+		List<LeaveDates> leaveDates = new ArrayList<>();
+
+		Leave leave = new Leave(leaveResponse.getLeaveType(), leaveResponse.getDescription(),
+				dates.size(), leaveResponse.isApproval());
+
+		leave.setHrManager(hrManager);
+
+		leave.setLeaveDates(leaveDates);
+
+		Long userId = leaveResponse.getEmployeeID();
+		User user = userRepo.findById(userId).get();
+
+		Employee employee = employeeRepo.findById(leaveResponse.getEmployeeID()).get();
+		leave.setEmployee(employee);
+
+		leave = leaveResponseService.saveLeaveDates(dates , leave);
+
+		leaveRepo.save(leave);
+
+		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
+
+		//sending notification to employee who requesteed the leave
+		String sendingTopic = "topicRM"+ hrmId + "EMP" + userId;
+		Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval());
+		notificationService.sendToManagersTopic(notification);
+
+	}
 }

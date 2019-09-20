@@ -48,11 +48,12 @@ public class AuthRestAPIs {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		String jwt = jwtProvider.generateJwtToken(authentication);
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
-		String name = userRepo.findById(userPrincipal.getId()).get().getName();
+//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
+		String name = userRepo.findById(userPrinciple.getId()).get().getName();
 
-		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities(),name));
+		return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(),
+				userPrinciple.getAuthorities(),name));
 	}
 
 	@PostMapping("/google")

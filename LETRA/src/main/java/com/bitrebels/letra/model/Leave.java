@@ -36,6 +36,11 @@ public class Leave implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "reporting_manager"))
     private List<ReportingManager> reportingManager = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name="hrManager_id")
+    private HRManager hrManager;
+
+
     public Leave() {
     }
 
@@ -108,5 +113,13 @@ public class Leave implements Serializable {
 
     public void setReportingManager(List<ReportingManager> reportingManager) {
         this.reportingManager = reportingManager;
+    }
+
+    public HRManager getHrManager() {
+        return hrManager;
+    }
+
+    public void setHrManager(HRManager hrManager) {
+        this.hrManager = hrManager;
     }
 }

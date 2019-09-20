@@ -18,6 +18,9 @@ public class HRManager {
     @OneToMany(mappedBy = "hrManager")
     private Set<User> userSet;
 
+    @OneToMany(mappedBy = "hrManager")
+    private Set<Leave> leave;
+
     public HRManager(Long hrmId) {
         this.hrmId = hrmId;
     }
@@ -46,5 +49,11 @@ public class HRManager {
         this.userSet = userSet;
     }
 
+    public Set<Leave> getLeave() {
+        return leave;
+    }
 
+    public void setLeave(Set<Leave> leave) {
+        this.leave = leave;
+    }
 }
