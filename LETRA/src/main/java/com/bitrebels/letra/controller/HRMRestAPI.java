@@ -183,39 +183,39 @@ public class HRMRestAPI {
 //		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
 	}
 
-//	@PostMapping("/leaveresponse")
-////	@PreAuthorize("hasRole('RM')")
-//	public void hrmRespondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
-//
-//		Long hrmId = userService.authenticatedUser();
-//		HRManager hrManager = hrmRepo.findById(hrmId).get();
-//
-//		List<String> dates = leaveResponse.getDates();
-//		List<LeaveDates> leaveDates = new ArrayList<>();
-//
-//		Leave leave = new Leave(leaveResponse.getLeaveType(), leaveResponse.getDescription(),
-//				dates.size(), leaveResponse.isApproval());
-//
-//		leave.setHrManager(hrManager);
-//
-//		leave.setLeaveDates(leaveDates);
-//
-//		Long userId = leaveResponse.getEmployeeID();
-//		User user = userRepo.findById(userId).get();
-//
-//		Employee employee = employeeRepo.findById(leaveResponse.getEmployeeID()).get();
-//		leave.setEmployee(employee);
-//
-//		leave = leaveResponseService.saveLeaveDates(dates , leave);
-//
-//		leaveRepo.save(leave);
-//
-//		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
-//
-//		//sending notification to employee who requesteed the leave
-//		String sendingTopic = "topicRM"+ hrmId + "EMP" + userId;
-//		Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval());
-//		notificationService.sendToManagersTopic(notification);
-//
-//	}
+	@PostMapping("/hrmleaveresponse")
+//	@PreAuthorize("hasRole('RM')")
+	public void hrmRespondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
+
+		Long hrmId = userService.authenticatedUser();
+		HRManager hrManager = hrmRepo.findById(hrmId).get();
+
+		List<String> dates = leaveResponse.getDates();
+		List<LeaveDates> leaveDates = new ArrayList<>();
+
+		Leave leave = new Leave(leaveResponse.getLeaveType(), leaveResponse.getDescription(),
+				dates.size(), leaveResponse.isApproval());
+
+		leave.setHrManager(hrManager);
+
+		leave.setLeaveDates(leaveDates);
+
+		Long userId = leaveResponse.getEmployeeID();
+		User user = userRepo.findById(userId).get();
+
+		Employee employee = employeeRepo.findById(leaveResponse.getEmployeeID()).get();
+		leave.setEmployee(employee);
+
+		leave = leaveResponseService.saveLeaveDates(dates , leave);
+
+		leaveRepo.save(leave);
+
+		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
+
+		//sending notification to employee who requesteed the leave
+		String sendingTopic = "topicRM"+ hrmId + "EMP" + userId;
+		Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval());
+		notificationService.sendToManagersTopic(notification);
+
+	}
 }
