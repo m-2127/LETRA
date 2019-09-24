@@ -1,6 +1,7 @@
 package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.LeaveForm;
+import com.bitrebels.letra.message.request.ResetForm;
 import com.bitrebels.letra.message.response.LeaveValidation;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
@@ -13,6 +14,7 @@ import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
 import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
+import com.bitrebels.letra.services.ResetPassword;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +26,11 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/emp")
 public class EmployeeRestAPI {
 	
 	@Autowired
@@ -50,6 +53,9 @@ public class EmployeeRestAPI {
 
 	@Autowired
 	ProgressRepo progressRepo;
+
+	@Autowired
+	ResetPassword resetPassword;
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -203,5 +209,18 @@ public class EmployeeRestAPI {
 
 		return new ResponseEntity<>(new LeaveValidation(annual,casual,sick, user.getGender()),HttpStatus.OK);
 	}
+
+	@PostMapping("/reset")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
+
+		User user = userRepo.findById(userService.authenticatedUser()).get();
+		String password = resetform.getPassword();
+
+		resetPassword.setNewPassword(password, user);
+
+			return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
+		}
+
 
 }

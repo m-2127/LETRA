@@ -6,8 +6,7 @@ import javax.validation.constraints.Size;
 public class ResetForm {
     @NotBlank
     private String password;
-    
-    @NotBlank
+
     private String token;
 
 	public String getPassword() {
