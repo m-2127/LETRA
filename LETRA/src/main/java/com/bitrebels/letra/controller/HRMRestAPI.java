@@ -28,7 +28,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/admin")
 public class HRMRestAPI {
 
 	@Autowired
@@ -85,7 +85,7 @@ public class HRMRestAPI {
 	@Autowired
 	LeaveResponseService leaveResponseService;
 
-	@PostMapping("/registration")
+	@PostMapping("/manageusers")
 	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm registrationRequest) {
 
@@ -103,7 +103,7 @@ public class HRMRestAPI {
 
 		// Creating user's account
 		User user = new User(registrationRequest.getName(), registrationRequest.getEmail(),
-				encoder.encode(registrationRequest.getPassword()), registrationRequest.getMobilenumber(),
+				encoder.encode(registrationRequest.getMobilenumber()), registrationRequest.getMobilenumber(),
 				registrationRequest.getGender());
 		user.setHrManager(hrManager);
 		Set<Role> roles = new HashSet<>();
@@ -159,6 +159,21 @@ public class HRMRestAPI {
 
 		rmRepo.save(manager);
 		userRepository.save(user);
+	}
+
+	@GetMapping("/findmanager")
+	@PreAuthorize("hasRole('HRM')")
+	public Map< Long, String > setManager() {
+
+		 Iterator<User> iterator = userRepo.findByNonManagers().iterator();
+		 Map< Long, String > userMap = new HashMap<>();
+
+		 while(iterator.hasNext()){
+		 	User currentUser = iterator.next();
+		 	userMap.put(currentUser.getId(),currentUser.getName());
+		 }
+
+		 return userMap;
 	}
 
 	@PostMapping("/setholidays")
