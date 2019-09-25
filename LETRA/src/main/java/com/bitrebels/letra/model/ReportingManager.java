@@ -24,6 +24,10 @@ public class ReportingManager {
 	@JoinColumn(name="project_id",referencedColumnName = "project_id")
 	private Project project;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="user_id",referencedColumnName = "user_id")
+	private User user;
+
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "manager")
 	private Set<Progress> progressSet;
 
@@ -76,5 +80,13 @@ public class ReportingManager {
 
 	public void setLeaveList(List<Leave> leaveList) {
 		this.leaveList = leaveList;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

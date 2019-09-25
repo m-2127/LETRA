@@ -70,6 +70,9 @@ public class User{
     @ManyToMany(mappedBy = "users")
     private List<Topic> topics;
 
+    @OneToOne(mappedBy = "user")
+    private ReportingManager rm;
+
 	public User() {}
 
     public User(String name,String email, String password, String mobilenumber, String gender) {
@@ -174,6 +177,14 @@ public class User{
 
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
+    }
+
+    public ReportingManager getRm() {
+        return rm;
+    }
+
+    public void setRm(ReportingManager rm) {
+        this.rm = rm;
     }
 }
 
