@@ -3,6 +3,8 @@ package com.bitrebels.letra.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -34,8 +36,12 @@ public class LeaveRequest {
 	//time at which leave was applied
 	private LocalDateTime time;
 
-	@OneToMany(cascade = CascadeType.ALL ,mappedBy = "leaveRequest")
+	@OneToMany(mappedBy = "leaveRequest", cascade = CascadeType.ALL )
 	private Set<Progress> progressSet;
+
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "employee_id")
+	private List<Employee> employeeList = new ArrayList<>();
 
 	public LeaveRequest() {
 		super();
@@ -125,5 +131,13 @@ public class LeaveRequest {
 
 	public void setNoOfDays(int noOfDays) {
 		this.noOfDays = noOfDays;
+	}
+
+	public List<Employee> getEmployeeList() {
+		return employeeList;
+	}
+
+	public void setEmployeeList(List<Employee> employeeList) {
+		this.employeeList = employeeList;
 	}
 }

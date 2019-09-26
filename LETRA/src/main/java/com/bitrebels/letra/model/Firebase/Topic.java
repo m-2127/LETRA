@@ -12,8 +12,10 @@ public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long topic_id;
+
     private String topic;
-    @ManyToMany(cascade = {CascadeType.ALL})
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "topic_user",
             joinColumns = {@JoinColumn(name = "topic_id")},

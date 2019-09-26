@@ -12,14 +12,17 @@ public class HRManager {
     @Id
     private Long hrmId ;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "hrManager")
+    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST)
     private Set<Progress> progressSet;
 
-    @OneToMany(mappedBy = "hrManager")
+    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST)
     private Set<User> userSet;
 
-    @OneToMany(mappedBy = "hrManager")
+    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST)
     private Set<Leave> leave;
+
+    public HRManager() {
+    }
 
     public HRManager(Long hrmId) {
         this.hrmId = hrmId;

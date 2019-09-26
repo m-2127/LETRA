@@ -24,16 +24,16 @@ public class ReportingManager {
 	@JoinColumn(name="project_id",referencedColumnName = "project_id")
 	private Project project;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="user_id",referencedColumnName = "user_id")
-	private User user;
-
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "manager")
+	@OneToMany(mappedBy = "manager" , cascade = CascadeType.ALL)
 	private Set<Progress> progressSet;
 
-	@ManyToMany(cascade = CascadeType.ALL,mappedBy = "reportingManager")
+	@ManyToMany(mappedBy = "reportingManager" , cascade = CascadeType.PERSIST)
 	private List<Leave> leaveList;
 
+	//this mapping is for the case of creating sql join statements
+	@OneToOne
+	@JoinColumn(name="user_id",referencedColumnName = "user_id")
+	private User user;
 	
 	public ReportingManager() {}
 

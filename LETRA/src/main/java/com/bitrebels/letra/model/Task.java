@@ -40,11 +40,11 @@ public class Task {
 
 	private Timestamp updateTime;
 
-	@ManyToOne
-	@JoinColumn(name="project_id")
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name="project_id" )
 	private Project project;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "employee_id")
 	private Employee employee;
 

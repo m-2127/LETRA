@@ -10,24 +10,23 @@ public class Employee{
 	@Id
 	private long employeeId;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "employee_project",
 	joinColumns = @JoinColumn(name = "employee_id"),
 	inverseJoinColumns = @JoinColumn(name = "project_id")
 	)
 	private Set<Project> project;
 	
-	@ManyToMany(mappedBy = "employees")
+	@ManyToMany(mappedBy = "employees" , cascade = CascadeType.PERSIST)
 	private Set<ReportingManager> managers = new HashSet<>();
 	
-	@OneToMany(mappedBy = "employee", orphanRemoval = true)
+	@OneToMany(mappedBy = "employee", cascade = CascadeType.PERSIST)
 	private Set<Task> tasks;
 	
-    @OneToMany
-    @JoinColumn(name="employee_id")
+    @OneToMany(mappedBy = "employeeList" , cascade = CascadeType.PERSIST)
     private Set<LeaveRequest> leaveRequest;
     
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST)
     private Set<Leave> leave;
 
 	public Employee() {}

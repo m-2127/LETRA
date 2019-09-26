@@ -20,23 +20,23 @@ public class Leave implements Serializable {
 
     private boolean approval;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinTable(name = "leave_leaveDate",
             joinColumns = @JoinColumn(name = "approved_leave"),
             inverseJoinColumns = @JoinColumn(name = "leave_date"))
     private List<LeaveDates> leaveDates;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="employee_id")
     private Employee employee;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "leave_reportingManager",
             joinColumns = @JoinColumn(name = "approved_leave"),
             inverseJoinColumns = @JoinColumn(name = "reporting_manager"))
     private List<ReportingManager> reportingManager = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="hrManager_id")
     private HRManager hrManager;
 

@@ -20,7 +20,7 @@ public class LeaveQuota {
 	private int leavesTaken;
 
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name="user_id ")
 	private User user;
 

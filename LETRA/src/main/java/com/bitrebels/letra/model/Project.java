@@ -37,10 +37,10 @@ public class Project {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "project",cascade = CascadeType.ALL)
     private Set<Task> task = new HashSet<>();
     
-	@OneToOne(mappedBy = "project")
+	@OneToOne(mappedBy = "project" , cascade = CascadeType.PERSIST)
 	private ReportingManager rm;
 
-	@ManyToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "project", cascade = CascadeType.ALL )
 	private Set<Employee> employeeSet = new HashSet<>();
     
     public Project() {}

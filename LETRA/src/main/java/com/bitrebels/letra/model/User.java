@@ -60,14 +60,14 @@ public class User{
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "hrManagerId")
     private HRManager hrManager;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
     private Set<LeaveQuota> leaveQuotas;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users" , cascade = CascadeType.ALL)
     private List<Topic> topics;
 
     @OneToOne(mappedBy = "user")

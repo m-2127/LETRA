@@ -5,9 +5,6 @@ import javax.persistence.*;
 @Entity
 public class Progress {
 
-//    @EmbeddedId
-//    ProgressKey id;
-
     @Id
     private Long progressId;
 
@@ -21,16 +18,15 @@ public class Progress {
 
     private int availableDaysForLeave;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="manager_id")
     private ReportingManager manager;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="leave_id")
- //   @MapsId("leaveRequestId")
     private LeaveRequest leaveRequest;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="hrManager_id")
     private HRManager hrManager;
 
@@ -46,13 +42,13 @@ public class Progress {
         this.availableHoursOfWork = availableHoursOfWork;
     }
 
-//    public ProgressKey getId() {
-//        return id;
-//    }
-//
-//    public void setId(ProgressKey id) {
-//        this.id = id;
-//    }
+    public Long getProgressId() {
+        return progressId;
+    }
+
+    public void setProgressId(Long progressId) {
+        this.progressId = progressId;
+    }
 
     public double getCurrentProgress() {
         return Math.round(currentProgress*10)/10.0;
