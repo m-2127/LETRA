@@ -8,6 +8,7 @@ import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
+import com.bitrebels.letra.model.leavequota.LeaveQuota;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.FireBase.NotificationService;
@@ -18,12 +19,11 @@ import com.bitrebels.letra.services.UpdateProject;
 import com.bitrebels.letra.services.UpdateTask.AllocateEmployee;
 import com.bitrebels.letra.services.UpdateTask.EndDateDetector;
 import com.bitrebels.letra.services.UpdateTask.ProgressDetector;
+import com.bitrebels.letra.services.UpdateTask.TaskStatus;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +32,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
 
-  @RestController
-@RequestMapping("/api/auth")
+@RestController
+@RequestMapping("/api/rm")
 public class RMRestAPI {
 
 	@Autowired
@@ -44,6 +44,9 @@ public class RMRestAPI {
 	
 	@Autowired
 	ProjectRepository projectRepo;
+
+	@Autowired
+	HRMRepo hrmRepo;
 
 	@Autowired
 	AllocateEmployee allocateEmployee;
@@ -62,9 +65,6 @@ public class RMRestAPI {
 	
 	@Autowired
 	UserService userService;
-
-	@Autowired
-	private LeaveRequestRepository leaveRequestRepository;
 
 	@Autowired
 	EndDateDetector endDateDetector;
@@ -91,6 +91,9 @@ public class RMRestAPI {
 	NotificationService notificationService;
 
 	@Autowired
+	TaskStatus taskStatus;
+
+	@Autowired
 	LeaveResponseService leaveResponseService;
 
 	@PostMapping("/addproject")
@@ -105,6 +108,7 @@ public class RMRestAPI {
 		for (Task task : tasks) {
 			Timestamp timestamp = new Timestamp(new Date().getTime());
 			task.setUpdateTime(timestamp);
+			task.setProject(project);
 			taskRepo.save(task);
 		}
 		project.setTask(tasks);
@@ -112,49 +116,52 @@ public class RMRestAPI {
 
 		Long userId = userService.authenticatedUser();
 
-		ReportingManager rm = rmRepo.findById(userId).get();
+		ReportingManager manager = rmRepo.findById(userId).get();
 
-		project.setRm(rm);
-
-		Long rmId = userService.authenticatedUser();
-		
-		ReportingManager manager = rmRepo.getOne(rmId);
 		manager.setProject(project);
 		project.setRm(manager);
 
-	//	projectRepo.save(project);
-		rmRepo.save(manager);
+	//	rmRepo.save(manager);
+		projectRepo.save(project);
+
 
 		return new ResponseEntity<>(new ResponseMessage("Project Details added successfully!"), HttpStatus.OK);
 	}
 
 	@PostMapping("/updatetask")
 	@PreAuthorize("hasRole('RM')")
-	public ResponseEntity<?> updatetask(@ Valid @RequestBody UpdateTask updateTask) {
+	public ResponseEntity<?> updatetask(@Valid @RequestBody UpdateTask updateTask) {
 		Task task;
 
+
+		Long projectId = rmRepo.findById(userService.authenticatedUser()).get().getProject().getId();
+
         task = taskRepo.findById(updateTask.getTaskId()).get();
+		Employee employee = task.getEmployee();
+        task.setHours(updateTask.getDuration());
+        taskRepo.save(task);
 
         if(Objects.isNull(task.getEmployee())){
-            Employee employee = allocateEmployee.allocateEmployee(updateTask);
+            employee = allocateEmployee.allocateEmployee(updateTask);
             LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),taskRepo,
-                    updateTask.getProjectId(), projectRepo,employee);
+                    projectId, projectRepo,employee);
             task.setEndDate(endDate);
+            task.setEmployee(employee);
+            taskRepo.save(task);
 
         }
 
         task = progressDetector.updateProgress(updateTask, task);
 
-		if(updateTask.getStatus().equalsIgnoreCase("COMPLETED")){
-			task.setStatus(Status.COMPLETED);
-		}
+		taskStatus.updateStatus(updateTask,task);
+		employeeRepo.save(employee);
 		taskRepo.save(task);
 
 		return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
 	}
 
 	@PostMapping("/leaveresponse")
-//	@PreAuthorize("hasRole('RM')")
+	@PreAuthorize("hasRole('RM')")
 	public void respondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
 
 		Long rmId = userService.authenticatedUser();
@@ -222,37 +229,41 @@ public class RMRestAPI {
 		return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);
 	}
 
-	@MessageMapping("/view")
-	@SendTo("/rmtemplate/rm")
-		public Hello greeting(Email email) throws Exception{
-
-
-		return new Hello("Hi " + email.getEmail());
-	}
-
       @GetMapping("/holidayreport")
- //     @PreAuthorize("hasRole('RM')")
+      @PreAuthorize("hasRole('RM')")
       public void holidayReport(){
 
 //          Long userId = userService.authenticatedUser();
 //
-          ReportingManager rm = rmRepo.findById(1l).get();
-          Project project = rm.getProject();
+//          ReportingManager rm = rmRepo.findById(1l).get();
+//          Project project = rm.getProject();
+//
+//          List<Employee> employeeList = employeeRepo.findByProject(project);
+//		  Employee employee = employeeRepo.findById(2l).get();
+//
+//          managerPDF.pdfGenerator(employeeList,userRepo,rm , project);
+//
+//
+//          //List<Leave> leave = leaveRepo.findByEmployeeAndDatesBetween(employee,LocalDate.of(2019,5,10),LocalDate.of(2019,7,13));
+//          List<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManager(
+//          		LocalDate.of(2019,5,10), LocalDate.of(2019,7,13),employee,rm);
+//          Iterator<Leave> leaveIterator = leave.iterator();
+//				 while(leaveIterator.hasNext()) {
+//				 	Leave leave1 = leaveIterator.next();
+//			  System.out.println(leave1.getDescription() + "\n " + leave1.getLeaveType() +" \n" + leave1.getEmployee().getEmployeeId());
+//		  }
+	  }
 
-          List<Employee> employeeList = employeeRepo.findByProject(project);
-		  Employee employee = employeeRepo.findById(2l).get();
+	@DeleteMapping
+	@PreAuthorize("hasRole('RM')")
+	public void deleteProject(){
 
-          managerPDF.pdfGenerator(employeeList,userRepo,rm , project);
+	}
 
+	@GetMapping("/updatepage")
+	@PreAuthorize("hasRole('RM')")
+	public void findEmployees(){
+		Set<Task> tasks = rmRepo.findById(userService.authenticatedUser()).get().getProject().getTask();
 
-          //List<Leave> leave = leaveRepo.findByEmployeeAndDatesBetween(employee,LocalDate.of(2019,5,10),LocalDate.of(2019,7,13));
-          List<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManager(
-          		LocalDate.of(2019,5,10), LocalDate.of(2019,7,13),employee,rm);
-          Iterator<Leave> leaveIterator = leave.iterator();
-				 while(leaveIterator.hasNext()) {
-				 	Leave leave1 = leaveIterator.next();
-			  System.out.println(leave1.getDescription() + "\n " + leave1.getLeaveType() +" \n" + leave1.getEmployee().getEmployeeId());
-		  }
-
-      }
+	}
 }
