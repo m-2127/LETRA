@@ -49,8 +49,9 @@ public class AllocateEmployee {
 
         Employee employee;
         Long rmId = userService.authenticatedUser();
+        Long projectId = rmRepo.findById(rmId).get().getProject().getId();
 
-        Project actualProject = projectRepo.getOne(updateTask.getProjectId());
+        Project actualProject = projectRepo.getOne(projectId);
 
         Set<Project> project = new HashSet<Project>();
         project.add(actualProject);
@@ -72,10 +73,12 @@ public class AllocateEmployee {
                 Role userRole = roleRepo.findByName(RoleName.ROLE_EMPLOYEE).get();
                 user.getRoles().add(userRole);
                 employee = new Employee(project, manager, user.getId());
+                employee.setTasks(task);
 
-                employeeRepo.save(employee);
+                actualTask.setEmployee(employee);//adding employee to task
                 actualManager.getEmployees().add(employee);//adding the employee to RM
 
+   //             employeeRepo.save(employee);
                 userRepo.save(user);
         }
 
@@ -86,9 +89,10 @@ public class AllocateEmployee {
                 employee.getManagers().add(actualManager);
                 employee.getTasks().add(actualTask);
 
-                employeeRepo.save(employee);
+            actualTask.setEmployee(employee);//adding employee to task
+            actualManager.getEmployees().add(employee);//adding the employee to RM
 
-                actualManager.getEmployees().add(employee);//adding the employee to RM
+ //           employeeRepo.save(employee);
 
         }
         //find user
@@ -97,7 +101,7 @@ public class AllocateEmployee {
         String topic = "EmpTopic" + employee.getEmployeeId() + "RM"+ rmId ;
         topicService.subscribe(updateTask.getDeviceToken(),topic,user);
 
-        return employee;
+        return employee ;
         //return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
 
     }

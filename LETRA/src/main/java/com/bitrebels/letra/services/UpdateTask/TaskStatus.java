@@ -19,8 +19,13 @@ public class TaskStatus {
         String status = updateTask.getStatus();
 
         if(status.equalsIgnoreCase("Completed")){
+            task.setStatus(Status.COMPLETED);
             Employee employee = employeeRepo.findById(updateTask.getEmployeeId()).get();
             employee.getTasks().remove(task);
+        }else if(status.equalsIgnoreCase("Maintenance")){
+            task.setStatus(Status.MAINTENANCE);
+        }else if(status.equalsIgnoreCase("development")){
+            task.setStatus(Status.DEVELOPMENT);
         }
 
     }

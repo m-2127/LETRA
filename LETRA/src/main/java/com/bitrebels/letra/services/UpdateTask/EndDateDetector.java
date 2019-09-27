@@ -43,13 +43,14 @@ public class EndDateDetector {
         durationHours = task.getHours()*1.0;
         int durationDays;
 
-        /*othertask below will always be of project type(development/maintenance)opposite to the type
+        /*othertask mentioned below will always be of project type(development/maintenance)opposite to the type
         of the project of the current task*/
         Set<Task> currentTask = findOtherTask(employee, taskId);
+        //the current task set above includes all tasks of the user except for the current task
 
         /*condition below inside if condition is for the current task*/
         if (status == Status.DEVELOPMENT) {
-            //4.9 is the hours is 70% of a particular day's hours
+            //4.9 hours is 70% of a particular day's hours
             status = Status.DEVELOPMENT;
             return datePointer(currentTask,previousEndDate,task , status );
 
