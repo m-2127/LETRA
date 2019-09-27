@@ -41,7 +41,7 @@ public class LeaveRequest {
 
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "employee_id")
-	private List<Employee> employeeList = new ArrayList<>();
+	private Employee employee;
 
 	public LeaveRequest() {
 		super();
@@ -133,11 +133,11 @@ public class LeaveRequest {
 		this.noOfDays = noOfDays;
 	}
 
-	public List<Employee> getEmployeeList() {
-		return employeeList;
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setEmployeeList(List<Employee> employeeList) {
-		this.employeeList = employeeList;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 }

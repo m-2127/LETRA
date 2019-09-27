@@ -31,9 +31,9 @@ public class ReportingManager {
 	private List<Leave> leaveList;
 
 	//this mapping is for the case of creating sql join statements
-	@OneToOne
-	@JoinColumn(name="user_id",referencedColumnName = "user_id")
-	private User user;
+//	@OneToOne
+//	@JoinColumn(name="user_id",referencedColumnName = "user_id")
+//	private User user;
 	
 	public ReportingManager() {}
 
@@ -82,11 +82,11 @@ public class ReportingManager {
 		this.leaveList = leaveList;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
+//	public User getUser() {
+//		return user;
+//	}
+//
+//	public void setUser(User user) {
+//		this.user = user;
+//	}
 }

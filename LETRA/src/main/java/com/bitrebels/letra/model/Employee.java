@@ -23,7 +23,7 @@ public class Employee{
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.PERSIST)
 	private Set<Task> tasks;
 	
-    @OneToMany(mappedBy = "employeeList" , cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST)
     private Set<LeaveRequest> leaveRequest;
     
     @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST)

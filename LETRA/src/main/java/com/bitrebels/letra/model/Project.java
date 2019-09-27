@@ -37,7 +37,7 @@ public class Project {
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "project",cascade = CascadeType.ALL)
     private Set<Task> task = new HashSet<>();
     
-	@OneToOne(mappedBy = "project" , cascade = CascadeType.PERSIST)
+	@OneToOne(mappedBy = "project" , cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private ReportingManager rm;
 
 	@ManyToMany(mappedBy = "project", cascade = CascadeType.ALL )

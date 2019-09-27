@@ -70,8 +70,8 @@ public class User{
     @ManyToMany(mappedBy = "users" , cascade = CascadeType.ALL)
     private List<Topic> topics;
 
-    @OneToOne(mappedBy = "user")
-    private ReportingManager rm;
+//    @OneToOne(mappedBy = "user")
+//    private ReportingManager rm;
 
 	public User() {}
 
@@ -179,12 +179,12 @@ public class User{
         this.deviceToken = deviceToken;
     }
 
-    public ReportingManager getRm() {
-        return rm;
-    }
-
-    public void setRm(ReportingManager rm) {
-        this.rm = rm;
-    }
+//    public ReportingManager getRm() {
+//        return rm;
+//    }
+//
+//    public void setRm(ReportingManager rm) {
+//        this.rm = rm;
+//    }
 }
 
