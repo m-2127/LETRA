@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Task {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @NotBlank
     @Size(min=3, max = 50)
