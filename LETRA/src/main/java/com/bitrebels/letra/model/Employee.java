@@ -17,7 +17,7 @@ public class Employee{
 	)
 	private Set<Project> project;
 	
-	@ManyToMany(mappedBy = "employees" , cascade = CascadeType.PERSIST)
+	@ManyToMany(mappedBy = "employees" , cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<ReportingManager> managers = new HashSet<>();
 	
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.PERSIST)
