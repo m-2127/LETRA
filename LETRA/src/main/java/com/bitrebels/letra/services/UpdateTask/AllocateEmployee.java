@@ -47,7 +47,7 @@ public class AllocateEmployee {
 
     public Employee allocateEmployee(UpdateTask updateTask) {
 
-        Employee employee;
+        Employee employee = null;
         Long rmId = userService.authenticatedUser();
         Long projectId = rmRepo.findById(rmId).get().getProject().getId();
 
@@ -69,17 +69,20 @@ public class AllocateEmployee {
 
         if (!optionalemployee.isPresent()) {
             Optional<User> optionaluser = userRepo.findById(updateTask.getEmployeeId());
+            if(optionaluser.isPresent()) {
                 User user = optionaluser.get();
                 Role userRole = roleRepo.findByName(RoleName.ROLE_EMPLOYEE).get();
                 user.getRoles().add(userRole);
                 employee = new Employee(project, manager, user.getId());
                 employee.setTasks(task);
 
+
                 actualTask.setEmployee(employee);//adding employee to task
                 actualManager.getEmployees().add(employee);//adding the employee to RM
 
-   //             employeeRepo.save(employee);
+                //             employeeRepo.save(employee);
                 userRepo.save(user);
+            }
         }
 
         //if the user is currently working on a project
@@ -95,6 +98,9 @@ public class AllocateEmployee {
  //           employeeRepo.save(employee);
 
         }
+
+        actualProject.getEmployeeSet().add(employee);
+        actualManager.getEmployees().add(employee);
         //find user
         User user = userRepo.findById(employee.getEmployeeId()).get();
         //subscribing RM to employees topic
