@@ -137,24 +137,23 @@ public class RMRestAPI {
 		Long projectId = rmRepo.findById(userService.authenticatedUser()).get().getProject().getId();
 
         task = taskRepo.findById(updateTask.getTaskId()).get();
-		Employee employee = task.getEmployee();
+		//Employee employee = task.getEmployee();
         task.setHours(updateTask.getDuration());
         taskRepo.save(task);
 
         if(Objects.isNull(task.getEmployee())){
-            employee = allocateEmployee.allocateEmployee(updateTask);
-            LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),taskRepo,
-                    projectId, projectRepo,employee);
+            Employee employee = allocateEmployee.allocateEmployee(updateTask);
+            LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),
+                    projectId, employee);
             task.setEndDate(endDate);
             task.setEmployee(employee);
-            taskRepo.save(task);
 
         }
 
         task = progressDetector.updateProgress(updateTask, task);
 
 		taskStatus.updateStatus(updateTask,task);
-		employeeRepo.save(employee);
+	//	employeeRepo.save(employee);
 		taskRepo.save(task);
 
 		return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
