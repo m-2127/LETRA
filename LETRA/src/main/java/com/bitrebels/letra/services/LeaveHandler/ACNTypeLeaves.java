@@ -9,6 +9,8 @@ import com.bitrebels.letra.repository.ProgressRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 @Service
@@ -75,12 +77,26 @@ public class ACNTypeLeaves {
             availableDaysForLeave = (int)Math.ceil(availableHoursForLeave/2.1);
         }
 
+
+        currentProgressHours = round(currentProgressHours , 3);
+        requiredProgressHours = round(requiredProgressHours , 3);
+        remainingWorkInHours = round(remainingWorkInHours , 3);
+        hoursOfWorkAvailable = round(hoursOfWorkAvailable , 3);
+
         Progress progress = new Progress(currentProgressHours, requiredProgressHours, remainingWorkInHours ,
                 hoursOfWorkAvailable,availableDaysForLeave);
 
-        progressRepo.save(progress);
+       progressRepo.save(progress);
 
         return progress;
 
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }
