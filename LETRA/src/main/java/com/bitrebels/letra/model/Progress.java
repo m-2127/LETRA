@@ -6,7 +6,8 @@ import javax.persistence.*;
 public class Progress {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long progressId;
 
     private double currentProgress;
