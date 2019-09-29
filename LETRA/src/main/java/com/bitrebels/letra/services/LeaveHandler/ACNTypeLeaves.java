@@ -5,6 +5,7 @@ import com.bitrebels.letra.model.LeaveRequest;
 import com.bitrebels.letra.model.Progress;
 import com.bitrebels.letra.model.Status;
 import com.bitrebels.letra.model.Task;
+import com.bitrebels.letra.repository.ProgressRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ public class ACNTypeLeaves {
 
     @Autowired
     LeaveTracker leaveTracker;
+
+    @Autowired
+    ProgressRepo progressRepo;
 
     protected LocalDate leaveStartDate;
     protected LocalDate leaveEndDate;
@@ -73,6 +77,8 @@ public class ACNTypeLeaves {
 
         Progress progress = new Progress(currentProgressHours, requiredProgressHours, remainingWorkInHours ,
                 hoursOfWorkAvailable,availableDaysForLeave);
+
+        progressRepo.save(progress);
 
         return progress;
 
