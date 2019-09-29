@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/emp")
@@ -80,6 +77,8 @@ public class EmployeeRestAPI {
 
 		leaveRequest.setStatus(LeaveStatus.PENDING);
 
+
+
 		//retrieving the currently authenticated user
 		Long employeeId = userService.authenticatedUser();
 		Employee employee = employeeRepository.findById(employeeId).get();
@@ -93,7 +92,8 @@ public class EmployeeRestAPI {
 		String deviceToken = user.getDeviceToken();
 
         employee.getLeaveRequest().add(leaveRequest);
-		employeeRepository.save(employee);
+        leaveRequest.setEmployee(employee);
+	//	employeeRepository.save(employee);
 
 		String leaveType = leaveForm.getLeaveType();
 
@@ -103,8 +103,9 @@ public class EmployeeRestAPI {
 		int workingDays = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
 
 
-		if(!(leaveType.equalsIgnoreCase("maternity"))){
 
+		if((!(leaveType.equalsIgnoreCase("maternity"))) && !(Objects.isNull(employee))){
+			System.out.println("HI");
 
 			for (Task task: tasks) {
 				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
@@ -113,34 +114,40 @@ public class EmployeeRestAPI {
 				String subsTopic = "topicRM"+ rmID + "EMP" +employeeId;
 				topicService.subscribe(deviceToken,subsTopic,user);
 
-				if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
+				System.out.println("Shafi");
 
+				if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
+					System.out.println("Shafi inside one");
 					continue;
 				}
 				ReportingManager manager = task.getProject().getRm();
 
 				if(leaveType.equalsIgnoreCase("annual") || leaveType.equalsIgnoreCase("casual")
 						|| leaveType.equalsIgnoreCase("nopay")) {
-
+					System.out.println("Shafi inside annual condition");
 					progress = acnTypeLeaves.calculateRecommendation(task, workingDays, leaveRequest);
 					if(progress==null){
+						System.out.println("Shafi inside two");
 						continue;
 					}
 				}
 				else {
 						progress = new Progress();
 				}
+				System.out.println("Rizvi");
 					progress.setManager(manager);
+					manager.getProgressSet().add(progress);
 					progress.setLeaveRequest(leaveRequest);
-					progressRepo.save(progress);//i think it is not necessary to save this because when leave request is saved, the progress is also saved automatically
+				//	progressRepo.save(progress);//i think it is not necessary to save this because when leave request is saved, the progress is also saved automatically
 					leaveRequest.getProgressSet().add(progress);
-					leaveReqRepo.save(leaveRequest);
+
 
                 //notification received by RM
                     String sendingTopic = "EmpTopic" + employee.getEmployeeId() + "RM"+ rmID ;
                     Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now());
                     notificationService.sendToEmployeesTopic(notification);
 			}
+			leaveReqRepo.save(leaveRequest);
 		}
 		else{
 
@@ -148,9 +155,12 @@ public class EmployeeRestAPI {
             String subsTopic = "topicHRM"+ user.getHrManager().getHrmId() + "EMP" +employeeId;
             topicService.subscribe(deviceToken,subsTopic,user);
 
+            System.out.println("HI");
+
             progress = new Progress();
             HRManager hrManager = userRepo.findById(employee.getEmployeeId()).get().getHrManager();
             progress.setHrManager(hrManager);
+            hrManager.getProgressSet().add(progress);
             progress.setLeaveRequest(leaveRequest);
             progressRepo.save(progress);
             leaveRequest.getProgressSet().add(progress);//Here it is a progress SET because 1 leave can have at most two progresses(i.e. employee working in two projects)
@@ -160,8 +170,9 @@ public class EmployeeRestAPI {
             String sendingTopic = "UserTopic" + user.getId() + "HRM"+ user.getHrManager().getHrmId();
             Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now());
             notificationService.sendToEmployeesTopic(notification);
-		}
 
+			System.out.println("Shafi else");
+		}
 
 		return new ResponseEntity<>(new ResponseMessage("Leave applied successfully"), HttpStatus.OK);
 	}
