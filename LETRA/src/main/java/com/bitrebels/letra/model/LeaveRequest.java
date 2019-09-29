@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class LeaveRequest {
 	private LocalDateTime time;
 
 	@OneToMany(mappedBy = "leaveRequest", cascade = CascadeType.ALL )
-	private Set<Progress> progressSet;
+	private Set<Progress> progressSet = new HashSet<>();
 
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "employee_id")
