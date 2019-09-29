@@ -23,7 +23,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -75,6 +77,8 @@ public class EmployeeRestAPI {
 		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
 				leaveForm.getFinishDate() , leaveForm.getDescription(), leaveForm.getNoOfDays());
 
+		leaveRequest.setTime(LocalDateTime.now());
+
 		leaveRequest.setStatus(LeaveStatus.PENDING);
 
 
@@ -105,7 +109,6 @@ public class EmployeeRestAPI {
 
 
 		if((!(leaveType.equalsIgnoreCase("maternity"))) && !(Objects.isNull(employee))){
-			System.out.println("HI");
 
 			for (Task task: tasks) {
 				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
@@ -114,20 +117,16 @@ public class EmployeeRestAPI {
 				String subsTopic = "topicRM"+ rmID + "EMP" +employeeId;
 				topicService.subscribe(deviceToken,subsTopic,user);
 
-				System.out.println("Shafi");
-
 				if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
-					System.out.println("Shafi inside one");
 					continue;
 				}
 				ReportingManager manager = task.getProject().getRm();
 
 				if(leaveType.equalsIgnoreCase("annual") || leaveType.equalsIgnoreCase("casual")
 						|| leaveType.equalsIgnoreCase("nopay")) {
-					System.out.println("Shafi inside annual condition");
+
 					progress = acnTypeLeaves.calculateRecommendation(task, workingDays, leaveRequest);
 					if(progress==null){
-						System.out.println("Shafi inside two");
 						continue;
 					}
 				}
