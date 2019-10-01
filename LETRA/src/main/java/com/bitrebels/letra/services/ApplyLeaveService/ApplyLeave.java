@@ -12,15 +12,11 @@ import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
 import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
 import com.bitrebels.letra.services.UserService;
-import org.hibernate.annotations.AttributeAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ApplyLeave {
@@ -52,9 +48,9 @@ public class ApplyLeave {
     @Autowired
     LeaveTracker leaveTracker;
 
-    public void applyLeave(LeaveForm leaveForm , LeaveRequest leaveRequest, Set<Task> tasks ){
+    public void applyLeave(LeaveForm leaveForm , LeaveRequest leaveRequest, Set<Task> tasks  ){
 
-        Progress progress;
+        Progress progress = null;
         Long rmID = null;
         List<Long> progressId = new ArrayList<>();
 
@@ -120,7 +116,8 @@ public class ApplyLeave {
 
             String sendingTopic = "EmpTopic-" + employee.getEmployeeId() + "-RM-"+ rmID ;
             Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now() ,
-                        leaveReqId , progressId);
+                        leaveReqId );
+            notification.getProgress().add(progress);
             notificationService.sendToEmployeesTopic(notification);
 
             leaveReqRepo.save(leaveRequest);
@@ -165,7 +162,8 @@ public class ApplyLeave {
         //notification received by HRM
         String sendingTopic = "UserTopic-" + user.getId() + "-HRM-"+ user.getHrManager().getHrmId();
         Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now(),
-                leaveReqId, progressId);
+                leaveReqId);
+        notification.getProgress().add(progress);
         notificationService.sendToEmployeesTopic(notification);
     }
 }
