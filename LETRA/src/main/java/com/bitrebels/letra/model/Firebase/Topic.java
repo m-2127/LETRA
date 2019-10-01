@@ -23,7 +23,10 @@ public class Topic {
     )
     private List<User> users = new ArrayList<>();
 
-    public Topic( String topic) {
+    public Topic() {
+    }
+
+    public Topic(String topic) {
         this.topic = topic;
     }
 
