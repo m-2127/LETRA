@@ -1,6 +1,7 @@
 package com.bitrebels.letra.services.FireBase;
 
 import com.bitrebels.letra.model.Firebase.Notification;
+import com.bitrebels.letra.model.Progress;
 import com.bitrebels.letra.repository.firebase.NotificationRepo;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -9,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 @Service
 public class NotificationServiceImp implements NotificationService{
@@ -32,10 +37,19 @@ public class NotificationServiceImp implements NotificationService{
             return new ResponseEntity<>("Notification saving failed", HttpStatus.BAD_REQUEST);
         }
 
+        Iterator<Progress> progressIterator = notification.getProgress().iterator();
+        Map<String , String > progresses = new HashMap<>();
+
+        while(progressIterator.hasNext()){
+            Progress tempProgress = progressIterator.next();
+            progresses.put(tempProgress.getProgressId().toString() , tempProgress.getManager().getRmId().toString());
+        }
 
         Message message = Message.builder()
                 .putData("name", notification.getName())
                 .putData("date", notification.getDate().toString())
+                .putData("leaveId", notification.getLeaveReqId() + "")
+                .putAllData(progresses)
                 .setTopic(notification.getTopic())
                 .build();
 

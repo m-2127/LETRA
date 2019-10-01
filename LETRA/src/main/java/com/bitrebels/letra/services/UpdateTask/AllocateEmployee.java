@@ -104,7 +104,7 @@ public class AllocateEmployee {
         //find user
         User user = userRepo.findById(employee.getEmployeeId()).get();
         //subscribing RM to employees topic
-        String topic = "EmpTopic" + employee.getEmployeeId() + "RM"+ rmId ;
+        String topic = "EmpTopic-" + employee.getEmployeeId() + "-RM-"+ rmId ;
         topicService.subscribe(updateTask.getDeviceToken(),topic,user);
 
         return employee ;
