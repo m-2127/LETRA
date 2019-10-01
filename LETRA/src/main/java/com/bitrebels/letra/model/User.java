@@ -54,7 +54,7 @@ public class User{
 
     private String deviceToken;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade={CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.ALL})
     @JoinTable(name = "user_roles", 
     	joinColumns = @JoinColumn(name = "user_id"), 
     	inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -64,11 +64,11 @@ public class User{
     @JoinColumn(name = "hrManagerId")
     private HRManager hrManager;
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL )
     private Set<LeaveQuota> leaveQuotas;
 
-    @ManyToMany(mappedBy = "users" , cascade = CascadeType.ALL)
-    private List<Topic> topics;
+    @ManyToMany(mappedBy = "users" , cascade = CascadeType.ALL )
+    private Set<Topic> topics;
 
 //    @OneToOne(mappedBy = "user")
 //    private ReportingManager rm;
@@ -163,11 +163,11 @@ public class User{
         this.leaveQuotas = leaveQuotas;
     }
 
-    public List<Topic> getTopics() {
+    public Set<Topic> getTopics() {
         return topics;
     }
 
-    public void setTopics(List<Topic> topics) {
+    public void setTopics(Set<Topic> topics) {
         this.topics = topics;
     }
 

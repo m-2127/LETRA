@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Employee{
+public class  Employee{
 	
 	@Id
 	private long employeeId;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	@JoinTable(name = "employee_project",
 	joinColumns = @JoinColumn(name = "employee_id"),
 	inverseJoinColumns = @JoinColumn(name = "project_id")
@@ -20,13 +20,13 @@ public class Employee{
 	@ManyToMany(mappedBy = "employees" , cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<ReportingManager> managers = new HashSet<>();
 	
-	@OneToMany(mappedBy = "employee", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "employee", cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
 	private Set<Task> tasks;
 	
-    @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST )
     private Set<LeaveRequest> leaveRequest;
     
-    @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST )
     private Set<Leave> leave;
 
 	public Employee() {}

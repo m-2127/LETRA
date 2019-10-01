@@ -4,7 +4,9 @@ import com.bitrebels.letra.model.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Topic {
@@ -15,13 +17,13 @@ public class Topic {
 
     private String topic;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST )
     @JoinTable(
             name = "topic_user",
             joinColumns = {@JoinColumn(name = "topic_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     public Topic() {
     }
@@ -46,11 +48,11 @@ public class Topic {
         this.topic = topic;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

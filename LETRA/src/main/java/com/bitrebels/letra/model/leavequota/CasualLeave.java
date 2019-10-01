@@ -14,6 +14,9 @@ public class CasualLeave extends LeaveQuota {
 	@Column(name="remaining_leaves")
 	private int remainingLeaves;
 
+	public CasualLeave() {
+	}
+
 	public void reduceRemaining(int x){
 		remainingLeaves -= x;
 	}

@@ -11,9 +11,9 @@ import java.util.Set;
 public class ReportingManager {
 	
 	@Id
-	private long rmId ;
+	private Long rmId ;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL )
 	@JoinTable(name = "rm_employee",
 	joinColumns = @JoinColumn(name = "rm_id"),
 	inverseJoinColumns = @JoinColumn(name = "employee_id")
@@ -24,11 +24,11 @@ public class ReportingManager {
 	@JoinColumn(name="project_id",referencedColumnName = "project_id")
 	private Project project;
 
-	@OneToMany(mappedBy = "manager" , cascade = CascadeType.ALL)
-	private Set<Progress> progressSet;
+	@OneToMany(mappedBy = "manager" , cascade = CascadeType.ALL )
+	private Set<Progress> progressSet = new HashSet<>();
 
-	@ManyToMany(mappedBy = "reportingManager" , cascade = CascadeType.PERSIST)
-	private List<Leave> leaveList;
+	@ManyToMany(mappedBy = "reportingManager" , cascade = CascadeType.PERSIST )
+	private Set<Leave> leaveList;
 
 	//this mapping is for the case of creating sql join statements
 //	@OneToOne
@@ -42,11 +42,11 @@ public class ReportingManager {
 		this.rmId = rmId;
 	}
 
-	public long getRmId() {
+	public Long getRmId() {
 		return rmId;
 	}
 
-	public void setRmId(long rmId) {
+	public void setRmId(Long rmId) {
 		this.rmId = rmId;
 	}
 
@@ -74,15 +74,15 @@ public class ReportingManager {
 		this.progressSet = progressSet;
 	}
 
-	public List<Leave> getLeaveList() {
+	public Set<Leave> getLeaveList() {
 		return leaveList;
 	}
 
-	public void setLeaveList(List<Leave> leaveList) {
+	public void setLeaveList(Set<Leave> leaveList) {
 		this.leaveList = leaveList;
 	}
 
-//	public User getUser() {
+	//	public User getUser() {
 //		return user;
 //	}
 //

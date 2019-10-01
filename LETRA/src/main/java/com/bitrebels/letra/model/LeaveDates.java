@@ -1,9 +1,13 @@
 package com.bitrebels.letra.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class LeaveDates {
@@ -14,8 +18,12 @@ public class LeaveDates {
 
     private LocalDate date;
 
-    @ManyToMany(mappedBy = "leaveDates", cascade = CascadeType.PERSIST)
-    private List<Leave> leaves = new ArrayList<>();
+    @ManyToMany(mappedBy = "leaveDates", cascade = CascadeType.PERSIST )
+    @JsonIgnore
+    private Set<Leave> leaves = new HashSet<>();
+
+    public LeaveDates() {
+    }
 
     public LeaveDates(LocalDate date) {
         this.date = date;
@@ -37,11 +45,11 @@ public class LeaveDates {
         this.date = date;
     }
 
-    public List<Leave> getLeaves() {
+    public Set<Leave> getLeaves() {
         return leaves;
     }
 
-    public void setLeaves(List<Leave> leaves) {
+    public void setLeaves(Set<Leave> leaves) {
         this.leaves = leaves;
     }
 }

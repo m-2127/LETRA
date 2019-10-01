@@ -3,9 +3,7 @@ package com.bitrebels.letra.model;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,7 +11,7 @@ import java.util.Set;
 public class LeaveRequest {
 	@Id
 	@GeneratedValue( strategy = GenerationType.IDENTITY )
-	private long leaveId;
+	private long leaveReqId;
 	
 	@Column(name = "leave_type")
 	private String leaveType;
@@ -40,9 +38,12 @@ public class LeaveRequest {
 	@OneToMany(mappedBy = "leaveRequest", cascade = CascadeType.ALL )
 	private Set<Progress> progressSet = new HashSet<>();
 
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST )
 	@JoinColumn(name = "employee_id")
 	private Employee employee;
+
+	@OneToOne(mappedBy = "leaveRequest" , cascade = CascadeType.PERSIST)
+	private Leave leave;
 
 	public LeaveRequest() {
 		super();
@@ -61,12 +62,12 @@ public class LeaveRequest {
 	}
 
 
-	public long getLeaveId() {
-		return leaveId;
+	public long getLeaveReqId() {
+		return leaveReqId;
 	}
 
-	public void setLeaveId(long leaveId) {
-		this.leaveId = leaveId;
+	public void setLeaveReqId(long leaveReqId) {
+		this.leaveReqId = leaveReqId;
 	}
 
 	public String getLeaveType() {
@@ -140,5 +141,13 @@ public class LeaveRequest {
 
 	public void setEmployee(Employee employee) {
 		this.employee = employee;
+	}
+
+	public Leave getLeave() {
+		return leave;
+	}
+
+	public void setLeave(Leave leave) {
+		this.leave = leave;
 	}
 }

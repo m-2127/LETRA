@@ -1,11 +1,13 @@
 package com.bitrebels.letra.model.Firebase;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.bitrebels.letra.model.Progress;
+
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Notification {
@@ -20,17 +22,18 @@ public class Notification {
     private String name;
     private LocalDate date;
     private boolean approval;
-    private List<Long> progressId;
+
+    @OneToMany(mappedBy = "notification" )
+    private Set<Progress> progress = new HashSet<>();
 
     public Notification() {
     }
 
-    public Notification(String topic, String name, LocalDate date, long leaveReqId , List<Long> progressId ) {
+    public Notification(String topic, String name, LocalDate date, long leaveReqId ) {
         this.topic = topic;
         this.name = name;
         this.date = date;
         this.leaveReqId = leaveReqId;
-        this.progressId = progressId;
     }
 
     public Notification(String topic, String name, boolean approval , long leaveReqId ) {
@@ -88,12 +91,12 @@ public class Notification {
         this.date = date;
     }
 
-    public List<Long> getProgressId() {
-        return progressId;
+    public Set<Progress> getProgress() {
+        return progress;
     }
 
-    public void setProgressId(List<Long> progressId) {
-        this.progressId = progressId;
+    public void setProgress(Set<Progress> progress) {
+        this.progress = progress;
     }
 
     public boolean isApproval() {

@@ -1,9 +1,7 @@
 package com.bitrebels.letra.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,13 +10,13 @@ public class HRManager {
     @Id
     private Long hrmId ;
 
-    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST)
-    private Set<Progress> progressSet;
+    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST )
+    private Set<Progress> progressSet = new HashSet<>();
 
-    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST )
     private Set<User> userSet;
 
-    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "hrManager" , cascade = CascadeType.PERSIST )
     private Set<Leave> leave;
 
     public HRManager() {

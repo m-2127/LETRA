@@ -1,5 +1,7 @@
 package com.bitrebels.letra.model;
 
+import com.bitrebels.letra.model.Firebase.Notification;
+
 import javax.persistence.*;
 
 @Entity
@@ -31,6 +33,10 @@ public class Progress {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="hrManager_id")
     private HRManager hrManager;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "notification_id")
+    private Notification notification;
 
     public Progress() {
     }
@@ -114,5 +120,13 @@ public class Progress {
 
     public void setHrManager(HRManager hrManager) {
         this.hrManager = hrManager;
+    }
+
+    public Notification getNotification() {
+        return notification;
+    }
+
+    public void setNotification(Notification notification) {
+        this.notification = notification;
     }
 }

@@ -34,13 +34,13 @@ public class Project {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "project",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER ,mappedBy = "project")
     private Set<Task> task = new HashSet<>();
     
 	@OneToOne(mappedBy = "project" , cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private ReportingManager rm;
 
-	@ManyToMany(mappedBy = "project", cascade = CascadeType.ALL )
+	@ManyToMany(mappedBy = "project", cascade = CascadeType.ALL)
 	private Set<Employee> employeeSet = new HashSet<>();
     
     public Project() {}

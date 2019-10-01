@@ -14,6 +14,9 @@ public class AnnualLeave extends LeaveQuota {
 	@Column(name="remaining_leaves")
 	private int remainingLeaves;
 
+	public AnnualLeave() {
+	}
+
 	public void reduceRemaining(int x){
 		remainingLeaves -= x;
 	}
