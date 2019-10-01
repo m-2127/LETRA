@@ -95,7 +95,8 @@ public class EmployeeRestAPI {
 
 
 
-		Leave leave = new Leave( LeaveStatus.PENDING , employee , user.getHrManager() , leaveRequest);
+		Leave leave = new Leave( LeaveStatus.PENDING , employee , user.getHrManager() , leaveRequest,
+				employee.getProject().size());
 		leaveRequest.setLeave(leave);
 		leaveRepo.save(leave);
 
@@ -108,6 +109,7 @@ public class EmployeeRestAPI {
 		employeeRepository.save(employee);
 
 		Iterator<Project> projectIterator  = employee.getProject().iterator();
+
 
 		if(leaveForm.getLeaveType().equalsIgnoreCase("maternity") ){
 			applyLeave.applyLeaveForMaternity(leaveForm, leaveRequest);

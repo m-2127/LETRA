@@ -12,7 +12,7 @@ import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
-import com.bitrebels.letra.services.LeaveHandler.LeaveResponseService;
+import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
 import com.bitrebels.letra.services.UserService;
@@ -24,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -60,6 +59,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	HolidayRepo holidayRepo;
+
+	@Autowired
+	LeaveRequestRepository leaveReqRepo;
 
 	@Autowired
     TopicService topicService;
@@ -199,29 +201,21 @@ public class HRMRestAPI {
 	}
 
 	@PostMapping("/hrmleaveresponse")
-//	@PreAuthorize("hasRole('RM')")
+	@PreAuthorize("hasRole('HRM')")
 	public void hrmRespondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
 
 		Long hrmId = userService.authenticatedUser();
-		HRManager hrManager = hrmRepo.findById(hrmId).get();
-
 		List<String> dates = leaveResponse.getDates();
-		List<LeaveDates> leaveDates = new ArrayList<>();
 
-		Leave leave = new Leave(leaveResponse.getLeaveType(), leaveResponse.getDescription(),
-				dates.size(), leaveResponse.isApproval());
+		Leave leave = leaveRepo.findLeaveByLeaveRequest(leaveReqRepo.findById(leaveResponse.getLeaveReqId()).get());
 
-		leave.setHrManager(hrManager);
+		leave = leaveResponseService.saveLeaveDates(dates , leave);
 
-		leave.setLeaveDates(leaveDates);
+
+		leave.getDescription().add(new Description(leaveResponse.getDescription()));
 
 		Long userId = leaveResponse.getEmployeeID();
 		User user = userRepo.findById(userId).get();
-
-		Employee employee = employeeRepo.findById(leaveResponse.getEmployeeID()).get();
-		leave.setEmployee(employee);
-
-		leave = leaveResponseService.saveLeaveDates(dates , leave);
 
 		leaveRepo.save(leave);
 
@@ -229,8 +223,10 @@ public class HRMRestAPI {
 
 		//sending notification to employee who requesteed the leave
 		String sendingTopic = "topicRM"+ hrmId + "EMP" + userId;
-		Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval());
+		Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval(),leave.getId());
 		notificationService.sendToManagersTopic(notification);
 
+
+		leaveRepo.save(leave);
 	}
 }
