@@ -138,23 +138,18 @@ public class EmployeeRestAPI {
 
 			LeaveQuota leaveQuota = leaveQuotaIterator.next();
 			if(leaveQuota instanceof AnnualLeave){
-				AnnualLeave annualLeave = (AnnualLeave) leaveQuota;
 				leaveQuota.setId(1l);
 			}
 			else if(leaveQuota instanceof CasualLeave){
-				CasualLeave casualLeave = (CasualLeave) leaveQuota;
 				leaveQuota.setId(2l);
 			}
 			else if(leaveQuota instanceof MaternityLeave){
-				MaternityLeave maternityLeave = (MaternityLeave) leaveQuota;
 				leaveQuota.setId(3l);
 			}
 			else if(leaveQuota instanceof NoPayLeave){
-				NoPayLeave noPayLeave = (NoPayLeave) leaveQuota;
 				leaveQuota.setId(4l);
 			}
 			else{
-				SickLeave sickLeave = (SickLeave) leaveQuota;
 				leaveQuota.setId(5l);
 			}
 		}
