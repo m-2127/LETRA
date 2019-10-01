@@ -126,12 +126,40 @@ public class EmployeeRestAPI {
 	}
 	
 	@GetMapping("/leavequota")
-//	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('EMPLOYEE')")
 	public List<?> viewDetails(){
 
 		long employeeId = userService.authenticatedUser();
 		Employee employee = employeeRepository.findById(employeeId).get();
-		return leaveQuotaRepo.findByUser(new User());
+		List<LeaveQuota> leaveQuotas = leaveQuotaRepo.findByUser(userRepo.findById(employeeId).get());
+		Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+
+		while(leaveQuotaIterator.hasNext()){
+
+			LeaveQuota leaveQuota = leaveQuotaIterator.next();
+			if(leaveQuota instanceof AnnualLeave){
+				AnnualLeave annualLeave = (AnnualLeave) leaveQuota;
+				leaveQuota.setId(1l);
+			}
+			else if(leaveQuota instanceof CasualLeave){
+				CasualLeave casualLeave = (CasualLeave) leaveQuota;
+				leaveQuota.setId(2l);
+			}
+			else if(leaveQuota instanceof MaternityLeave){
+				MaternityLeave maternityLeave = (MaternityLeave) leaveQuota;
+				leaveQuota.setId(3l);
+			}
+			else if(leaveQuota instanceof NoPayLeave){
+				NoPayLeave noPayLeave = (NoPayLeave) leaveQuota;
+				leaveQuota.setId(4l);
+			}
+			else{
+				SickLeave sickLeave = (SickLeave) leaveQuota;
+				leaveQuota.setId(5l);
+			}
+		}
+		return leaveQuotas;
+
 	}
 
 //	@GetMapping("/holidayreport")
@@ -179,7 +207,24 @@ public class EmployeeRestAPI {
 		resetPassword.setNewPassword(password, user);
 
 			return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
-		}
+	}
+
+	@GetMapping("/clickNotification")
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	public ResponseEntity<?> requestedLeaveStatus(@RequestParam Map<String, String> requestParams) {
+
+		Long leaveId = Long.parseLong(requestParams.get("leaveId"));
+//		Long rmId = Long.parseLong(requestParams.get("rmId"));
+		Leave leave = leaveRepo.findById(leaveId).get();
+
+		Leave returning = new Leave(leave.getLeaveType(),leave.getDescription(),leave.getDuration(),leave.isApproval(),leave.getStatus(),
+				leave.getLeaveDates(),leave.getLeaveRequest());
+
+		Employee employee = employeeRepository.findById(userService.authenticatedUser()).get();
+		System.out.println(employee.getTasks().size());
+
+		return new ResponseEntity<>(returning, HttpStatus.BAD_REQUEST);
+	}
 
 
 }
