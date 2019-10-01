@@ -3,7 +3,9 @@ package com.bitrebels.letra.message.request;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeaveResponse {
+public class  LeaveResponse {
+
+    private long leaveReqId;
 
     private String leaveType;
 
@@ -54,5 +56,13 @@ public class LeaveResponse {
 
     public void setApproval(boolean approval) {
         this.approval = approval;
+    }
+
+    public long getLeaveReqId() {
+        return leaveReqId;
+    }
+
+    public void setLeaveReqId(long leaveReqId) {
+        this.leaveReqId = leaveReqId;
     }
 }

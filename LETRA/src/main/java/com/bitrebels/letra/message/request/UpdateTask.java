@@ -1,13 +1,14 @@
 package com.bitrebels.letra.message.request;
 
+import com.bitrebels.letra.services.Date.DateHandler;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UpdateTask {
-
-    @NotNull
-    private Long projectId;
 
     @NotNull
     private Long taskId;
@@ -21,15 +22,15 @@ public class UpdateTask {
 
     private String deviceToken;
 
-    Map<Long, Long> updatedTask = new HashMap<>();
+    @NotNull
+    @JsonDeserialize(using = DateHandler.class)
+    private LocalDate startdate;
 
-    public Long getProjectId() {
-        return projectId;
-    }
+//    @NotNull
+//    @JsonDeserialize(using = DateHandler.class)
+//    private LocalDate enddate;
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+    private int duration;
 
     public Long getTaskId() {
         return taskId;
@@ -45,14 +46,6 @@ public class UpdateTask {
 
     public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public Map<Long, Long> getUpdatedTask() {
-        return updatedTask;
-    }
-
-    public void setUpdatedTask(Map<Long, Long> updatedTask) {
-        this.updatedTask = updatedTask;
     }
 
     public int getProgress() {
@@ -78,4 +71,28 @@ public class UpdateTask {
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
+
+    public LocalDate getStartdate() {
+        return startdate;
+    }
+
+    public void setStartdate(LocalDate startdate) {
+        this.startdate = startdate;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+//    public LocalDate getEnddate() {
+//        return enddate;
+//    }
+//
+//    public void setEnddate(LocalDate enddate) {
+//        this.enddate = enddate;
+//    }
 }
