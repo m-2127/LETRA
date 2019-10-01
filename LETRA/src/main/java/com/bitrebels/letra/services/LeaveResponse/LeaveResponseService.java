@@ -1,4 +1,4 @@
-package com.bitrebels.letra.services.LeaveHandler;
+package com.bitrebels.letra.services.LeaveResponse;
 
 import com.bitrebels.letra.model.Leave;
 import com.bitrebels.letra.model.LeaveDates;
@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class LeaveResponseService {
@@ -24,5 +26,21 @@ public class LeaveResponseService {
         }
 
         return leave;
+    }
+
+    public void updateDatesWithCurrentResponse(Set<LeaveDates> initialDateList , List<String> finalDateList , Leave leave){
+
+        for(String date : finalDateList) {
+            LocalDate localDate = LocalDate.parse(date);
+
+            for (LeaveDates leaveDate : initialDateList) {
+
+                if(!localDate.isEqual(leaveDate.getDate())){
+                       initialDateList.remove(leaveDate);
+                }
+
+            }
+        }
+        leave.setLeaveDates(initialDateList);
     }
 }
