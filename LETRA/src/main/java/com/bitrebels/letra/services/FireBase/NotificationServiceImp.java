@@ -48,7 +48,7 @@ public class NotificationServiceImp implements NotificationService{
         Message message = Message.builder()
                 .putData("name", notification.getName())
                 .putData("date", notification.getDate().toString())
-                .putData("leaveId", notification.getLeaveReqId() + "")
+                .putData("leaveReqId", notification.getLeaveReqId() + "")
                 .putAllData(progresses)
                 .setTopic(notification.getTopic())
                 .build();

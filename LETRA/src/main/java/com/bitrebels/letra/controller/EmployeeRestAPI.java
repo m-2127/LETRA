@@ -2,6 +2,7 @@ package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.message.request.ResetForm;
+import com.bitrebels.letra.message.response.EmployeeQuotaHome;
 import com.bitrebels.letra.message.response.LeaveValidation;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
@@ -127,7 +128,7 @@ public class EmployeeRestAPI {
 	
 	@GetMapping("/leavequota")
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	public List<?> viewDetails(){
+	public ResponseEntity<?> viewDetails(){
 
 		long employeeId = userService.authenticatedUser();
 		Employee employee = employeeRepository.findById(employeeId).get();
@@ -153,7 +154,7 @@ public class EmployeeRestAPI {
 				leaveQuota.setId(5l);
 			}
 		}
-		return leaveQuotas;
+		return new ResponseEntity<>(new EmployeeQuotaHome(leaveQuotas), HttpStatus.OK);
 
 	}
 
