@@ -10,6 +10,7 @@ import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.AnnualRepo;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.ApplyLeaveService.ApplyLeave;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
@@ -23,7 +24,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -51,6 +51,9 @@ public class EmployeeRestAPI {
 	UserService userService;
 
 	@Autowired
+	TaskRepository taskRepo;
+
+	@Autowired
 	ProgressRepo progressRepo;
 
 	@Autowired
@@ -68,20 +71,20 @@ public class EmployeeRestAPI {
 	@Autowired
     NotificationService notificationService;
 
+	@Autowired
+	LeaveRepo leaveRepo;
+
+	@Autowired
+	ApplyLeave applyLeave;
+
 	@PostMapping("/applyleave")
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
 
-		Progress progress;
-
 		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
 				leaveForm.getFinishDate() , leaveForm.getDescription(), leaveForm.getNoOfDays());
 
-		leaveRequest.setTime(LocalDateTime.now());
-
-		leaveRequest.setStatus(LeaveStatus.PENDING);
-
-
+		leaveReqRepo.save(leaveRequest);
 
 		//retrieving the currently authenticated user
 		Long employeeId = userService.authenticatedUser();
@@ -89,88 +92,32 @@ public class EmployeeRestAPI {
 
 		//setting the device token to user and subscribing to the topic of current manager
 		User user = userRepo.findById(employeeId).get();
-		if(user.getDeviceToken() == null){
-			user.setDeviceToken(leaveForm.getDeviceToken());
-		}
 
-		String deviceToken = user.getDeviceToken();
+
+
+		Leave leave = new Leave( LeaveStatus.PENDING , employee , user.getHrManager() , leaveRequest);
+		leaveRequest.setLeave(leave);
+		leaveRepo.save(leave);
+
+		leaveRequest.setTime(LocalDateTime.now());
+		leaveRequest.setStatus(LeaveStatus.PENDING);
+		leaveRequest.setEmployee(employee);
 
         employee.getLeaveRequest().add(leaveRequest);
-        leaveRequest.setEmployee(employee);
-	//	employeeRepository.save(employee);
 
-		String leaveType = leaveForm.getLeaveType();
+		employeeRepository.save(employee);
 
-		Set<Task> tasks = employee.getTasks();
+		Iterator<Project> projectIterator  = employee.getProject().iterator();
 
-		//			working days between leave start date and leave end date
-		int workingDays = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
-
-
-
-		if((!(leaveType.equalsIgnoreCase("maternity"))) && !(Objects.isNull(employee))){
-
-			for (Task task: tasks) {
-				//requiredOrRemainingWork() method can be used either to calculate required work or remaining work
-
-				Long rmID = task.getProject().getRm().getRmId();
-				String subsTopic = "topicRM"+ rmID + "EMP" +employeeId;
-				topicService.subscribe(deviceToken,subsTopic,user);
-
-				if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
-					continue;
-				}
-				ReportingManager manager = task.getProject().getRm();
-
-				if(leaveType.equalsIgnoreCase("annual") || leaveType.equalsIgnoreCase("casual")
-						|| leaveType.equalsIgnoreCase("nopay")) {
-
-					progress = acnTypeLeaves.calculateRecommendation(task, workingDays, leaveRequest);
-					if(progress==null){
-						continue;
-					}
-				}
-				else {
-						progress = new Progress();
-				}
-				System.out.println("Rizvi");
-					progress.setManager(manager);
-					manager.getProgressSet().add(progress);
-					progress.setLeaveRequest(leaveRequest);
-				//	progressRepo.save(progress);//i think it is not necessary to save this because when leave request is saved, the progress is also saved automatically
-					leaveRequest.getProgressSet().add(progress);
-
-
-                //notification received by RM
-                    String sendingTopic = "EmpTopic" + employee.getEmployeeId() + "RM"+ rmID ;
-                    Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now());
-                    notificationService.sendToEmployeesTopic(notification);
-			}
-			leaveReqRepo.save(leaveRequest);
+		if(leaveForm.getLeaveType().equalsIgnoreCase("maternity") ){
+			applyLeave.applyLeaveForMaternity(leaveForm, leaveRequest);
 		}
-		else{
-
-		    //subscribing user to HRM's topic
-            String subsTopic = "topicHRM"+ user.getHrManager().getHrmId() + "EMP" +employeeId;
-            topicService.subscribe(deviceToken,subsTopic,user);
-
-            System.out.println("HI");
-
-            progress = new Progress();
-            HRManager hrManager = userRepo.findById(employee.getEmployeeId()).get().getHrManager();
-            progress.setHrManager(hrManager);
-            hrManager.getProgressSet().add(progress);
-            progress.setLeaveRequest(leaveRequest);
-            progressRepo.save(progress);
-            leaveRequest.getProgressSet().add(progress);//Here it is a progress SET because 1 leave can have at most two progresses(i.e. employee working in two projects)
-            leaveReqRepo.save(leaveRequest);
-
-            //notification received by HRM
-            String sendingTopic = "UserTopic" + user.getId() + "HRM"+ user.getHrManager().getHrmId();
-            Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now());
-            notificationService.sendToEmployeesTopic(notification);
-
-			System.out.println("Shafi else");
+		else {
+			while (projectIterator.hasNext()) {
+				Project project = projectIterator.next();
+				Set<Task> tasks = taskRepo.findTaskByEmployeeAndProject(employee, project);
+				applyLeave.applyLeave(leaveForm, leaveRequest, tasks);
+			}
 		}
 
 		return new ResponseEntity<>(new ResponseMessage("Leave applied successfully"), HttpStatus.OK);
