@@ -8,11 +8,10 @@ import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
-import com.bitrebels.letra.model.leavequota.LeaveQuota;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.FireBase.NotificationService;
-import com.bitrebels.letra.services.LeaveHandler.LeaveResponseService;
+import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveQuota.ManagerPDF;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
 import com.bitrebels.letra.services.UpdateProject;
@@ -62,12 +61,18 @@ public class RMRestAPI {
 
 	@Autowired
 	EmployeeRepository employeeRepo;
-	
+
+	@Autowired
+	ProgressRepo progressRepo;
+
 	@Autowired
 	UserService userService;
 
 	@Autowired
 	EndDateDetector endDateDetector;
+
+	@Autowired
+	LeaveDatesRepo leaveDatesRepo;
 
 	@Autowired
 	ManagerPDF managerPDF;
@@ -77,9 +82,6 @@ public class RMRestAPI {
 
 	@Autowired
 	UpdateProject updateProject;
-
-	@Autowired
-	LeaveDatesRepo leaveDatesRepo;
 
 	@Autowired
 	LeaveRepo leaveRepo;
@@ -95,6 +97,9 @@ public class RMRestAPI {
 
 	@Autowired
 	LeaveResponseService leaveResponseService;
+
+	@Autowired
+	LeaveRequestRepository leaveRequestRepo;
 
 	@PostMapping("/addproject")
 //	@PreAuthorize("hasRole('RM')")
@@ -163,35 +168,69 @@ public class RMRestAPI {
 	@PreAuthorize("hasRole('RM')")
 	public void respondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
 
+		Leave leave;
+
 		Long rmId = userService.authenticatedUser();
 		ReportingManager reportingManager = rmRepo.findById(rmId).get();
 
 		List<String> dates = leaveResponse.getDates();
-		List<LeaveDates> leaveDates = new ArrayList<>();
 
-		Leave leave = new Leave(leaveResponse.getLeaveType(), leaveResponse.getDescription(),
-				dates.size(), leaveResponse.isApproval());
+		leave = leaveRepo.findLeaveByLeaveRequest(leaveRequestRepo.findById(leaveResponse.getLeaveReqId()).get());
 
 		leave.getReportingManager().add(reportingManager);
-
-		leave.setLeaveDates(leaveDates);
+		leaveRepo.save(leave);//added reporting manager to leave because I need to get the sizeof the list of reporting managers
 
 		Long userId = leaveResponse.getEmployeeID();
 		User user = userRepo.findById(userId).get();
 
-		Employee employee = employeeRepo.findById(leaveResponse.getEmployeeID()).get();
-		leave.setEmployee(employee);
+		if(leave.getReportingManager().size() != 2 ){//this runs when the initial manager responses
+			leave.setLeaveType(leaveResponse.getLeaveType());
+			leave.getDescription().add(new Description(leaveResponse.getDescription()));
+			leave.setApproval(leaveResponse.isApproval());
+			if(leaveResponse.isApproval()) {
+				leaveResponseService.saveLeaveDates(dates,leave);
+				leave.setStatus(LeaveStatus.APPROVED);
+				leave.setDuration(leave.getLeaveDates().size());
+			}
+			else{
+				leave.setStatus(LeaveStatus.REJECTED);
+				//sending notification to employee who requested the leave
+				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
+				Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval() , leave.getId());
+				notificationService.sendToManagersTopic(notification);
+			}
 
-		leave = leaveResponseService.saveLeaveDates(dates,leave);
+			if(leave.getNoOfManagers() == 1){
+				//sending notification to employee who requested the leave
+				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
+				Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval() , leave.getId());
+				notificationService.sendToManagersTopic(notification);
+
+				updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
+			}
+		}
+		else{//this works only for the second manager
+			if(leave.getStatus() == LeaveStatus.APPROVED){//here it checks if the previous manager has approved
+				leave.getDescription().add(new Description(leaveResponse.getDescription()));
+				leave.setApproval(leaveResponse.isApproval());
+
+				if(leaveResponse.isApproval()) {
+					leave.setStatus(LeaveStatus.APPROVED);
+					leaveResponseService.updateDatesWithCurrentResponse(leave.getLeaveDates() , dates , leave);
+					leave.setDuration(leave.getLeaveDates().size());
+					updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
+				}
+				else{
+					leave.setStatus(LeaveStatus.REJECTED);
+				}
+				//sending notification to employee who requested the leave
+				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
+				Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval() , leave.getId());
+				notificationService.sendToManagersTopic(notification);
+			}
+		}
 
 		leaveRepo.save(leave);
-
-		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
-
-		//sending notification to employee who requesteed the leave
-        String sendingTopic = "topicRM"+ rmId + "EMP" + userId;
-        Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval());
-        notificationService.sendToManagersTopic(notification);
 
 	}
 
@@ -265,4 +304,20 @@ public class RMRestAPI {
 		Set<Task> tasks = rmRepo.findById(userService.authenticatedUser()).get().getProject().getTask();
 
 	}
+
+//	@GetMapping("/selectnotification")
+//	@PreAuthorize("hasRole('RM')")
+//	public ResponseEntity<?> selectnotification(@RequestParam Map<String, String> requestParams) {
+//
+//		Long userId = Long.parseLong(requestParams.get("userId"));
+//		long rmId = userService.authenticatedUser();
+//		Optional<ReportingManager> reportingManager = rmRepo.findById(rmId);
+//
+//		if(reportingManager.isPresent()){
+//			List<Progress> progressList = progressRepo.findProgressByManager(reportingManager.get());
+//		}
+//
+//
+//
+//	}
 }
