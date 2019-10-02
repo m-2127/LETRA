@@ -2,6 +2,7 @@ package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.message.request.ResetForm;
+import com.bitrebels.letra.message.response.EmpNotificationDetails;
 import com.bitrebels.letra.message.response.EmployeeQuotaHome;
 import com.bitrebels.letra.message.response.LeaveValidation;
 import com.bitrebels.letra.message.response.ResponseMessage;
@@ -111,15 +112,15 @@ public class EmployeeRestAPI {
 
 		Iterator<Project> projectIterator  = employee.getProject().iterator();
 
-
 		if(leaveForm.getLeaveType().equalsIgnoreCase("maternity") ){
 			applyLeave.applyLeaveForMaternity(leaveForm, leaveRequest);
 		}
 		else {
 			while (projectIterator.hasNext()) {
 				Project project = projectIterator.next();
+				Long rmId  = project.getRm().getRmId();
 				Set<Task> tasks = taskRepo.findTaskByEmployeeAndProject(employee, project);
-				applyLeave.applyLeave(leaveForm, leaveRequest, tasks);
+				applyLeave.applyLeave(leaveForm, leaveRequest, tasks , rmId);
 			}
 		}
 
@@ -205,22 +206,16 @@ public class EmployeeRestAPI {
 			return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping("/clickNotification")
+	@GetMapping("/selectnotification")
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> requestedLeaveStatus(@RequestParam Map<String, String> requestParams) {
 
 		Long leaveId = Long.parseLong(requestParams.get("leaveId"));
-//		Long rmId = Long.parseLong(requestParams.get("rmId"));
+		Long rmId = Long.parseLong(requestParams.get("rmId"));
+		String rmName = userRepo.findById(rmId).get().getName();
 		Leave leave = leaveRepo.findById(leaveId).get();
 
-		Leave returning = new Leave(leave.getLeaveType(),leave.getDescription(),leave.getDuration(),leave.isApproval(),leave.getStatus(),
-				leave.getLeaveDates(),leave.getLeaveRequest());
-
-		Employee employee = employeeRepository.findById(userService.authenticatedUser()).get();
-		System.out.println(employee.getTasks().size());
-
-		return new ResponseEntity<>(returning, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new EmpNotificationDetails(leave , rmName), HttpStatus.BAD_REQUEST);
 	}
-
 
 }
