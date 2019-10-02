@@ -5,6 +5,7 @@ import com.bitrebels.letra.message.request.LeaveResponse;
 import com.bitrebels.letra.message.request.ProjectForm;
 import com.bitrebels.letra.message.request.UpdateTask;
 import com.bitrebels.letra.message.response.ProjectStatus;
+import com.bitrebels.letra.message.response.RMNotificationDetails;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
@@ -305,19 +306,21 @@ public class RMRestAPI {
 
 	}
 
-//	@GetMapping("/selectnotification")
-//	@PreAuthorize("hasRole('RM')")
-//	public ResponseEntity<?> selectnotification(@RequestParam Map<String, String> requestParams) {
-//
-//		Long userId = Long.parseLong(requestParams.get("userId"));
-//		long rmId = userService.authenticatedUser();
-//		Optional<ReportingManager> reportingManager = rmRepo.findById(rmId);
-//
-//		if(reportingManager.isPresent()){
-//			List<Progress> progressList = progressRepo.findProgressByManager(reportingManager.get());
-//		}
-//
-//
-//
-//	}
+	@GetMapping("/selectnotification")
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> selectnotification(@RequestParam Map<String, String> requestParams) {
+
+		Long leaveReqId = Long.parseLong(requestParams.get("leaveReqId"));
+		LeaveRequest leaveRequest = leaveRequestRepo.findById(leaveReqId).get();
+		long employeeId = leaveRequest.getEmployee().getEmployeeId();
+		String name = userRepo.findById(employeeId).get().getName();
+
+		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
+		Set<Progress> progresses = progressRepo.findProgressByLeaveRequestAndManager(leaveRequest, manager);
+
+		RMNotificationDetails response  = new RMNotificationDetails(leaveRequest , progresses , employeeId , name );
+
+		return new ResponseEntity<>(response , HttpStatus.OK);
+
+	}
 }
