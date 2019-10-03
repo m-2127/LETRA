@@ -12,17 +12,17 @@ import java.time.LocalDate;
 public class Task {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank
     @Size(min=3, max = 50)
-    private String name;
+    private String taskName;
 
     @NotNull
-    private LocalDate startDate;
+    private LocalDate taskStartDate;
 
     @NotNull
-    private LocalDate endDate;
+    private LocalDate taskEndDate;
     
     @NotBlank
     @Size(min=10, max = 50)
@@ -48,10 +48,10 @@ public class Task {
 	@JoinColumn(name = "employee_id")
 	private Employee employee;
 
-	public Task(String name, LocalDate startDate, String description, int duration) {
+	public Task(String taskName, LocalDate taskStartDate, String description, int duration) {
 		super();
-		this.name = name;
-		this.startDate = startDate;
+		this.taskName = taskName;
+		this.taskStartDate = taskStartDate;
 		this.description = description;
 		this.hours = duration;
 	}
@@ -70,28 +70,28 @@ public class Task {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getTaskName() {
+		return taskName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
-	public LocalDate getStartDate() {
-		return startDate;
+	public LocalDate getTaskStartDate() {
+		return taskStartDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
-		this.startDate = startDate;
+	public void setTaskStartDate(LocalDate taskStartDate) {
+		this.taskStartDate = taskStartDate;
 	}
 
-	public LocalDate getEndDate() {
-		return endDate;
+	public LocalDate getTaskEndDate() {
+		return taskEndDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
+	public void setTaskEndDate(LocalDate taskEndDate) {
+		this.taskEndDate = taskEndDate;
 	}
 
 	public String getDescription() {
