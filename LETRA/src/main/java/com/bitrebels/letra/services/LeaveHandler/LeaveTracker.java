@@ -24,7 +24,8 @@ public class LeaveTracker {
 //    the workDays in below functions are multiplied by 7 considering the
 //    number of work hours per day as 7
 
-    public double requiredWork(LocalDate firstDate, LocalDate secondDate, LocalDate taskEndDate, Status status){
+    public double requiredWork(LocalDate firstDate, LocalDate secondDate, LocalDate taskEndDate, Status status,
+                               int totalHoursOfTask){
         //firstDate= task start date
         //secondDate= leave start date
 
@@ -42,7 +43,14 @@ public class LeaveTracker {
             workingDays = countWorkingDays(firstDate,secondDate);
         }
 
-        return countHours(workingDays, status);
+        double requiredWork = countHours(workingDays, status);
+
+        if( requiredWork >= totalHoursOfTask ) {
+            return totalHoursOfTask;
+        }else{
+            return requiredWork;
+        }
+
     }
 
     public double leftWorkHours( LocalDate taskEndDate,
@@ -176,7 +184,7 @@ public class LeaveTracker {
 
 
     public double currentProgress(LocalDate leaveStartDate , int actualCurrentProgress, Timestamp lastUpdate,
-                               Status status){
+                               Status status, int totalHoursOfTheTask){
         /* This method is used to calculate the number of hours that have been worked till the start date of
         leave but not updated to the database. That is the work done + the work which will be done till the
          start date of the leave. Returns the total number of hours completed as at the start date of the leave
@@ -191,10 +199,23 @@ public class LeaveTracker {
         int daysSinceLastUpdate = countWorkingDays(lastUpdateDate, dateOfLeave);
 
         if(status.equals(Status.DEVELOPMENT)) {
-            return daysSinceLastUpdate *4.9 + actualCurrentProgress;
+
+            double currentProgress = daysSinceLastUpdate *4.9 + actualCurrentProgress;
+
+            if( currentProgress >= totalHoursOfTheTask ) {
+                return totalHoursOfTheTask;
+            }else{
+                return currentProgress;
+            }
         }
         else{
-            return daysSinceLastUpdate *2.1 + actualCurrentProgress;
+            double currentProgress = daysSinceLastUpdate *2.1 + actualCurrentProgress;
+
+            if( currentProgress >= totalHoursOfTheTask ) {
+                return totalHoursOfTheTask;
+            }else{
+                return currentProgress;
+            }
         }
     }
 
