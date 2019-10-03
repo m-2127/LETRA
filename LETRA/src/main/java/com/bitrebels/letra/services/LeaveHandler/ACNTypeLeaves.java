@@ -32,14 +32,14 @@ public class ACNTypeLeaves {
 
         double currentProgressHours;
 
-        taskStartDate = task.getStartDate();
-        taskEndDate = task.getEndDate();
+        taskStartDate = task.getTaskStartDate();
+        taskEndDate = task.getTaskEndDate();
         leaveStartDate = leaveRequest.getSetDate();
         leaveEndDate = leaveRequest.getFinishDate();
 
-        if(task.getStatus().equals(Status.COMPLETED)|| task.getEndDate().isBefore(leaveRequest.getSetDate())||
-                task.getStartDate().isAfter(leaveRequest.getFinishDate())||
-                task.getStartDate().isEqual(leaveRequest.getFinishDate())){
+        if(task.getStatus().equals(Status.COMPLETED)|| task.getTaskEndDate().isBefore(leaveRequest.getSetDate())||
+                task.getTaskStartDate().isAfter(leaveRequest.getFinishDate())||
+                task.getTaskStartDate().isEqual(leaveRequest.getFinishDate())){
             return null;
         }
 
@@ -47,24 +47,28 @@ public class ACNTypeLeaves {
 
 
         //required progress refers to the expected progress as of the date of the leave start
+        //tested
         double requiredProgressHours = leaveTracker.requiredWork(taskStartDate,leaveStartDate,
-                                taskEndDate,task.getStatus());
+                                taskEndDate,task.getStatus(),task.getHours());
 
          /*current progress refers to the actual progress as at the leave start date(An assumption is made here
          considering that the employee will complete 4.9/2.1 hours of the task each from the date of leave being
          applied to the date of leave start)*/
          if(taskStartDate.isBefore(leaveStartDate)) {
+             //tested
              currentProgressHours = leaveTracker.currentProgress(leaveStartDate, task.getProgress(),
-                     task.getUpdateTime(), task.getStatus());
+                     task.getUpdateTime(), task.getStatus(),task.getHours());
          }else{
              currentProgressHours = 0.0;
          }
 
         //number of hours remaining to complete the task from the leave end date
+        //tested
         double hoursOfWorkAvailable = leaveTracker.leftWorkHours(taskEndDate,
                 leaveEndDate,task.getStatus());
 
         //actual work left from the day of the leave
+        //tested
         double remainingWorkInHours = leaveTracker.remainingWorkInHours( currentProgressHours, task.getHours());
 
         double availableHoursForLeave = leaveTracker.availableHoursForLeave(currentProgressHours,
@@ -84,7 +88,7 @@ public class ACNTypeLeaves {
         hoursOfWorkAvailable = round(hoursOfWorkAvailable , 3);
 
         Progress progress = new Progress(currentProgressHours, requiredProgressHours, remainingWorkInHours ,
-                hoursOfWorkAvailable,availableDaysForLeave);
+                hoursOfWorkAvailable,availableDaysForLeave , task.getTaskName());
 
        progressRepo.save(progress);
 
