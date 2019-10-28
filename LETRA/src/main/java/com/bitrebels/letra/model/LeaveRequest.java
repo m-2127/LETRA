@@ -1,5 +1,7 @@
 package com.bitrebels.letra.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,14 +37,17 @@ public class LeaveRequest {
 	//time at which leave was applied
 	private LocalDateTime time;
 
-	@OneToMany(mappedBy = "leaveRequest", cascade = CascadeType.ALL )
+	@JsonIgnore
+	@OneToMany(mappedBy = "leaveRequest", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
 	private Set<Progress> progressSet = new HashSet<>();
 
-	@ManyToOne(cascade = CascadeType.PERSIST )
+	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.PERSIST , fetch = FetchType.LAZY)
 	@JoinColumn(name = "employee_id")
 	private Employee employee;
 
-	@OneToOne(mappedBy = "leaveRequest" , cascade = CascadeType.PERSIST)
+	@JsonIgnore
+	@OneToOne(mappedBy = "leaveRequest" , cascade = CascadeType.PERSIST , fetch = FetchType.LAZY)
 	private Leave leave;
 
 	public LeaveRequest() {

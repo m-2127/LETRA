@@ -5,10 +5,7 @@ import com.bitrebels.letra.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UpdateProject {
@@ -51,8 +48,6 @@ public class UpdateProject {
                 projectSet.add(project);
 
                 employee = new Employee(projectSet, managerSet, user.getId());
-                reportingManager.getEmployees().add(employee);
-                project.getEmployeeSet().add(employee);
 
                 userRepo.save(user);
             }
@@ -62,6 +57,7 @@ public class UpdateProject {
                 employee.getProject().add(project);
                 employee.getManagers().add(reportingManager);
             }
+
             reportingManager.getEmployees().add(employee);
             project.getEmployeeSet().add(employee);
             employeeRepo.save(employee);
@@ -76,6 +72,22 @@ public class UpdateProject {
             //taskRepo.ge
             projectRepo.save(project);
             rmRepo.save(reportingManager);
+        }
+    }
+
+    public void updateProjectStatusAndTasks(String taskStatus , Project project){
+
+        if(taskStatus.equalsIgnoreCase("completed")) {
+            project.setStatus(Status.COMPLETED);
+            taskRepo.updateTaskStatus(Status.COMPLETED , project);
+        }
+        else if(taskStatus.equalsIgnoreCase("development")){
+            project.setStatus(Status.DEVELOPMENT);
+            taskRepo.updateTaskStatus(Status.DEVELOPMENT , project);
+        }
+        else{
+            project.setStatus(Status.MAINTENANCE);
+            taskRepo.updateTaskStatus(Status.MAINTENANCE , project);
         }
     }
 }

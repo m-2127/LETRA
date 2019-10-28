@@ -2,10 +2,7 @@ package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.message.request.ResetForm;
-import com.bitrebels.letra.message.response.EmpNotificationDetails;
-import com.bitrebels.letra.message.response.EmployeeQuotaHome;
-import com.bitrebels.letra.message.response.LeaveValidation;
-import com.bitrebels.letra.message.response.ResponseMessage;
+import com.bitrebels.letra.message.response.*;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.model.leavequota.*;
@@ -218,4 +215,31 @@ public class EmployeeRestAPI {
 		return new ResponseEntity<>(new EmpNotificationDetails(leave , rmName), HttpStatus.BAD_REQUEST);
 	}
 
+	@GetMapping("/leavehistory")
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	public ResponseEntity<?> leaveHistory(){
+
+		long employeeId = userService.authenticatedUser();
+		Employee employee = employeeRepository.findById(employeeId).get();
+		Set<Leave> leaveSet = employee.getLeave();
+
+		Iterator<Leave> leaveIterator = leaveSet.iterator();
+
+		List<LeaveHistory> leaveHistories = new ArrayList<>();
+
+		while(leaveIterator.hasNext()){
+			Leave temp = leaveIterator.next();
+			Set<Description> descriptions = temp.getDescription();
+			Set<LeaveDates> leaveDates = temp.getLeaveDates();
+
+			LeaveHistory leaveHistory = new LeaveHistory(temp.getId(),temp.getLeaveType(),temp.getDuration());
+
+			leaveHistory.setDescriptions(descriptions);
+			leaveHistory.setLeaveDates(leaveDates);
+
+			leaveHistories.add(leaveHistory);
+		}
+
+		return new ResponseEntity<>(leaveHistories , HttpStatus.OK);
+	}
 }

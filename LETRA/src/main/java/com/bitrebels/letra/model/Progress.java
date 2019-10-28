@@ -1,6 +1,7 @@
 package com.bitrebels.letra.model;
 
 import com.bitrebels.letra.model.Firebase.Notification;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -22,32 +23,39 @@ public class Progress {
 
     private int availableDaysForLeave;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST , fetch = FetchType.LAZY)
     @JoinColumn(name="manager_id")
     private ReportingManager manager;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JoinColumn(name="leave_id")
     private LeaveRequest leaveRequest;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST ,fetch = FetchType.LAZY)
     @JoinColumn(name="hrManager_id")
     private HRManager hrManager;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST , fetch = FetchType.LAZY)
     @JoinColumn(name = "notification_id")
     private Notification notification;
+
+    private String taskName;
 
     public Progress() {
     }
 
     public Progress(double currentProgress, double requiredProgress, double remainingWork,
-                    double availableHoursOfWork, int availableDaysForLeave) {
+                    double availableHoursOfWork, int availableDaysForLeave , String taskName ) {
         this.currentProgress = currentProgress;
         this.requiredProgress = requiredProgress;
         this.remainingWork = remainingWork;
         this.availableDaysForLeave = availableDaysForLeave;
         this.availableHoursOfWork = availableHoursOfWork;
+        this.taskName = taskName;
     }
 
     public Long getProgressId() {
@@ -129,4 +137,13 @@ public class Progress {
     public void setNotification(Notification notification) {
         this.notification = notification;
     }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
 }

@@ -205,6 +205,7 @@ public class HRMRestAPI {
 	public void hrmRespondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
 
 		Long hrmId = userService.authenticatedUser();
+		String hrmName = userRepo.findById(hrmId).get().getName();
 		List<String> dates = leaveResponse.getDates();
 
 		Leave leave = leaveRepo.findLeaveByLeaveRequest(leaveReqRepo.findById(leaveResponse.getLeaveReqId()).get());
@@ -212,7 +213,7 @@ public class HRMRestAPI {
 		leave = leaveResponseService.saveLeaveDates(dates , leave);
 
 
-		leave.getDescription().add(new Description(leaveResponse.getDescription()));
+		leave.getDescription().add(new Description(leaveResponse.getDescription(), hrmName));
 
 		Long userId = leaveResponse.getEmployeeID();
 		User user = userRepo.findById(userId).get();

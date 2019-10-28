@@ -15,11 +15,14 @@ public class Description {
     @JoinColumn(name = "leave_id")
     private Leave leave;
 
+    private String managerName;
+
     public Description() {
     }
 
-    public Description(String description) {
+    public Description(String description, String mangerName) {
         this.description = description;
+        this.managerName = mangerName;
     }
 
     public long getId() {
@@ -44,5 +47,13 @@ public class Description {
 
     public void setLeave(Leave leave) {
         this.leave = leave;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
     }
 }

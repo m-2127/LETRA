@@ -15,7 +15,14 @@ public class EmployeeAllocation{
 
     public EmployeeAllocation() {
     }
-    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public List<Long> getAddedEmp() {
         return addedEmp;

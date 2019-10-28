@@ -5,9 +5,7 @@ import com.bitrebels.letra.model.Project;
 import com.bitrebels.letra.model.Status;
 import com.bitrebels.letra.model.Task;
 import com.bitrebels.letra.repository.*;
-import com.bitrebels.letra.services.Date.DateToLocalDate;
 import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
-import javafx.scene.effect.SepiaTone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +37,7 @@ public class EndDateDetector {
     public LocalDate deriveEndDate( long taskId, long projectId, Employee employee) {
 
         Task task = taskRepo.getOne(taskId);
-        datePointer = task.getStartDate();
+        datePointer = task.getTaskStartDate();
         LocalDate previousEndDate = null;
 
         Project project = projectRepo.getOne(projectId);
@@ -91,7 +89,7 @@ public class EndDateDetector {
             boolean holidaychecker = holidayRepo.existsHolidayByDate(datePointer);
 
             //duration indicates the maximum number of times this loop can iterate
-            while((!checkIfTargetAchieved()) && (duration>0)) {
+            while((!isWorkCompleted()) && (duration>0)) {
 
                 if (datePointerCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY &&
                         datePointerCal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && !holidaychecker) {
@@ -115,10 +113,10 @@ public class EndDateDetector {
              this.datePointer = LocalDateTime.ofInstant(datePointerCal.toInstant(),
                     datePointerCal.getTimeZone().toZoneId()).toLocalDate();
 
-            return checkIfTargetAchieved();
+            return isWorkCompleted();
         }
 
-        public boolean checkIfTargetAchieved(){
+        public boolean isWorkCompleted(){
             if(completedWorkHours>=durationHours){
                 return true;
             }
@@ -132,48 +130,56 @@ public class EndDateDetector {
             int days;
             //-2 to remove the days inclusive of previousenddate and othertask start date
             if(previousEndDate!=null) {
-                if (((previousEndDate.isAfter(task.getStartDate())) || (previousEndDate.isEqual(task.getStartDate()))) &&
-                        otherTask.getStartDate().isAfter(task.getStartDate())) {
-                    days = leaveTracker.countWorkingDays(previousEndDate, otherTask.getStartDate()) - 2;
+                if (((previousEndDate.isAfter(task.getTaskStartDate())) || (previousEndDate.isEqual(task.getTaskStartDate()))) &&
+                        otherTask.getTaskStartDate().isAfter(task.getTaskStartDate())) {
+                    days = leaveTracker.countWorkingDays(previousEndDate, otherTask.getTaskStartDate()) - 2;
                     if(addDay(datePointer, days, /*2,*/status)){
                         return datePointer;
                     }
                 }
             }
 
-            if (otherTask.getEndDate().isBefore(task.getStartDate())) {
+            if (otherTask.getTaskEndDate().isBefore(task.getTaskStartDate())) {
                 continue;
             }
 
-            if((task.getStartDate().isEqual(otherTask.getEndDate()))){
+            if((task.getTaskStartDate().isEqual(otherTask.getTaskEndDate()))){
                 if(addDay(datePointer,1,/*2,*/status)){
                     return datePointer;
                 }
             }
 
-            if(((otherTask.getStartDate().isEqual(task.getStartDate()))|| (otherTask.getStartDate().isBefore(task.getStartDate())))){
-                days = leaveTracker.countWorkingDays(task.getStartDate(), otherTask.getEndDate());
+            if(((otherTask.getTaskStartDate().isEqual(task.getTaskStartDate()))|| (otherTask.getTaskStartDate().isBefore(task.getTaskStartDate())))){
+                days = leaveTracker.countWorkingDays(task.getTaskStartDate(), otherTask.getTaskEndDate());
                 if(addDay(datePointer,days,/*2,*/status)){
                     return datePointer;
+
                 }
             }
 
-            if(otherTask.getStartDate().isAfter(task.getStartDate())){
-                days = leaveTracker.countWorkingDays(otherTask.getStartDate(), otherTask.getEndDate());
+            if(otherTask.getTaskStartDate().isAfter(task.getTaskStartDate())){
+                days = leaveTracker.countWorkingDays(otherTask.getTaskStartDate(), otherTask.getTaskEndDate());
                 if(addDay(datePointer,days,/*2,*/status)){
                     return datePointer;
                 }
             }
-            previousEndDate = otherTask.getEndDate();
+            previousEndDate = otherTask.getTaskEndDate();
         } //foreach loop if condition
 
         return finalCal(status);
     }
 
     public LocalDate finalCal(Status status){
-        if(!checkIfTargetAchieved()){
+        if(!isWorkCompleted()){
             double remainingDurationHours = durationHours - completedWorkHours;
-            int remainingDurationDays = (int)Math.ceil(remainingDurationHours/4.9);
+            int remainingDurationDays;
+
+            if(status == Status.DEVELOPMENT){
+                remainingDurationDays = (int)Math.ceil(remainingDurationHours/4.9);
+            }
+            else {
+                remainingDurationDays = (int) Math.ceil(remainingDurationHours / 2.1);
+            }
             addDay(datePointer,remainingDurationDays,/*2,*/status);
         }
         return datePointer;

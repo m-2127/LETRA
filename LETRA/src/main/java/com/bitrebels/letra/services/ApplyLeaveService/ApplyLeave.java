@@ -3,10 +3,7 @@ package com.bitrebels.letra.services.ApplyLeaveService;
 import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
-import com.bitrebels.letra.repository.EmployeeRepository;
-import com.bitrebels.letra.repository.LeaveRequestRepository;
-import com.bitrebels.letra.repository.ProgressRepo;
-import com.bitrebels.letra.repository.UserRepository;
+import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
@@ -48,15 +45,19 @@ public class ApplyLeave {
     @Autowired
     LeaveTracker leaveTracker;
 
-    public void applyLeave(LeaveForm leaveForm , LeaveRequest leaveRequest, Set<Task> tasks  ){
+    @Autowired
+    RMRepository rmRepository;
+
+    public void applyLeave(LeaveForm leaveForm , LeaveRequest leaveRequest, Set<Task> tasks , long rmId ){
 
         Progress progress = null;
-        Long rmID = null;
         List<Long> progressId = new ArrayList<>();
 
         String leaveType = leaveForm.getLeaveType();
 
         long leaveReqId = leaveRequest.getLeaveReqId();
+
+        ReportingManager manager = rmRepository.findById(rmId).get();
 
         //working days between leave start date and leave end date
         int workingDays = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
@@ -74,16 +75,20 @@ public class ApplyLeave {
 
         if((!(leaveType.equalsIgnoreCase("maternity"))) && !(Objects.isNull(employee))){
 
+            String subsTopic = "topicRM-"+ rmId + "-EMP-" +employeeId;
+            topicService.subscribe(deviceToken,subsTopic,user);
+
+            //notification received by RM
+            String sendingTopic = "EmpTopic-" + employee.getEmployeeId() + "-RM-"+ rmId ;
+            Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now() ,
+                    leaveReqId );
+
             for (Task task: tasks) {
                 //requiredOrRemainingWork() method can be used either to calculate required work or remaining work
 
-                rmID = task.getProject().getRm().getRmId();
-
-
-                if(task.getEndDate().isBefore(leaveRequest.getSetDate()) || task.getStartDate().isAfter(leaveRequest.getFinishDate())){
+                if(task.getTaskEndDate().isBefore(leaveRequest.getSetDate()) || task.getTaskStartDate().isAfter(leaveRequest.getFinishDate())){
                     continue;
                 }
-                ReportingManager manager = task.getProject().getRm();
 
                 if(leaveType.equalsIgnoreCase("annual") || leaveType.equalsIgnoreCase("casual")
                         || leaveType.equalsIgnoreCase("nopay")) {
@@ -102,21 +107,25 @@ public class ApplyLeave {
                 progress.setLeaveRequest(leaveRequest);
                 leaveRequest.getProgressSet().add(progress);
                 progress.setHrManager(user.getHrManager());
+                progress.setNotification(notification);
                 progressRepo.save(progress);
-
-                //notification received by RM
 
                 progressId.add(progress.getProgressId());
 
 
             }
 
-            String subsTopic = "topicRM-"+ rmID + "-EMP-" +employeeId;
-            topicService.subscribe(deviceToken,subsTopic,user);
+            if(progress == null){
+                progress = new Progress();
+                progress.setManager(manager);
+                manager.getProgressSet().add(progress);
+                progress.setLeaveRequest(leaveRequest);
+                leaveRequest.getProgressSet().add(progress);
+                progress.setHrManager(user.getHrManager());
+                progress.setNotification(notification);
+                progressRepo.save(progress);
+            }
 
-            String sendingTopic = "EmpTopic-" + employee.getEmployeeId() + "-RM-"+ rmID ;
-            Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now() ,
-                        leaveReqId );
             notification.getProgress().add(progress);
             notificationService.sendToEmployeesTopic(notification);
 

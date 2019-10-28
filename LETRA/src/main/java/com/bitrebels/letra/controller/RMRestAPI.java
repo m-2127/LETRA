@@ -151,7 +151,7 @@ public class RMRestAPI {
             Employee employee = allocateEmployee.allocateEmployee(updateTask);
             LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),
                     projectId, employee);
-            task.setEndDate(endDate);
+            task.setTaskEndDate(endDate);
             task.setEmployee(employee);
 
         }
@@ -173,6 +173,7 @@ public class RMRestAPI {
 
 		Long rmId = userService.authenticatedUser();
 		ReportingManager reportingManager = rmRepo.findById(rmId).get();
+		String managerName = userRepo.findById(rmId).get().getName();
 
 		List<String> dates = leaveResponse.getDates();
 
@@ -186,7 +187,7 @@ public class RMRestAPI {
 
 		if(leave.getReportingManager().size() != 2 ){//this runs when the initial manager responses
 			leave.setLeaveType(leaveResponse.getLeaveType());
-			leave.getDescription().add(new Description(leaveResponse.getDescription()));
+			leave.getDescription().add(new Description(leaveResponse.getDescription(),managerName));
 			leave.setApproval(leaveResponse.isApproval());
 			if(leaveResponse.isApproval()) {
 				leaveResponseService.saveLeaveDates(dates,leave);
@@ -197,14 +198,14 @@ public class RMRestAPI {
 				leave.setStatus(LeaveStatus.REJECTED);
 				//sending notification to employee who requested the leave
 				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-				Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval() , leave.getId());
+				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
 				notificationService.sendToManagersTopic(notification);
 			}
 
 			if(leave.getNoOfManagers() == 1){
 				//sending notification to employee who requested the leave
 				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-				Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval() , leave.getId());
+				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
 				notificationService.sendToManagersTopic(notification);
 
 				updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
@@ -212,7 +213,7 @@ public class RMRestAPI {
 		}
 		else{//this works only for the second manager
 			if(leave.getStatus() == LeaveStatus.APPROVED){//here it checks if the previous manager has approved
-				leave.getDescription().add(new Description(leaveResponse.getDescription()));
+				leave.getDescription().add(new Description(leaveResponse.getDescription() , managerName));
 				leave.setApproval(leaveResponse.isApproval());
 
 				if(leaveResponse.isApproval()) {
@@ -226,7 +227,7 @@ public class RMRestAPI {
 				}
 				//sending notification to employee who requested the leave
 				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-				Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval() , leave.getId());
+				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
 				notificationService.sendToManagersTopic(notification);
 			}
 		}
@@ -240,16 +241,14 @@ public class RMRestAPI {
 	public ResponseEntity<?> updateProject(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
 		
 		Long rmId = userService.authenticatedUser();
-
 		ReportingManager reportingManager = rmRepo.findById(rmId).get();
-
 		Project project = projectRepo.findByRm(reportingManager).get();
 
 		List<Long> addedEmployees = employeeAllocation.getAddedEmp();
 		List<Long> deletedEmployess = employeeAllocation.getDeletedEmp();
 
 		updateProject.addEmployees(reportingManager, project, addedEmployees);
-
+		updateProject.updateProjectStatusAndTasks(employeeAllocation.getStatus(),project);
 
 
 		return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
@@ -299,11 +298,35 @@ public class RMRestAPI {
 
 	}
 
-	@GetMapping("/updatepage")
+	@GetMapping("/returnemployees1")
 	@PreAuthorize("hasRole('RM')")
-	public void findEmployees(){
-		Set<Task> tasks = rmRepo.findById(userService.authenticatedUser()).get().getProject().getTask();
+	public Map<Long , String> findEmployees1(){
+		List<User> userList = userRepo.findAll();
+		Map<Long , String> userMap = new HashMap<>();
+		Iterator<User> userIterator = userList.iterator();
+		while(userIterator.hasNext()){
+			User user = userIterator.next();
+			long id = user.getId();
+			String name = user.getName();
+			userMap.put(id,name);
+		}
+		return userMap;
+	}
 
+	@GetMapping("/returnemployees2")
+	@PreAuthorize("hasRole('RM')")
+	public Map<Long , String> findEmployees2(){
+		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
+		Set<Employee> employeeList = manager.getEmployees();
+		Map<Long , String> employeeMap = new HashMap<>();
+		Iterator<Employee> employeeIterator = employeeList.iterator();
+		while(employeeIterator.hasNext()){
+			Employee employee = employeeIterator.next();
+			long id = employee.getEmployeeId();
+			String name = userRepo.findById(id).get().getName();
+			employeeMap.put(id,name);
+		}
+		return employeeMap;
 	}
 
 	@GetMapping("/selectnotification")

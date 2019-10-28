@@ -31,7 +31,7 @@ public class Leave implements Serializable {
     @Column(name = "status")
     private LeaveStatus status;
 
-    @ManyToMany(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
+    @ManyToMany( cascade = CascadeType.ALL)
     @JoinTable(name = "leave_leaveDate",
             joinColumns = @JoinColumn(name = "approved_leave"),
             inverseJoinColumns = @JoinColumn(name = "leave_date"))
@@ -39,9 +39,11 @@ public class Leave implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST )
     @JoinColumn(name="employee_id")
+    @JsonIgnore
     private Employee employee;
 
     @ManyToMany(cascade = CascadeType.PERSIST )
+    @JsonIgnore
     @JoinTable(name = "leave_reportingManager",
             joinColumns = @JoinColumn(name = "approved_leave"),
             inverseJoinColumns = @JoinColumn(name = "reporting_manager"))
@@ -49,10 +51,12 @@ public class Leave implements Serializable {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="hrManager_id")
+    @JsonIgnore
     private HRManager hrManager;
 
     @OneToOne
-    @JoinColumn(columnDefinition = "leaveReqId" , referencedColumnName = "leaveReqId")
+    @JoinColumn(name = "leaveReqId" , referencedColumnName = "leaveReqId")
+    @JsonIgnore
     private LeaveRequest leaveRequest;
 
 
