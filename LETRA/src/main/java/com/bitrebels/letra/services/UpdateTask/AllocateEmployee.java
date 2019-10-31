@@ -56,9 +56,9 @@ public class AllocateEmployee {
         Set<Project> project = new HashSet<Project>();
         project.add(actualProject);
 
-        Task actualTask = taskRepo.findById(updateTask.getTaskId()).get();
-        Set<Task> task = new HashSet<Task>();
-        task.add(actualTask);
+       // Task actualTask = taskRepo.findById(updateTask.getTaskId()).get();
+      //  Set<Task> task = new HashSet<Task>();
+       // task.add(actualTask);
 
         ReportingManager actualManager = rmRepo.getOne(rmId);
         Set<ReportingManager> manager = new HashSet<>();
@@ -74,10 +74,10 @@ public class AllocateEmployee {
                 Role userRole = roleRepo.findByName(RoleName.ROLE_EMPLOYEE).get();
                 user.getRoles().add(userRole);
                 employee = new Employee(project, manager, user.getId());
-                employee.setTasks(task);
+             //   employee.setTasks(task);
 
 
-                actualTask.setEmployee(employee);//adding employee to task
+            //    actualTask.setEmployee(employee);//adding employee to task
                 actualManager.getEmployees().add(employee);//adding the employee to RM
 
                 //             employeeRepo.save(employee);
@@ -90,9 +90,9 @@ public class AllocateEmployee {
                 employee = optionalemployee.get();
                 employee.getProject().add(actualProject);
                 employee.getManagers().add(actualManager);
-                employee.getTasks().add(actualTask);
+            //   employee.getTasks().add(actualTask);
 
-            actualTask.setEmployee(employee);//adding employee to task
+          // actualTask.setEmployee(employee);//adding employee to task
             actualManager.getEmployees().add(employee);//adding the employee to RM
 
  //           employeeRepo.save(employee);
