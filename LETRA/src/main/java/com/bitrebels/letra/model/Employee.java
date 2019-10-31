@@ -21,7 +21,7 @@ public class  Employee{
 	private Set<ReportingManager> managers = new HashSet<>();
 
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.PERSIST,fetch = FetchType.LAZY)
-	private Set<Task> tasks;
+	private Set<Task> tasks = new HashSet<>();
 
     @OneToMany(mappedBy = "employee" , cascade = CascadeType.PERSIST )
     private Set<LeaveRequest> leaveRequest;

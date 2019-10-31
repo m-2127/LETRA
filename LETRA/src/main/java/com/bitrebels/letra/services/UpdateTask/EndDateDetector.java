@@ -127,13 +127,13 @@ public class EndDateDetector {
 
         public LocalDate datePointer(Set<Task> currentTask,LocalDate previousEndDate,Task task, Status status){
         for (Task otherTask : currentTask) {
-            int days;
+            int days_1 , days_2;
             //-2 to remove the days inclusive of previousenddate and othertask start date
             if(previousEndDate!=null) {
                 if (((previousEndDate.isAfter(task.getTaskStartDate())) || (previousEndDate.isEqual(task.getTaskStartDate()))) &&
                         otherTask.getTaskStartDate().isAfter(task.getTaskStartDate())) {
-                    days = leaveTracker.countWorkingDays(previousEndDate, otherTask.getTaskStartDate()) - 2;
-                    if(addDay(datePointer, days, /*2,*/status)){
+                    days_1 = leaveTracker.countWorkingDays(previousEndDate, otherTask.getTaskStartDate()) - 2;
+                    if(addDay(datePointer, days_1, /*2,*/status)){
                         return datePointer;
                     }
                 }
@@ -150,16 +150,19 @@ public class EndDateDetector {
             }
 
             if(((otherTask.getTaskStartDate().isEqual(task.getTaskStartDate()))|| (otherTask.getTaskStartDate().isBefore(task.getTaskStartDate())))){
-                days = leaveTracker.countWorkingDays(task.getTaskStartDate(), otherTask.getTaskEndDate());
-                if(addDay(datePointer,days,/*2,*/status)){
+
+                days_1 = leaveTracker.countWorkingDays(task.getTaskStartDate(), otherTask.getTaskEndDate());
+            //    days_2 = leaveTracker.countWorkingDays(task.getTaskStartDate(), otherTask.getTaskStartDate());
+
+                if(addDay(datePointer,days_1,/*2,*/status)){
                     return datePointer;
 
                 }
             }
 
             if(otherTask.getTaskStartDate().isAfter(task.getTaskStartDate())){
-                days = leaveTracker.countWorkingDays(otherTask.getTaskStartDate(), otherTask.getTaskEndDate());
-                if(addDay(datePointer,days,/*2,*/status)){
+                days_1 = leaveTracker.countWorkingDays(otherTask.getTaskStartDate(), otherTask.getTaskEndDate());
+                if(addDay(datePointer,days_1,/*2,*/status)){
                     return datePointer;
                 }
             }
