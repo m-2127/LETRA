@@ -1,9 +1,6 @@
 package com.bitrebels.letra.controller;
 
-import com.bitrebels.letra.message.request.HolidaySet;
-import com.bitrebels.letra.message.request.LeaveQuotaForm;
-import com.bitrebels.letra.message.request.LeaveResponse;
-import com.bitrebels.letra.message.request.RegistrationForm;
+import com.bitrebels.letra.message.request.*;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
@@ -15,6 +12,7 @@ import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
+import com.bitrebels.letra.services.ResetPassword;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,6 +57,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	HolidayRepo holidayRepo;
+
+	@Autowired
+	ResetPassword resetPassword;
 
 	@Autowired
 	LeaveRequestRepository leaveReqRepo;
@@ -229,5 +230,17 @@ public class HRMRestAPI {
 
 
 		leaveRepo.save(leave);
+	}
+
+	@PostMapping("/reset")
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
+
+		User user = userRepo.findById(userService.authenticatedUser()).get();
+		String password = resetform.getPassword();
+
+		resetPassword.setNewPassword(password, user);
+
+		return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
 	}
 }
