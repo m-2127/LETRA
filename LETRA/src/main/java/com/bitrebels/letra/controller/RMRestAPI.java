@@ -1,9 +1,6 @@
   package com.bitrebels.letra.controller;
 
-import com.bitrebels.letra.message.request.EmployeeAllocation;
-import com.bitrebels.letra.message.request.LeaveResponse;
-import com.bitrebels.letra.message.request.ProjectForm;
-import com.bitrebels.letra.message.request.UpdateTask;
+import com.bitrebels.letra.message.request.*;
 import com.bitrebels.letra.message.response.ProjectStatus;
 import com.bitrebels.letra.message.response.RMNotificationDetails;
 import com.bitrebels.letra.message.response.ResponseMessage;
@@ -15,11 +12,9 @@ import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveQuota.ManagerPDF;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
+import com.bitrebels.letra.services.ResetPassword;
 import com.bitrebels.letra.services.UpdateProject;
-import com.bitrebels.letra.services.UpdateTask.AllocateEmployee;
-import com.bitrebels.letra.services.UpdateTask.EndDateDetector;
-import com.bitrebels.letra.services.UpdateTask.ProgressDetector;
-import com.bitrebels.letra.services.UpdateTask.TaskStatus;
+import com.bitrebels.letra.services.UpdateTask.*;
 import com.bitrebels.letra.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,6 +56,9 @@ public class RMRestAPI {
 	RMRepository rmRepo;
 
 	@Autowired
+	ResetPassword resetPassword;
+
+	@Autowired
 	EmployeeRepository employeeRepo;
 
 	@Autowired
@@ -97,13 +95,16 @@ public class RMRestAPI {
 	TaskStatus taskStatus;
 
 	@Autowired
+	AllocateEmpToTask allocateEmpToTask;
+
+	@Autowired
 	LeaveResponseService leaveResponseService;
 
 	@Autowired
 	LeaveRequestRepository leaveRequestRepo;
 
-	@PostMapping("/addproject")
-//	@PreAuthorize("hasRole('RM')")
+	@PostMapping("/addproject")//new project tab
+	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody ProjectForm projectForm) {
 
 		// add project details
@@ -134,11 +135,11 @@ public class RMRestAPI {
 		return new ResponseEntity<>(new ResponseMessage("Project Details added successfully!"), HttpStatus.OK);
 	}
 
-	@PostMapping("/updatetask")
+	@PostMapping("/updatetask")//update project tab - edit task button
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> updatetask(@Valid @RequestBody UpdateTask updateTask) {
-		Task task;
 
+		Task task;
 
 		Long projectId = rmRepo.findById(userService.authenticatedUser()).get().getProject().getId();
 
@@ -148,24 +149,25 @@ public class RMRestAPI {
         taskRepo.save(task);
 
         if(Objects.isNull(task.getEmployee())){
-            Employee employee = allocateEmployee.allocateEmployee(updateTask);
+            Employee employee = allocateEmployee.allocateEmployee(updateTask);//allocates emp to project
             LocalDate endDate = endDateDetector.deriveEndDate(updateTask.getTaskId(),
                     projectId, employee);
+            allocateEmpToTask.allocateEmpToTask(task,employee);//exactly allocates emp to task
             task.setTaskEndDate(endDate);
             task.setEmployee(employee);
+			employeeRepo.save(employee);
 
         }
 
         task = progressDetector.updateProgress(updateTask, task);
 
 		taskStatus.updateStatus(updateTask,task);
-	//	employeeRepo.save(employee);
 		taskRepo.save(task);
 
 		return new ResponseEntity<>(new ResponseMessage("Task Updated Successfully!"), HttpStatus.OK);
 	}
 
-	@PostMapping("/leaveresponse")
+	@PostMapping("/leaveresponse")//responding to leave
 	@PreAuthorize("hasRole('RM')")
 	public void respondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
 
@@ -236,7 +238,7 @@ public class RMRestAPI {
 
 	}
 
-	@PostMapping("/updateProject")
+	@PostMapping("/updateProject")//update project tab - edit project details button
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> updateProject(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
 		
@@ -298,7 +300,7 @@ public class RMRestAPI {
 
 	}
 
-	@GetMapping("/returnemployees1")
+	@GetMapping("/returnemployees1")//returns all employees of the project
 	@PreAuthorize("hasRole('RM')")
 	public Map<Long , String> findEmployees1(){
 		List<User> userList = userRepo.findAll();
@@ -313,7 +315,7 @@ public class RMRestAPI {
 		return userMap;
 	}
 
-	@GetMapping("/returnemployees2")
+	@GetMapping("/returnemployees2")//returns employees under a given manager
 	@PreAuthorize("hasRole('RM')")
 	public Map<Long , String> findEmployees2(){
 		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
@@ -329,7 +331,7 @@ public class RMRestAPI {
 		return employeeMap;
 	}
 
-	@GetMapping("/selectnotification")
+	@GetMapping("/selectnotification")//recommendation details
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> selectnotification(@RequestParam Map<String, String> requestParams) {
 
@@ -345,5 +347,44 @@ public class RMRestAPI {
 
 		return new ResponseEntity<>(response , HttpStatus.OK);
 
+	}
+
+	@PostMapping("/addnewtask")//update project tab- add new task button
+	@PreAuthorize("hasRole('RM')")
+	public void addNewTask(@RequestBody AddNewTask addNewTask){
+
+		Task task = new Task(addNewTask.getName(),addNewTask.getStartdate(),addNewTask.getDescription(),addNewTask.getDuration());
+		String status = addNewTask.getStatus();
+		if(status.equalsIgnoreCase("development")){
+			task.setStatus(Status.DEVELOPMENT);
+		}
+		else{
+			task.setStatus(Status.MAINTENANCE);
+		}
+
+		Timestamp timestamp = new Timestamp(new Date().getTime());
+		task.setUpdateTime(timestamp);
+
+		Long userId = userService.authenticatedUser();
+		ReportingManager manager = rmRepo.findById(userId).get();
+		Project project = manager.getProject();
+		task.setProject(project);
+
+		project.getTask().add(task);
+
+		projectRepo.save(project);
+		taskRepo.save(task);
+	}
+
+	@PostMapping("/reset")
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
+
+		User user = userRepo.findById(userService.authenticatedUser()).get();
+		String password = resetform.getPassword();
+
+		resetPassword.setNewPassword(password, user);
+
+		return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
 	}
 }
