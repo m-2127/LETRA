@@ -252,7 +252,7 @@ public class HRMRestAPI {
 	}
 
 	@PostMapping("/report")
-	@PreAuthorize("hasRole('RM')")
+	@PreAuthorize("hasRole('HRM')")
 	public Map<String, Integer> report(@RequestBody HRMReport hrmReport){
 
 		String projectString = hrmReport.getProjectString();

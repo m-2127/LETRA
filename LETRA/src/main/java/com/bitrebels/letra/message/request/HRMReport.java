@@ -3,14 +3,10 @@ package com.bitrebels.letra.message.request;
 import com.bitrebels.letra.services.Date.DateHandler;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class HRMReport {
-
-    @NotBlank
-    private String leaveType;
 
     @NotNull
     @JsonDeserialize(using = DateHandler.class)
@@ -20,16 +16,9 @@ public class HRMReport {
     @JsonDeserialize(using = DateHandler.class)
     private LocalDate finishDate;
 
-    @NotBlank
-    private long projectId;
+    private String projectString;
 
-    public String getLeaveType() {
-        return leaveType;
-    }
-
-    public void setLeaveType(String leaveType) {
-        this.leaveType = leaveType;
-    }
+    private String employeeString;
 
     public LocalDate getStartDate() {
         return startDate;
@@ -47,11 +36,19 @@ public class HRMReport {
         this.finishDate = finishDate;
     }
 
-    public long getProjectId() {
-        return projectId;
+    public String getProjectString() {
+        return projectString;
     }
 
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
+    public void setProjectString(String projectString) {
+        this.projectString = projectString;
+    }
+
+    public String getEmployeeString() {
+        return employeeString;
+    }
+
+    public void setEmployeeString(String employeeString) {
+        this.employeeString = employeeString;
     }
 }

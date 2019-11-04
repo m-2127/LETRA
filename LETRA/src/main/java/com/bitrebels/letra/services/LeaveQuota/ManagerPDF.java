@@ -51,7 +51,7 @@ public class ManagerPDF {
 
         int leavesTaken = 0;
         // returns the leaves taken by the current employee from the start date of the project till the date input from the frontend
-        List<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManager(
+        Set<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManager(
                 project.getStartDate(), LocalDate.now() ,employee,rm);
 
         Iterator<Leave> leaveIterator = leave.iterator();
