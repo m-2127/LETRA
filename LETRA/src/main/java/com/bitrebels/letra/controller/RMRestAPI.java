@@ -2,12 +2,14 @@
 
 import com.bitrebels.letra.message.request.*;
 import com.bitrebels.letra.message.response.ProjectStatus;
+import com.bitrebels.letra.message.response.RMHomePage;
 import com.bitrebels.letra.message.response.RMNotificationDetails;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.Date.FindDatesBetween;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveQuota.ManagerPDF;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 @RestController
@@ -102,6 +105,9 @@ public class RMRestAPI {
 
 	@Autowired
 	LeaveRequestRepository leaveRequestRepo;
+
+	@Autowired
+	FindDatesBetween findDatesBetween;
 
 	@PostMapping("/addproject")//new project tab
 	@PreAuthorize("hasRole('RM')")
@@ -252,7 +258,6 @@ public class RMRestAPI {
 		updateProject.addEmployees(reportingManager, project, addedEmployees);
 		updateProject.updateProjectStatusAndTasks(employeeAllocation.getStatus(),project);
 
-
 		return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
 	}
 	
@@ -261,12 +266,13 @@ public class RMRestAPI {
 	public ResponseEntity<?> viewproject(){
 
 		Long userId = userService.authenticatedUser();
-		
+
 		ReportingManager rm = rmRepo.findById(userId).get();
-		 
+
 		Project project = projectRepo.findByRm(rm).get();
 
 		return new ResponseEntity<>(new ProjectStatus(project), HttpStatus.OK);
+
 	}
 
       @GetMapping("/holidayreport")
@@ -343,7 +349,11 @@ public class RMRestAPI {
 		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
 		Set<Progress> progresses = progressRepo.findProgressByLeaveRequestAndManager(leaveRequest, manager);
 
+		Set<LocalDate> localDates = findDatesBetween.getDatesBetween(leaveRequest.getSetDate(),
+									leaveRequest.getFinishDate().plusDays(1));
+
 		RMNotificationDetails response  = new RMNotificationDetails(leaveRequest , progresses , employeeId , name );
+		response.setDates(localDates);
 
 		return new ResponseEntity<>(response , HttpStatus.OK);
 
@@ -386,5 +396,30 @@ public class RMRestAPI {
 		resetPassword.setNewPassword(password, user);
 
 		return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping("/homepage")
+	@PreAuthorize("hasRole('RM')")
+	public Set<RMHomePage> setNewPassword() {
+
+		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
+
+		List<Leave> leaves = leaveRepo.findByReportingManagerAndStatus(manager,LeaveStatus.PENDING);
+
+		Iterator<Leave> leavesIterator  = leaves.iterator();
+
+		Set<RMHomePage> rmHomePagesSet = new HashSet<>();
+
+		while(leavesIterator.hasNext()){
+			LeaveRequest leaveReq = leavesIterator.next().getLeaveRequest();
+			String name =  userRepo.findById(leaveReq.getEmployee().getEmployeeId()).get().getName();
+			long leaveReqId = leaveReq.getLeaveReqId();
+			String leaveType = leaveReq.getLeaveType();
+
+			RMHomePage rmHomePage = new RMHomePage(leaveReqId,leaveType,name);
+			rmHomePagesSet.add(rmHomePage);
+		}
+
+		return rmHomePagesSet;
 	}
 }
