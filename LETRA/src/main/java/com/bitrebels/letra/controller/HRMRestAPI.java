@@ -1,6 +1,8 @@
 package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.*;
+import com.bitrebels.letra.message.response.HolidayDisplay;
+import com.bitrebels.letra.message.response.HolidayDisplayReturn;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
@@ -14,6 +16,7 @@ import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
 import com.bitrebels.letra.services.ResetPassword;
 import com.bitrebels.letra.services.UserService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -36,7 +40,7 @@ public class HRMRestAPI {
 
 	@Autowired
 	PasswordEncoder encoder;
-	
+
 	@Autowired
 	RMRepository rmRepo;
 
@@ -180,10 +184,10 @@ public class HRMRestAPI {
 	}
 
 	@PostMapping("/setholidays")
-//	@PreAuthorize("hasRole('HRM'))")
+	@PreAuthorize("hasRole('HRM')")
 	public void setHolidays(@RequestBody HolidaySet holidaySet){
 		List<Holiday> holidays = holidaySet.getHolidays();
-
+				System.out.println("safdafs");
 		Iterator<Holiday> iterable = holidays.iterator();
 
 		while(iterable.hasNext()){
@@ -242,5 +246,44 @@ public class HRMRestAPI {
 		resetPassword.setNewPassword(password, user);
 
 		return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
+	}
+
+	@PostMapping("/report")
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> report(@RequestBody HRMReport hrmReport){
+
+		Project project = projectRepo.findById(hrmReport.getProjectId()).get();
+		ReportingManager rm = project.getRm();
+		LocalDate startDate = hrmReport.getStartDate();
+		LocalDate endDate = hrmReport.getFinishDate();
+		String leaveType  = hrmReport.getLeaveType();
+
+		List<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndLeaveTypeAndReportingManager(
+          		startDate, endDate ,leaveType ,rm);
+
+		Iterator<Leave> leaveIterator = leave.iterator();
+			while(leaveIterator.hasNext()) {
+				 	Leave leave1 = leaveIterator.next();
+			}
+			return null;//testing
+	}
+
+	@GetMapping("/holidays")
+	@PreAuthorize("hasRole('HRM')")
+	public HolidayDisplayReturn holidays(){
+		List<Holiday> holidaysList = holidayRepo.findAll();
+		Iterator<Holiday> holidayIterator = holidaysList.iterator();
+
+		Set<HolidayDisplay> holidayDisplaySet = new HashSet<>();
+
+		while(holidayIterator.hasNext()){
+			Holiday holiday = holidayIterator.next();
+			HolidayDisplay holidayDisplay  = new HolidayDisplay(holiday.getDescription() , holiday.getDate());
+			holidayDisplaySet.add(holidayDisplay);
+		}
+
+		HolidayDisplayReturn holidayDisplayReturn = new HolidayDisplayReturn(holidayDisplaySet);
+
+		return holidayDisplayReturn;
 	}
 }

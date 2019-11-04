@@ -156,12 +156,12 @@ public class EmployeeRestAPI {
 
 	}
 
-//	@GetMapping("/holidayreport")
-//	@PreAuthorize("hasRole('RM')")
-//	public void holidayReport(){
-//
-//
-//	}
+	@GetMapping("/holidays")
+	@PreAuthorize("hasRole('RM')")
+	public void holidayReport(){
+
+
+	}
 
 	@GetMapping("/leavevalidation")
 	@PreAuthorize("hasRole('USER')")
