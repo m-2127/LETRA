@@ -400,7 +400,7 @@ public class RMRestAPI {
 
 	@GetMapping("/homepage")
 	@PreAuthorize("hasRole('RM')")
-	public Set<RMHomePage> setNewPassword() {
+	public Set<RMHomePage> homePages() {
 
 		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
 
