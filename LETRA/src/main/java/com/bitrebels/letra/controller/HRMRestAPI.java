@@ -11,12 +11,12 @@ import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
+import com.bitrebels.letra.services.LeaveQuota.HRMLeaveReport;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
 import com.bitrebels.letra.services.ResetPassword;
 import com.bitrebels.letra.services.UserService;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,6 +91,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	LeaveResponseService leaveResponseService;
+
+	@Autowired
+	HRMLeaveReport hrmLeaveReport;
 
 	@PostMapping("/manageusers")
 	@PreAuthorize("hasRole('HRM')")
@@ -250,22 +253,23 @@ public class HRMRestAPI {
 
 	@PostMapping("/report")
 	@PreAuthorize("hasRole('RM')")
-	public ResponseEntity<?> report(@RequestBody HRMReport hrmReport){
+	public Map<String, Integer> report(@RequestBody HRMReport hrmReport){
 
-		Project project = projectRepo.findById(hrmReport.getProjectId()).get();
+		String projectString = hrmReport.getProjectString();
+		long projectId = Long.parseLong(hrmReport.getProjectString());
+		Project project = projectRepo.findById(projectId).get();
 		ReportingManager rm = project.getRm();
+
 		LocalDate startDate = hrmReport.getStartDate();
 		LocalDate endDate = hrmReport.getFinishDate();
-		String leaveType  = hrmReport.getLeaveType();
 
-		List<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndLeaveTypeAndReportingManager(
-          		startDate, endDate ,leaveType ,rm);
+		String employeeString = hrmReport.getEmployeeString();
+		long employeeId = Long.parseLong(employeeString);
+		Employee employee  = employeeRepo.findById(employeeId).get();
 
-		Iterator<Leave> leaveIterator = leave.iterator();
-			while(leaveIterator.hasNext()) {
-				 	Leave leave1 = leaveIterator.next();
-			}
-			return null;//testing
+		Set<Leave> leaveSet = hrmLeaveReport.selectLeaves(employeeString,projectString,startDate,endDate,employee, rm);
+
+		return hrmLeaveReport.addLeave(leaveSet);
 	}
 
 	@GetMapping("/holidays")
