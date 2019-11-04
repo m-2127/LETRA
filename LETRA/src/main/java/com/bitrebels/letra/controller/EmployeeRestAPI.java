@@ -47,6 +47,9 @@ public class EmployeeRestAPI {
 	AnnualRepo annualRepo;
 
 	@Autowired
+	RMRepository rmRepository;
+
+	@Autowired
 	UserService userService;
 
 	@Autowired
@@ -116,6 +119,7 @@ public class EmployeeRestAPI {
 			while (projectIterator.hasNext()) {
 				Project project = projectIterator.next();
 				Long rmId  = project.getRm().getRmId();
+				leave.getReportingManager().add(rmRepository.findById(rmId).get());
 				Set<Task> tasks = taskRepo.findTaskByEmployeeAndProject(employee, project);
 				applyLeave.applyLeave(leaveForm, leaveRequest, tasks , rmId);
 			}
