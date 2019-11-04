@@ -3,6 +3,7 @@ package com.bitrebels.letra.message.response;
 import com.bitrebels.letra.model.LeaveRequest;
 import com.bitrebels.letra.model.Progress;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 public class RMNotificationDetails {
@@ -15,7 +16,7 @@ public class RMNotificationDetails {
 
     Set<Progress> progress;
 
-
+    Set<LocalDate> dates;
 
     public RMNotificationDetails(LeaveRequest leaveRequest, Set<Progress> progress,long employeeId,
                                  String employeeName) {
@@ -59,5 +60,11 @@ public class RMNotificationDetails {
         this.progress = progress;
     }
 
+    public Set<LocalDate> getDates() {
+        return dates;
+    }
 
+    public void setDates(Set<LocalDate> dates) {
+        this.dates = dates;
+    }
 }
