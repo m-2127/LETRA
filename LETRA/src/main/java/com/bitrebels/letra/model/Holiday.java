@@ -17,6 +17,9 @@ public class Holiday {
 
     private String description;
 
+    public Holiday() {
+    }
+
     public Holiday(LocalDate date, String description) {
         this.date = date;
         this.description = description;

@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -16,7 +14,7 @@ public class Leave implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String LeaveType;
+    private String leaveType;
 
     private int noOfManagers;
 
@@ -64,7 +62,7 @@ public class Leave implements Serializable {
     }
 
     public Leave(String leaveType, Set<Description> description, int duration, boolean approval, LeaveStatus status, Set<LeaveDates> leaveDates, LeaveRequest leaveRequest) {
-        LeaveType = leaveType;
+        this.leaveType = leaveType;
         this.description = description;
         this.duration = duration;
         this.approval = approval;
@@ -85,7 +83,7 @@ public class Leave implements Serializable {
 
 
     public Leave(String leaveType, int duration, boolean approval) {
-        this.LeaveType = leaveType;
+        this.leaveType = leaveType;
         this.duration = duration;
         this.approval = approval;
     }
@@ -99,11 +97,11 @@ public class Leave implements Serializable {
     }
 
     public String getLeaveType() {
-        return LeaveType;
+        return leaveType;
     }
 
     public void setLeaveType(String leaveType) {
-        LeaveType = leaveType;
+        this.leaveType = leaveType;
     }
 
     public Employee getEmployee() {

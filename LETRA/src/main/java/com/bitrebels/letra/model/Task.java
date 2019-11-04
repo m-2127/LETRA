@@ -21,7 +21,6 @@ public class Task {
     @NotNull
     private LocalDate taskStartDate;
 
-    @NotNull
     private LocalDate taskEndDate;
     
     @NotBlank
