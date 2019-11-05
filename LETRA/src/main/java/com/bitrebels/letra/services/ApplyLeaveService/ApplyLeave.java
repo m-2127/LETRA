@@ -67,21 +67,21 @@ public class ApplyLeave {
 
         User user = userRepo.findById(employeeId).get();
 
-        if(user.getDeviceToken() == null){
-            user.setDeviceToken(leaveForm.getDeviceToken());
-        }
+//        if(user.getDeviceToken() == null){
+//            user.setDeviceToken(leaveForm.getDeviceToken());
+//        }
 
-        String deviceToken = user.getDeviceToken();
+//        String deviceToken = user.getDeviceToken();
 
         if((!(leaveType.equalsIgnoreCase("maternity"))) && !(Objects.isNull(employee))){
 
-            String subsTopic = "topicRM-"+ rmId + "-EMP-" +employeeId;
-            topicService.subscribe(deviceToken,subsTopic,user);
-
-            //notification received by RM
-            String sendingTopic = "EmpTopic-" + employee.getEmployeeId() + "-RM-"+ rmId ;
-            Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now() ,
-                    leaveReqId );
+//            String subsTopic = "topicRM-"+ rmId + "-EMP-" +employeeId;
+//            topicService.subscribe(deviceToken,subsTopic,user);
+//
+//            //notification received by RM
+//            String sendingTopic = "EmpTopic-" + employee.getEmployeeId() + "-RM-"+ rmId ;
+//            Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now() ,
+//                    leaveReqId );
 
             for (Task task: tasks) {
                 //requiredOrRemainingWork() method can be used either to calculate required work or remaining work
@@ -107,7 +107,7 @@ public class ApplyLeave {
                 progress.setLeaveRequest(leaveRequest);
                 leaveRequest.getProgressSet().add(progress);
                 progress.setHrManager(user.getHrManager());
-                progress.setNotification(notification);
+           //     progress.setNotification(notification);
                 progressRepo.save(progress);
 
                 progressId.add(progress.getProgressId());
@@ -122,12 +122,12 @@ public class ApplyLeave {
                 progress.setLeaveRequest(leaveRequest);
                 leaveRequest.getProgressSet().add(progress);
                 progress.setHrManager(user.getHrManager());
-                progress.setNotification(notification);
+     //           progress.setNotification(notification);
                 progressRepo.save(progress);
             }
 
-            notification.getProgress().add(progress);
-            notificationService.sendToEmployeesTopic(notification);
+    //        notification.getProgress().add(progress);
+    //        notificationService.sendToEmployeesTopic(notification);
 
             leaveReqRepo.save(leaveRequest);
         }
@@ -144,17 +144,15 @@ public class ApplyLeave {
 
         long leaveReqId = leaveRequest.getLeaveReqId();
 
-        if(user.getDeviceToken() == null){
-            user.setDeviceToken(leaveForm.getDeviceToken());
-        }
-
-        String deviceToken = user.getDeviceToken();
-
-        //subscribing user to HRM's topic
-        String subsTopic = "topicHRM"+ user.getHrManager().getHrmId() + "EMP" +employeeId;
-        topicService.subscribe(deviceToken,subsTopic,user);
-
-        System.out.println("HI");
+//        if(user.getDeviceToken() == null){
+//            user.setDeviceToken(leaveForm.getDeviceToken());
+//        }
+//
+//        String deviceToken = user.getDeviceToken();
+//
+//        //subscribing user to HRM's topic
+//        String subsTopic = "topicHRM"+ user.getHrManager().getHrmId() + "EMP" +employeeId;
+//        topicService.subscribe(deviceToken,subsTopic,user);
 
         progress = new Progress();
         HRManager hrManager = user.getHrManager();
@@ -169,10 +167,10 @@ public class ApplyLeave {
 
 
         //notification received by HRM
-        String sendingTopic = "UserTopic-" + user.getId() + "-HRM-"+ user.getHrManager().getHrmId();
+        /*String sendingTopic = "UserTopic-" + user.getId() + "-HRM-"+ user.getHrManager().getHrmId();
         Notification notification = new Notification(sendingTopic , user.getName() , LocalDate.now(),
                 leaveReqId);
         notification.getProgress().add(progress);
-        notificationService.sendToEmployeesTopic(notification);
+        notificationService.sendToEmployeesTopic(notification);*/
     }
 }

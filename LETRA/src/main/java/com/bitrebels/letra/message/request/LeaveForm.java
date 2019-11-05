@@ -25,10 +25,10 @@ public class LeaveForm {
 	@NotBlank
 	private String description;
 
-	@NotNull
-	private int noOfDays;
+//	@NotNull
+//	private int noOfDays;
 
-	private String deviceToken;
+//	private String deviceToken;
 	
 
 	public String getLeaveType() {
@@ -63,19 +63,19 @@ public class LeaveForm {
 		this.description = description;
 	}
 
-	public int getNoOfDays() {
-		return noOfDays;
-	}
-
-	public void setNoOfDays(int noOfDays) {
-		this.noOfDays = noOfDays;
-	}
-
-	public String getDeviceToken() {
-		return deviceToken;
-	}
-
-	public void setDeviceToken(String deviceToken) {
-		this.deviceToken = deviceToken;
-	}
+//	public int getNoOfDays() {
+//		return noOfDays;
+//	}
+//
+//	public void setNoOfDays(int noOfDays) {
+//		this.noOfDays = noOfDays;
+//	}
+//
+//	public String getDeviceToken() {
+//		return deviceToken;
+//	}
+//
+//	public void setDeviceToken(String deviceToken) {
+//		this.deviceToken = deviceToken;
+//	}
 }

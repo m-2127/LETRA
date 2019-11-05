@@ -4,6 +4,7 @@ import com.bitrebels.letra.message.request.*;
 import com.bitrebels.letra.message.response.HRMReportDetails;
 import com.bitrebels.letra.message.response.HolidayDisplayReturn;
 import com.bitrebels.letra.message.response.ResponseMessage;
+import com.bitrebels.letra.message.response.ReturnRepManagers;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.model.leavequota.*;
@@ -277,5 +278,23 @@ public class HRMRestAPI {
 	public HolidayDisplayReturn holidays(){
 
 		return holidayReturn.returnHoliday();
+	}
+
+	@GetMapping("/rms")
+	@PreAuthorize("hasRole('HRM')")
+	public Set<ReturnRepManagers> findRMS(){
+
+		List<ReportingManager> reportingManagers = rmRepo.findAll();
+		Iterator<ReportingManager> rmIterator  = reportingManagers.iterator();
+
+		Set<ReturnRepManagers> returnRepManagers = new HashSet<>();
+
+		while(rmIterator.hasNext()){
+			ReportingManager manager = rmIterator.next();
+			User user = userRepository.findById(manager.getRmId()).get();
+			returnRepManagers.add(new ReturnRepManagers(user.getId(),user.getName()));
+
+		}
+		return returnRepManagers;
 	}
 }

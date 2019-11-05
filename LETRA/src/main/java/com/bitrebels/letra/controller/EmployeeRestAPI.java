@@ -86,8 +86,11 @@ public class EmployeeRestAPI {
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
 
+		//working days between leave start date and leave end date
+		int duration = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
+
 		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
-				leaveForm.getFinishDate() , leaveForm.getDescription(), leaveForm.getNoOfDays());
+				leaveForm.getFinishDate() , leaveForm.getDescription(), duration);
 
 		leaveReqRepo.save(leaveRequest);
 
