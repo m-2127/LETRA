@@ -50,7 +50,7 @@
             <artifactId>twilio</artifactId>
             <version>7.34.0</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency> 
 
 		<!--firebase admin sdk-->
 		<dependency>

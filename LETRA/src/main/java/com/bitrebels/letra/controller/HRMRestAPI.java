@@ -131,8 +131,8 @@ public class HRMRestAPI {
 		user = leaveQuotaCal.updateQuotaOnRegistration(user);
 
 		//subscribing HRM to user topic
-        String topic = "UserTopic" + user.getId() + "HRM"+ hrmId  ;
-        topicService.subscribe(registrationRequest.getDeviceToken(),topic,user);
+//        String topic = "UserTopic" + user.getId() + "HRM"+ hrmId  ;
+//        topicService.subscribe(registrationRequest.getDeviceToken(),topic,user);
 
 		userRepository.save(user);
 

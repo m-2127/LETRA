@@ -12,9 +12,9 @@ public class RegistrationForm {
     @Email
     private String email;
     
-    @NotBlank
-    @Size(min = 6, max = 40)
-    private String password;
+//    @NotBlank
+//    @Size(min = 6, max = 40)
+//    private String password;
     
 
     @NotBlank
@@ -25,8 +25,8 @@ public class RegistrationForm {
     @Size(min = 4, max = 6)
     private String gender;
 
-    //hrm's devicetoken
-    private String deviceToken;
+//    //hrm's devicetoken
+//    private String deviceToken;
 
     
     public String getName() {
@@ -45,13 +45,13 @@ public class RegistrationForm {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
     
     
     public String getMobilenumber() {
@@ -70,11 +70,11 @@ public class RegistrationForm {
     	this.gender = gender;
     }
 
-    public String getDeviceToken() {
-        return deviceToken;
-    }
-
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
-    }
+//    public String getDeviceToken() {
+//        return deviceToken;
+//    }
+//
+//    public void setDeviceToken(String deviceToken) {
+//        this.deviceToken = deviceToken;
+//    }
 }
