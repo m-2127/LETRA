@@ -4,7 +4,7 @@ import com.bitrebels.letra.message.request.*;
 import com.bitrebels.letra.message.response.HRMReportDetails;
 import com.bitrebels.letra.message.response.HolidayDisplayReturn;
 import com.bitrebels.letra.message.response.ResponseMessage;
-import com.bitrebels.letra.message.response.ReturnRepManagers;
+import com.bitrebels.letra.message.response.ReturnDetails;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.model.leavequota.*;
@@ -280,21 +280,55 @@ public class HRMRestAPI {
 		return holidayReturn.returnHoliday();
 	}
 
-	@GetMapping("/rms")
+	@GetMapping("/findrms")
 	@PreAuthorize("hasRole('HRM')")
-	public Set<ReturnRepManagers> findRMS(){
+	public Set<ReturnDetails> findRMS(){
 
 		List<ReportingManager> reportingManagers = rmRepo.findAll();
 		Iterator<ReportingManager> rmIterator  = reportingManagers.iterator();
 
-		Set<ReturnRepManagers> returnRepManagers = new HashSet<>();
+		Set<ReturnDetails> rmDetails = new HashSet<>();
 
 		while(rmIterator.hasNext()){
 			ReportingManager manager = rmIterator.next();
 			User user = userRepository.findById(manager.getRmId()).get();
-			returnRepManagers.add(new ReturnRepManagers(user.getId(),user.getName()));
+			rmDetails.add(new ReturnDetails(user.getId(),user.getName()));
 
 		}
-		return returnRepManagers;
+		return rmDetails;
+	}
+
+	@GetMapping("/findemployees")
+	@PreAuthorize("hasRole('HRM')")
+	public Set<ReturnDetails> findEmployees(){
+
+		List<User> users = userRepository.findAll();
+		Iterator<User> userIterator  = users.iterator();
+
+		Set<ReturnDetails> employeeDetails = new HashSet<>();
+
+		while(userIterator.hasNext()){
+			User user = userIterator.next();
+			employeeDetails.add(new ReturnDetails(user.getId(),user.getName()));
+
+		}
+		return employeeDetails;
+	}
+
+	@GetMapping("/findprojects")
+	@PreAuthorize("hasRole('HRM')")
+	public Set<ReturnDetails> findProjects(){
+
+		List<Project> projects = projectRepo.findAll();
+		Iterator<Project> projectIterator  = projects.iterator();
+
+		Set<ReturnDetails> projectsDetails = new HashSet<>();
+
+		while(projectIterator.hasNext()){
+			Project currentProject = projectIterator.next();
+			projectsDetails.add(new ReturnDetails(currentProject.getId(),currentProject.getName()));
+
+		}
+		return projectsDetails;
 	}
 }
