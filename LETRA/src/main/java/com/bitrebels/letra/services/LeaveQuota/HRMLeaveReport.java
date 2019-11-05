@@ -1,18 +1,19 @@
 package com.bitrebels.letra.services.LeaveQuota;
 
+import com.bitrebels.letra.message.request.HRMReport;
 import com.bitrebels.letra.message.response.HRMReportDetails;
 import com.bitrebels.letra.model.Employee;
 import com.bitrebels.letra.model.Leave;
+import com.bitrebels.letra.model.Project;
 import com.bitrebels.letra.model.ReportingManager;
+import com.bitrebels.letra.repository.EmployeeRepository;
 import com.bitrebels.letra.repository.LeaveRepo;
-import org.apache.tomcat.jni.Local;
+import com.bitrebels.letra.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -21,24 +22,44 @@ public class HRMLeaveReport {
     @Autowired
     LeaveRepo leaveRepo;
 
-    public Set<Leave> selectLeaves(String employeeString, String projectString , LocalDate startDate,
-                                    LocalDate endDate, Employee employee , ReportingManager rm){
+    @Autowired
+    ProjectRepository projectRepo;
+
+    @Autowired
+    EmployeeRepository employeeRepo;
+
+    public Set<Leave> selectLeaves(long employeeString, long projectString , LocalDate startDate,
+                                   LocalDate endDate, HRMReport hrmReport){
 
         Set<Leave> leaveSet;
 
-            if(employeeString.equalsIgnoreCase("null") && projectString.equalsIgnoreCase("null")){
+            if(employeeString==0 && projectString==0){
                 leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndApproval(startDate, endDate,true);
             }
-            else if(employeeString.equalsIgnoreCase("null")){
+            else if(employeeString==0){
+                long projectId = hrmReport.getProjectId();
+                Project project = projectRepo.findById(projectId).get();
+                ReportingManager rm = project.getRm();
                 leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndReportingManagerAndApproval(startDate,
                         endDate,rm,true);
             }
-            else if(projectString.equalsIgnoreCase("null")){
+            else if(projectString==0){
+
+                long employeeId = hrmReport.getEmployeeId();
+                Employee employee  = employeeRepo.findById(employeeId).get();
+
                 leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndApproval(startDate,
                         endDate,employee,true);
             }
             else{
-                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManagerAnAndApproval(
+                long projectId = hrmReport.getProjectId();
+                Project project = projectRepo.findById(projectId).get();
+                ReportingManager rm = project.getRm();
+
+                long employeeId = hrmReport.getEmployeeId();
+                Employee employee  = employeeRepo.findById(employeeId).get();
+
+                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManagerAndApproval(
                         startDate,endDate,employee,rm,true);
             }
 

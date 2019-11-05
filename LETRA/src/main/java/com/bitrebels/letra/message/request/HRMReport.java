@@ -16,9 +16,9 @@ public class HRMReport {
     @JsonDeserialize(using = DateHandler.class)
     private LocalDate finishDate;
 
-    private String projectString;
+    private long projectId;
 
-    private String employeeString;
+    private long employeeId;
 
     public LocalDate getStartDate() {
         return startDate;
@@ -36,19 +36,19 @@ public class HRMReport {
         this.finishDate = finishDate;
     }
 
-    public String getProjectString() {
-        return projectString;
+    public long getProjectId() {
+        return projectId;
     }
 
-    public void setProjectString(String projectString) {
-        this.projectString = projectString;
+    public void setProjectId(long projectId) {
+        this.projectId = projectId;
     }
 
-    public String getEmployeeString() {
-        return employeeString;
+    public long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeString(String employeeString) {
-        this.employeeString = employeeString;
+    public void setEmployeeId(long employeeId) {
+        this.employeeId = employeeId;
     }
 }

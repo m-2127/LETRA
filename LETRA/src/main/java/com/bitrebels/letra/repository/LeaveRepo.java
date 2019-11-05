@@ -14,7 +14,7 @@ public interface LeaveRepo extends JpaRepository<Leave, Long> {
 //    List<Leave> findByEmployeeAndDatesBetween(Employee employee, LocalDate startDate, LocalDate endDate);
 //    int countLeavesByDatesBetween(LeaveDates startDate, LeaveDates endDate);
 //    List<Leave> findByLeaveDates_Date(LocalDate localDate);
-    Set<Leave> findByLeaveDates_DateBetweenAndEmployeeAndReportingManagerAnAndApproval(
+    Set<Leave> findByLeaveDates_DateBetweenAndEmployeeAndReportingManagerAndApproval(
             LocalDate startDate, LocalDate endDate, Employee employee , ReportingManager rm,boolean b);
 
     Set<Leave> findByLeaveDates_DateBetweenAndApproval(LocalDate startDate, LocalDate endDate,boolean b);

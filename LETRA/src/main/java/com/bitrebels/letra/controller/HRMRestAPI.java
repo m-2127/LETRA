@@ -2,7 +2,6 @@ package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.*;
 import com.bitrebels.letra.message.response.HRMReportDetails;
-import com.bitrebels.letra.message.response.HolidayDisplay;
 import com.bitrebels.letra.message.response.HolidayDisplayReturn;
 import com.bitrebels.letra.message.response.ResponseMessage;
 import com.bitrebels.letra.model.*;
@@ -261,19 +260,14 @@ public class HRMRestAPI {
 	@PreAuthorize("hasRole('HRM')")
 	public HRMReportDetails report(@RequestBody HRMReport hrmReport){
 
-		String projectString = hrmReport.getProjectString();
-		long projectId = Long.parseLong(hrmReport.getProjectString());
-		Project project = projectRepo.findById(projectId).get();
-		ReportingManager rm = project.getRm();
+		long projectId = hrmReport.getProjectId();
 
 		LocalDate startDate = hrmReport.getStartDate();
 		LocalDate endDate = hrmReport.getFinishDate();
 
-		String employeeString = hrmReport.getEmployeeString();
-		long employeeId = Long.parseLong(employeeString);
-		Employee employee  = employeeRepo.findById(employeeId).get();
+		long employeeId = hrmReport.getEmployeeId();
 
-		Set<Leave> leaveSet = hrmLeaveReport.selectLeaves(employeeString,projectString,startDate,endDate,employee, rm);
+		Set<Leave> leaveSet = hrmLeaveReport.selectLeaves(employeeId,projectId,startDate,endDate,hrmReport);
 
 		return hrmLeaveReport.addLeave(leaveSet);
 	}
