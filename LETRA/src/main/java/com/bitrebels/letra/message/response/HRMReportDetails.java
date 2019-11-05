@@ -10,6 +10,9 @@ public class HRMReportDetails {
 
     private int sick;
 
+    public HRMReportDetails() {
+    }
+
     public HRMReportDetails(int annual, int casual, int nopay, int sick) {
         this.annual = annual;
         this.casual = casual;
