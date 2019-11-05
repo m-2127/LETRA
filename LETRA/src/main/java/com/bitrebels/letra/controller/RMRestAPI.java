@@ -1,10 +1,7 @@
   package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.*;
-import com.bitrebels.letra.message.response.ProjectStatus;
-import com.bitrebels.letra.message.response.RMHomePage;
-import com.bitrebels.letra.message.response.RMNotificationDetails;
-import com.bitrebels.letra.message.response.ResponseMessage;
+import com.bitrebels.letra.message.response.*;
 import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.repository.*;
@@ -256,7 +253,7 @@ public class RMRestAPI {
 		Project project = projectRepo.findByRm(reportingManager).get();
 
 		List<Long> addedEmployees = employeeAllocation.getAddedEmp();
-		List<Long> deletedEmployess = employeeAllocation.getDeletedEmp();
+	//	List<Long> deletedEmployess = employeeAllocation.getDeletedEmp();
 
 		updateProject.addEmployees(reportingManager, project, addedEmployees);
 		updateProject.updateProjectStatusAndTasks(employeeAllocation.getStatus(),project);
@@ -311,17 +308,22 @@ public class RMRestAPI {
 
 	@GetMapping("/returnemployees1")//returns all employees of the project
 	@PreAuthorize("hasRole('RM')")
-	public Map<Long , String> findEmployees1(){
+	public Set<ReturnDetails> findEmployees1(){
+
 		List<User> userList = userRepo.findAll();
-		Map<Long , String> userMap = new HashMap<>();
+
+		Set<ReturnDetails> returnDetailsSet = new HashSet<>();
+
 		Iterator<User> userIterator = userList.iterator();
 		while(userIterator.hasNext()){
 			User user = userIterator.next();
 			long id = user.getId();
 			String name = user.getName();
-			userMap.put(id,name);
+
+			ReturnDetails returnDetails = new ReturnDetails(id,name);
+			returnDetailsSet.add(returnDetails);
 		}
-		return userMap;
+		return returnDetailsSet;
 	}
 
 	@GetMapping("/returnemployees2")//returns employees under a given manager

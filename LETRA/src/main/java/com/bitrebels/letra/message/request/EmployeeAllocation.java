@@ -10,8 +10,8 @@ public class EmployeeAllocation{
     private String status;
 
     private List<Long> addedEmp = new ArrayList<>();
-
-    private List<Long> deletedEmp = new ArrayList<>();
+//
+//    private List<Long> deletedEmp = new ArrayList<>();
 
     public EmployeeAllocation() {
     }
@@ -32,12 +32,12 @@ public class EmployeeAllocation{
         this.addedEmp = addedEmp;
     }
 
-    public List<Long> getDeletedEmp() {
-        return deletedEmp;
-    }
-
-    public void setDeletedEmp(List<Long> deletedEmp) {
-        this.deletedEmp = deletedEmp;
-    }
+//    public List<Long> getDeletedEmp() {
+//        return deletedEmp;
+//    }
+//
+//    public void setDeletedEmp(List<Long> deletedEmp) {
+//        this.deletedEmp = deletedEmp;
+//    }
 }
 

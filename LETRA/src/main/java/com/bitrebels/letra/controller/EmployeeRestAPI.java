@@ -273,7 +273,7 @@ public class EmployeeRestAPI {
 
 			EmployeeHomePage employeeHomePage  = new EmployeeHomePage(leaveRequest.getSetDate(),
 					leaveRequest.getFinishDate(),leaveRequest.getNoOfDays(),
-					leaveRequest.getLeaveType(), "PENDING");
+					leaveRequest.getLeaveType().toUpperCase(), "PENDING");
 
 			empHomePageSet.add(employeeHomePage);
 
