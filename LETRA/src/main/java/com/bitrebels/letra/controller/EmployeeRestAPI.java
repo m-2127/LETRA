@@ -1,5 +1,6 @@
 package com.bitrebels.letra.controller;
 
+import com.bitrebels.letra.message.request.HRMReport;
 import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.message.request.ResetForm;
 import com.bitrebels.letra.message.response.*;
@@ -23,6 +24,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -279,5 +281,39 @@ public class EmployeeRestAPI {
 
 		return empHomePageSet;
 
+	}
+
+	@GetMapping("/report")
+	@PreAuthorize("hasRole('HRM')")
+	public HRMReportDetails report(){
+
+		long employeeId = userService.authenticatedUser();
+
+		Set<LeaveQuota> leaveQuotas = userRepo.findById(employeeId).get().getLeaveQuotas();
+		Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+
+		HRMReportDetails hrmReportDetails = new HRMReportDetails();
+
+		while(leaveQuotaIterator.hasNext()){
+			LeaveQuota leaveQuota = leaveQuotaIterator.next();
+			if(leaveQuota instanceof AnnualLeave){
+				AnnualLeave annualLeave = (AnnualLeave) leaveQuota;
+				hrmReportDetails.setAnnual(annualLeave.getRemainingLeaves());
+			}
+			else if(leaveQuota instanceof CasualLeave){
+				CasualLeave casualLeave = (CasualLeave) leaveQuota;
+				hrmReportDetails.setCasual(casualLeave.getRemainingLeaves());
+			}
+			else if(leaveQuota instanceof NoPayLeave){
+				NoPayLeave noPayLeave = (NoPayLeave) leaveQuota;
+				hrmReportDetails.setNopay(1);
+			}
+			else{
+				SickLeave sickLeave = (SickLeave) leaveQuota;
+				hrmReportDetails.setSick(sickLeave.getRemainingLeaves());
+			}
+		}
+
+		return hrmReportDetails;
 	}
 }
