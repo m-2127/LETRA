@@ -27,17 +27,19 @@ public class HRMLeaveReport {
         Set<Leave> leaveSet;
 
             if(employeeString.equalsIgnoreCase("null") && projectString.equalsIgnoreCase("null")){
-                leaveSet = leaveRepo.findByLeaveDates_DateBetween(startDate, endDate);
+                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndApproval(startDate, endDate,true);
             }
             else if(employeeString.equalsIgnoreCase("null")){
-                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndReportingManager(startDate,endDate,rm);
+                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndReportingManagerAndApproval(startDate,
+                        endDate,rm,true);
             }
             else if(projectString.equalsIgnoreCase("null")){
-                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndEmployee(startDate,endDate,employee);
+                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndApproval(startDate,
+                        endDate,employee,true);
             }
             else{
-                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManager(
-                        startDate,endDate,employee,rm);
+                leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManagerAnAndApproval(
+                        startDate,endDate,employee,rm,true);
             }
 
         return leaveSet;
