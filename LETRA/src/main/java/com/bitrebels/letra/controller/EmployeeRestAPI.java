@@ -101,8 +101,6 @@ public class EmployeeRestAPI {
 		//setting the device token to user and subscribing to the topic of current manager
 		User user = userRepo.findById(employeeId).get();
 
-
-
 		Leave leave = new Leave( LeaveStatus.PENDING , employee , user.getHrManager() , leaveRequest,
 				employee.getProject().size());
 		leaveRequest.setLeave(leave);
@@ -251,5 +249,35 @@ public class EmployeeRestAPI {
 	public HolidayDisplayReturn holidays(){
 
 		return holidayReturn.returnHoliday();
+	}
+
+	@GetMapping("/homepage")
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	public Set<EmployeeHomePage> displayhomepage(){
+		long employeeId = userService.authenticatedUser();
+		Employee employee = employeeRepository.findById(employeeId).get();
+
+		Set<Leave> leaveSet = leaveRepo.findLeavesByStatus(LeaveStatus.PENDING);
+
+		Iterator<Leave> leaveIterator = leaveSet.iterator();
+
+		Set<EmployeeHomePage> empHomePageSet = new HashSet<>();
+
+		while(leaveIterator.hasNext()){
+
+			Leave leave = leaveIterator.next();
+			long leaveReqId = leave.getLeaveRequest().getLeaveReqId();
+			LeaveRequest leaveRequest = leaveReqRepo.findById(leaveReqId).get();
+
+			EmployeeHomePage employeeHomePage  = new EmployeeHomePage(leaveRequest.getSetDate(),
+					leaveRequest.getFinishDate(),leaveRequest.getNoOfDays(),
+					leaveRequest.getLeaveType(), "PENDING");
+
+			empHomePageSet.add(employeeHomePage);
+
+		}
+
+		return empHomePageSet;
+
 	}
 }
