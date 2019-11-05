@@ -2,21 +2,21 @@ package com.bitrebels.letra.message.response;
 
 public class ReturnDetails {
 
-    long rmId;
+    long id;
 
     String name;
 
-    public ReturnDetails(long rmId, String name) {
-        this.rmId = rmId;
+    public ReturnDetails(long id, String name) {
+        this.id = id;
         this.name = name;
     }
 
-    public long getRmId() {
-        return rmId;
+    public long getId() {
+        return id;
     }
 
-    public void setRmId(long rmId) {
-        this.rmId = rmId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
