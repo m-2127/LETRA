@@ -11,6 +11,7 @@ import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
+import com.bitrebels.letra.services.HolidayReturn;
 import com.bitrebels.letra.services.LeaveQuota.HRMLeaveReport;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
@@ -41,6 +42,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	PasswordEncoder encoder;
+
+	@Autowired
+	HolidayReturn holidayReturn;
 
 	@Autowired
 	RMRepository rmRepo;
@@ -276,19 +280,7 @@ public class HRMRestAPI {
 	@GetMapping("/holidays")
 	@PreAuthorize("hasRole('HRM')")
 	public HolidayDisplayReturn holidays(){
-		List<Holiday> holidaysList = holidayRepo.findAll();
-		Iterator<Holiday> holidayIterator = holidaysList.iterator();
 
-		Set<HolidayDisplay> holidayDisplaySet = new HashSet<>();
-
-		while(holidayIterator.hasNext()){
-			Holiday holiday = holidayIterator.next();
-			HolidayDisplay holidayDisplay  = new HolidayDisplay(holiday.getDescription() , holiday.getDate());
-			holidayDisplaySet.add(holidayDisplay);
-		}
-
-		HolidayDisplayReturn holidayDisplayReturn = new HolidayDisplayReturn(holidayDisplaySet);
-
-		return holidayDisplayReturn;
+		return holidayReturn.returnHoliday();
 	}
 }

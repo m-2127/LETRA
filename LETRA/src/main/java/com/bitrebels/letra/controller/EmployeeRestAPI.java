@@ -4,7 +4,6 @@ import com.bitrebels.letra.message.request.LeaveForm;
 import com.bitrebels.letra.message.request.ResetForm;
 import com.bitrebels.letra.message.response.*;
 import com.bitrebels.letra.model.*;
-import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.AnnualRepo;
@@ -12,6 +11,7 @@ import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.ApplyLeaveService.ApplyLeave;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
+import com.bitrebels.letra.services.HolidayReturn;
 import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
 import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
 import com.bitrebels.letra.services.ResetPassword;
@@ -23,7 +23,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -46,6 +45,9 @@ public class EmployeeRestAPI {
 	
 	@Autowired
 	AnnualRepo annualRepo;
+
+	@Autowired
+	HolidayReturn holidayReturn;
 
 	@Autowired
 	RMRepository rmRepository;
@@ -246,5 +248,12 @@ public class EmployeeRestAPI {
 		}
 
 		return new ResponseEntity<>(leaveHistories , HttpStatus.OK);
+	}
+
+	@GetMapping("/holidays")
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	public HolidayDisplayReturn holidays(){
+
+		return holidayReturn.returnHoliday();
 	}
 }
