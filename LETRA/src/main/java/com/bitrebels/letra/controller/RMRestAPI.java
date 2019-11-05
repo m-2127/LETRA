@@ -202,22 +202,22 @@ public class RMRestAPI {
 			leave.setApproval(leaveResponse.isApproval());
 			if(leaveResponse.isApproval()) {
 				leaveResponseService.saveLeaveDates(dates,leave);
-				leave.setStatus(LeaveStatus.APPROVED);
+				leave.setStatus(LeaveStatus.APPROVED);//need to change it to pending
 				leave.setDuration(leave.getLeaveDates().size());
 			}
 			else{
 				leave.setStatus(LeaveStatus.REJECTED);
 				//sending notification to employee who requested the leave
-				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
-				notificationService.sendToManagersTopic(notification);
+//				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
+//				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
+//				notificationService.sendToManagersTopic(notification);
 			}
 
 			if(leave.getNoOfManagers() == 1){
 				//sending notification to employee who requested the leave
-				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
-				notificationService.sendToManagersTopic(notification);
+//				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
+//				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
+//				notificationService.sendToManagersTopic(notification);
 
 				updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
 			}
@@ -237,9 +237,9 @@ public class RMRestAPI {
 					leave.setStatus(LeaveStatus.REJECTED);
 				}
 				//sending notification to employee who requested the leave
-				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
-				notificationService.sendToManagersTopic(notification);
+//				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
+//				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
+//				notificationService.sendToManagersTopic(notification);
 			}
 		}
 

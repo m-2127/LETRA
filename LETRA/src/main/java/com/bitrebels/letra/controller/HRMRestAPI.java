@@ -196,7 +196,7 @@ public class HRMRestAPI {
 	@PreAuthorize("hasRole('HRM')")
 	public void setHolidays(@RequestBody HolidaySet holidaySet){
 		List<Holiday> holidays = holidaySet.getHolidays();
-				System.out.println("safdafs");
+
 		Iterator<Holiday> iterable = holidays.iterator();
 
 		while(iterable.hasNext()){
