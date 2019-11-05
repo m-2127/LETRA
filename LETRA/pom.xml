@@ -44,6 +44,14 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!--twilio messaging dependency-->
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>7.34.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
 		<!--firebase admin sdk-->
 		<dependency>
 			<groupId>com.google.firebase</groupId>

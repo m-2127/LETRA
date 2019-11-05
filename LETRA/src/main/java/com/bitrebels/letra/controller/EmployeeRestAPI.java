@@ -163,13 +163,6 @@ public class EmployeeRestAPI {
 
 	}
 
-	@GetMapping("/holidays")
-	@PreAuthorize("hasRole('RM')")
-	public void holidayReport(){
-
-
-	}
-
 	@GetMapping("/leavevalidation")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> leaveValidator(){
