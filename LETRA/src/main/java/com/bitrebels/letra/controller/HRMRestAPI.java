@@ -30,6 +30,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/admin")
+@CrossOrigin(origins = "http://localhost:4200")
 public class HRMRestAPI {
 
 	@Autowired
