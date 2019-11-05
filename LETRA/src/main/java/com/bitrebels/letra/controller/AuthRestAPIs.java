@@ -54,7 +54,7 @@ public class AuthRestAPIs {
 		String name = userRepo.findById(userPrinciple.getId()).get().getName();
 
 		return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(),
-				userPrinciple.getAuthorities(),name));
+				userPrinciple.getAuthorities(),name,userPrinciple.getGender()));
 	}
 
 	@PostMapping("/google")
@@ -67,6 +67,7 @@ public class AuthRestAPIs {
 
 		String jwt = jwtProvider.generateJwtToken(userPrinciple);
 
-		return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(), userPrinciple.getAuthorities(),name));
+		return ResponseEntity.ok(new JwtResponse(jwt, userPrinciple.getUsername(), userPrinciple.getAuthorities()
+				,name,userPrinciple.getGender()));
 	}
 }
