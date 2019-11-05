@@ -1,6 +1,7 @@
 package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.*;
+import com.bitrebels.letra.message.response.HRMReportDetails;
 import com.bitrebels.letra.message.response.HolidayDisplay;
 import com.bitrebels.letra.message.response.HolidayDisplayReturn;
 import com.bitrebels.letra.message.response.ResponseMessage;
@@ -258,7 +259,7 @@ public class HRMRestAPI {
 
 	@PostMapping("/report")
 	@PreAuthorize("hasRole('HRM')")
-	public Map<String, Integer> report(@RequestBody HRMReport hrmReport){
+	public HRMReportDetails report(@RequestBody HRMReport hrmReport){
 
 		String projectString = hrmReport.getProjectString();
 		long projectId = Long.parseLong(hrmReport.getProjectString());

@@ -1,5 +1,6 @@
 package com.bitrebels.letra.services.LeaveQuota;
 
+import com.bitrebels.letra.message.response.HRMReportDetails;
 import com.bitrebels.letra.model.Employee;
 import com.bitrebels.letra.model.Leave;
 import com.bitrebels.letra.model.ReportingManager;
@@ -42,11 +43,9 @@ public class HRMLeaveReport {
         return leaveSet;
     }
 
-    public Map<String, Integer> addLeave(Set<Leave> leaveSet){
+    public HRMReportDetails addLeave(Set<Leave> leaveSet){
 
         int annual=0,casual=0,sick=0,nopay=0;
-
-        Map<String , Integer> leaveReportMap = new HashMap<>();
 
         Iterator<Leave> leaveIterator = leaveSet.iterator();
 
@@ -71,11 +70,6 @@ public class HRMLeaveReport {
                 }
         }
 
-        leaveReportMap.put("annual" , annual);
-        leaveReportMap.put("casual" , casual);
-        leaveReportMap.put("nopay" , nopay);
-        leaveReportMap.put("sick" , sick);
-
-        return leaveReportMap;
+        return new HRMReportDetails(annual,casual, nopay,sick);
     }
 }
