@@ -79,15 +79,15 @@ public class UpdateProject {
 
         if(taskStatus.equalsIgnoreCase("completed")) {
             project.setStatus(Status.COMPLETED);
-            taskRepo.updateTaskStatus(Status.COMPLETED , project);
+    //        taskRepo.updateTaskStatus(Status.COMPLETED , project);
         }
         else if(taskStatus.equalsIgnoreCase("development")){
             project.setStatus(Status.DEVELOPMENT);
-            taskRepo.updateTaskStatus(Status.DEVELOPMENT , project);
+     //       taskRepo.updateTaskStatus(Status.DEVELOPMENT , project);
         }
         else{
             project.setStatus(Status.MAINTENANCE);
-            taskRepo.updateTaskStatus(Status.MAINTENANCE , project);
+    //        taskRepo.updateTaskStatus(Status.MAINTENANCE , project);
         }
     }
 }

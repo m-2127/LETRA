@@ -254,7 +254,7 @@ public class HRMRestAPI {
 
 		resetPassword.setNewPassword(password, user);
 
-		return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
+		return resetPassword.setNewPassword(password, user);
 	}
 
 	@PostMapping("/report")

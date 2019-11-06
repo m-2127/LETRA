@@ -20,5 +20,7 @@ public interface TaskRepository extends JpaRepository<Task , Long> {
     Set<Task> findTaskByProject(Project project);
 
     @Query("update Task set status = statusValue where project = projectVal")
-    List<User> updateTaskStatus(@Param("statusValue") Status statusVal , @Param("projectVal") Project projectVal);
+    List<Task> updateTaskStatus(@Param("statusValue") Status statusVal , @Param("projectVal") Project projectVal);
+
+
 }

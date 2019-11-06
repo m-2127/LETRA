@@ -201,9 +201,7 @@ public class EmployeeRestAPI {
 		User user = userRepo.findById(userService.authenticatedUser()).get();
 		String password = resetform.getPassword();
 
-		resetPassword.setNewPassword(password, user);
-
-			return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
+		return resetPassword.setNewPassword(password, user);
 	}
 
 	@GetMapping("/selectnotification")
