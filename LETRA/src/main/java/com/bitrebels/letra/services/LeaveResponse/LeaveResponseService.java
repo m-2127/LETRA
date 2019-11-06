@@ -34,7 +34,7 @@ public class LeaveResponseService {
             LocalDate localDate = LocalDate.parse(date);
 
             Iterator<LeaveDates> leaveDatesIterator = initialDateList.iterator();
-            
+
             while(leaveDatesIterator.hasNext()){
                 LeaveDates currentLeaveDate = leaveDatesIterator.next();
 
@@ -44,14 +44,6 @@ public class LeaveResponseService {
 
             }
 
-//            leaveDatesIterator.
-//            for (LeaveDates leaveDate : initialDateList) {
-//
-//                if(!localDate.isEqual(leaveDate.getDate())){
-//                       initialDateList.remove(leaveDate);
-//                }
-//
-//            }
         }
 
 
