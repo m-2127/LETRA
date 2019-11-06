@@ -33,14 +33,28 @@ public class LeaveResponseService {
         for(String date : finalDateList) {
             LocalDate localDate = LocalDate.parse(date);
 
-            for (LeaveDates leaveDate : initialDateList) {
+            Iterator<LeaveDates> leaveDatesIterator = initialDateList.iterator();
+            
+            while(leaveDatesIterator.hasNext()){
+                LeaveDates currentLeaveDate = leaveDatesIterator.next();
 
-                if(!localDate.isEqual(leaveDate.getDate())){
-                       initialDateList.remove(leaveDate);
+                if(!localDate.isEqual(currentLeaveDate.getDate())){
+                    leaveDatesIterator.remove();
                 }
 
             }
+
+//            leaveDatesIterator.
+//            for (LeaveDates leaveDate : initialDateList) {
+//
+//                if(!localDate.isEqual(leaveDate.getDate())){
+//                       initialDateList.remove(leaveDate);
+//                }
+//
+//            }
         }
+
+
         leave.setLeaveDates(initialDateList);
     }
 }

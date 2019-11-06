@@ -30,7 +30,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/emp")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class EmployeeRestAPI {
 	
 	@Autowired
@@ -259,25 +259,40 @@ public class EmployeeRestAPI {
 		long employeeId = userService.authenticatedUser();
 		Employee employee = employeeRepository.findById(employeeId).get();
 
-		Set<Leave> leaveSet = leaveRepo.findLeavesByStatus(LeaveStatus.PENDING);
+		Set<Leave> leaveSet = leaveRepo.findLeavesByEmployee(employee);
 
-		Iterator<Leave> leaveIterator = leaveSet.iterator();
-
+		Iterator<Leave> firstleaveIterator = leaveSet.iterator();
 		Set<EmployeeHomePage> empHomePageSet = new HashSet<>();
 
-		while(leaveIterator.hasNext()){
+		while(firstleaveIterator.hasNext()){
+			Leave currentLeave = firstleaveIterator.next();
+			LocalDate today = LocalDate.now();
+			LocalDate endDate = currentLeave.getLeaveRequest().getFinishDate();
+			LeaveRequest leaveRequest = currentLeave.getLeaveRequest();
 
-			Leave leave = leaveIterator.next();
-			long leaveReqId = leave.getLeaveRequest().getLeaveReqId();
-			LeaveRequest leaveRequest = leaveReqRepo.findById(leaveReqId).get();
+			if(endDate.isBefore(today)){
+				firstleaveIterator.remove();
+			}
+			else{
+				EmployeeHomePage employeeHomePage  = new EmployeeHomePage(leaveRequest.getSetDate(),
+						leaveRequest.getFinishDate(),leaveRequest.getNoOfDays(),
+						leaveRequest.getLeaveType().toUpperCase(), currentLeave.getStatus().toString().toUpperCase());
 
-			EmployeeHomePage employeeHomePage  = new EmployeeHomePage(leaveRequest.getSetDate(),
-					leaveRequest.getFinishDate(),leaveRequest.getNoOfDays(),
-					leaveRequest.getLeaveType().toUpperCase(), "PENDING");
-
-			empHomePageSet.add(employeeHomePage);
-
+				empHomePageSet.add(employeeHomePage);
+			}
 		}
+
+//	//	Iterator<Leave> secondleaveIterator = leaveSet.iterator();
+//
+//		while(firstleaveIterator.hasNext()){
+//
+////			Leave leave = firstleaveIterator.next();
+//			long leaveReqId = leave.getLeaveRequest().getLeaveReqId();
+//			LeaveRequest leaveRequest = leaveReqRepo.findById(leaveReqId).get();
+//
+//
+//
+//		}
 
 		return empHomePageSet;
 

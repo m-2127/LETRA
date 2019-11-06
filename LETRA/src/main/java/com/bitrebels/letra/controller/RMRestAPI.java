@@ -183,11 +183,14 @@ public class RMRestAPI {
 		ReportingManager reportingManager = rmRepo.findById(rmId).get();
 		String managerName = userRepo.findById(rmId).get().getName();
 
+		//retrieving dates from frontend using leaveResponse
 		List<String> dates = leaveResponse.getDates();
 
 		leave = leaveRepo.findLeaveByLeaveRequest(leaveRequestRepo.findById(leaveResponse.getLeaveReqId()).get());
 
+		//setting the reporting manager the Leave
 		leave.getReportingManager().add(reportingManager);
+
 		leaveRepo.save(leave);//added reporting manager to leave because I need to get the sizeof the list of reporting managers
 
 		Long userId = leaveResponse.getEmployeeID();
@@ -195,11 +198,18 @@ public class RMRestAPI {
 
 		if(leave.getReportingManager().size() != 2 ){//this runs when the initial manager responses
 			leave.setLeaveType(leaveResponse.getLeaveType());
+
+			//description is a separate entity because one leave can have many descriptions(if two managers there can be
+			// two descriptions).
 			leave.getDescription().add(new Description(leaveResponse.getDescription(),managerName));
 			leave.setApproval(leaveResponse.isApproval());
-			if(leaveResponse.isApproval()) {
-				leaveResponseService.saveLeaveDates(dates,leave);
-				leave.setStatus(LeaveStatus.APPROVED);//need to change it to pending
+
+			if(leaveResponse.isApproval()) {//this condtion is when rm approves the leave
+				leaveResponseService.saveLeaveDates(dates,leave);//setting the dates which rm selected
+
+				//even the leave is approved it is set to pending because for the leave to be approved the other RM
+				// should also approve the leave
+				leave.setStatus(LeaveStatus.PENDING);
 				leave.setDuration(leave.getLeaveDates().size());
 			}
 			else{
@@ -210,7 +220,7 @@ public class RMRestAPI {
 //				notificationService.sendToManagersTopic(notification);
 			}
 
-			if(leave.getNoOfManagers() == 1){
+			if(leave.getNoOfManagers() == 1  && leave.getStatus()==LeaveStatus.PENDING){//pending=approved
 				//sending notification to employee who requested the leave
 //				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
 //				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
@@ -220,11 +230,11 @@ public class RMRestAPI {
 			}
 		}
 		else{//this works only for the second manager
-			if(leave.getStatus() == LeaveStatus.APPROVED){//here it checks if the previous manager has approved
+			if(leave.getStatus() == LeaveStatus.PENDING){//here it checks if the previous manager has approved
 				leave.getDescription().add(new Description(leaveResponse.getDescription() , managerName));
 				leave.setApproval(leaveResponse.isApproval());
 
-				if(leaveResponse.isApproval()) {
+				if(leaveResponse.isApproval()) {//checks if the second manger approved
 					leave.setStatus(LeaveStatus.APPROVED);
 					leaveResponseService.updateDatesWithCurrentResponse(leave.getLeaveDates() , dates , leave);
 					leave.setDuration(leave.getLeaveDates().size());
