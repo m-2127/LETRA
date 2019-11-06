@@ -450,7 +450,7 @@ public class RMRestAPI {
 
 	@GetMapping("/taskdetails ")
 	@PreAuthorize("hasRole('RM')")
-	public ReturnProjectDetails returnTaskDetails()  {
+	public Set<ReturnTaskDetails> returnTaskDetails()  {
 
 		Long rmId = userService.authenticatedUser();
 		ReportingManager reportingManager = rmRepo.findById(rmId).get();
@@ -458,13 +458,19 @@ public class RMRestAPI {
 		Set<Task> taskSet = reportingManager.getProject().getTask();
 		Iterator<Task> taskIterator = taskSet.iterator();
 
+		Set<ReturnTaskDetails> returnTaskSet= new HashSet<>();
+
 		while(taskIterator.hasNext()){
-			Task currentTask = taskIterator.next();
+			Task task = taskIterator.next();
+			task.getStatus().toString();
+
+			ReturnTaskDetails returnTaskDetails = new ReturnTaskDetails(task.getId(),task.getTaskName(),
+					task.getTaskStartDate(),task.getTaskEndDate(),task.getHours(),task.getProgress());
+
+			returnTaskSet.add(returnTaskDetails);
 
 		}
-		Project project = reportingManager.getProject();
 
-		return new ReturnProjectDetails(project.getName(),project.getStartDate(),project.getEndDate(),
-				project.getStatus().toString());
+		return returnTaskSet;
 	}
 }
