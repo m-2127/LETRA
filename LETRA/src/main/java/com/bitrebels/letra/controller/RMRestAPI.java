@@ -310,12 +310,6 @@ public class RMRestAPI {
 //		  }
 	  }
 
-	@DeleteMapping
-	@PreAuthorize("hasRole('RM')")
-	public void deleteProject(){
-
-	}
-
 	@GetMapping("/returnemployees1")//returns all employees of the project
 	@PreAuthorize("hasRole('RM')")
 	public Set<ReturnDetails> findEmployees1(){
@@ -338,18 +332,22 @@ public class RMRestAPI {
 
 	@GetMapping("/returnemployees2")//returns employees under a given manager
 	@PreAuthorize("hasRole('RM')")
-	public Map<Long , String> findEmployees2(){
+	public Set<ReturnDetails> findEmployees2(){
 		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
 		Set<Employee> employeeList = manager.getEmployees();
-		Map<Long , String> employeeMap = new HashMap<>();
+
+		Set<ReturnDetails> returnDetailsSet = new HashSet<>();
+
 		Iterator<Employee> employeeIterator = employeeList.iterator();
 		while(employeeIterator.hasNext()){
 			Employee employee = employeeIterator.next();
 			long id = employee.getEmployeeId();
 			String name = userRepo.findById(id).get().getName();
-			employeeMap.put(id,name);
+
+			ReturnDetails returnDetails = new ReturnDetails(id,name);
+			returnDetailsSet.add(returnDetails);
 		}
-		return employeeMap;
+		return returnDetailsSet;
 	}
 
 	@GetMapping("/selectnotification")//recommendation details
@@ -410,7 +408,7 @@ public class RMRestAPI {
 
 		resetPassword.setNewPassword(password, user);
 
-		return new ResponseEntity<>(new ResponseMessage("Succesfull."), HttpStatus.BAD_REQUEST);
+		return resetPassword.setNewPassword(password, user);
 	}
 
 	@GetMapping("/homepage")
@@ -438,9 +436,35 @@ public class RMRestAPI {
 		return rmHomePagesSet;
 	}
 
-	@GetMapping("/messaging")
+	@GetMapping("/projectdetails ")
 	@PreAuthorize("hasRole('RM')")
-	public void messaging()  {
+	public ReturnProjectDetails returnProjectDetails()  {
 
+		Long rmId = userService.authenticatedUser();
+		ReportingManager reportingManager = rmRepo.findById(rmId).get();
+		Project project = reportingManager.getProject();
+
+		 return new ReturnProjectDetails(project.getName(),project.getStartDate(),project.getEndDate(),
+						project.getStatus().toString());
+	}
+
+	@GetMapping("/taskdetails ")
+	@PreAuthorize("hasRole('RM')")
+	public ReturnProjectDetails returnTaskDetails()  {
+
+		Long rmId = userService.authenticatedUser();
+		ReportingManager reportingManager = rmRepo.findById(rmId).get();
+
+		Set<Task> taskSet = reportingManager.getProject().getTask();
+		Iterator<Task> taskIterator = taskSet.iterator();
+
+		while(taskIterator.hasNext()){
+			Task currentTask = taskIterator.next();
+
+		}
+		Project project = reportingManager.getProject();
+
+		return new ReturnProjectDetails(project.getName(),project.getStartDate(),project.getEndDate(),
+				project.getStatus().toString());
 	}
 }
