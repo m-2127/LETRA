@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Service
+@Service("updateProject")
 public class UpdateProject {
 
     @Autowired
@@ -89,5 +89,7 @@ public class UpdateProject {
             project.setStatus(Status.MAINTENANCE);
     //        taskRepo.updateTaskStatus(Status.MAINTENANCE , project);
         }
+
+        projectRepo.save(project);
     }
 }
