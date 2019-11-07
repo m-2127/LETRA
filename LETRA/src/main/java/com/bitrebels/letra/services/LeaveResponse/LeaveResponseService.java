@@ -28,6 +28,16 @@ public class LeaveResponseService {
         return leave;
     }
 
+    public Leave saveLeaveDatesofHRM(List<LocalDate> dates , Leave leave){
+        for(LocalDate date : dates) {
+            LeaveDates temp = new LeaveDates(date);
+            leave.getLeaveDates().add(temp);
+            leaveDatesRepo.save(temp);
+        }
+
+        return leave;
+    }
+
     public void updateDatesWithCurrentResponse(Set<LeaveDates> initialDateList , List<String> finalDateList , Leave leave){
 
         for(String date : finalDateList) {

@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.Iterator;
 import java.util.Set;
 
-@Service
+@Service("updateQuota")
 public class UpdateQuota {
+
     @Autowired
     UserRepository userRepo;
-    public  void updateQuota(String leaveType, int noOfDays, User user){
+
+    public void updateQuota(String leaveType, int noOfDays, User user){
 
         Set<LeaveQuota> leaveQuotas = user.getLeaveQuotas();
 
@@ -69,5 +71,22 @@ public class UpdateQuota {
         }
         user.setLeaveQuotas(leaveQuotas);
         userRepo.save(user);
+    }
+
+    public void updateMaternityQuota(long duration,User user){
+
+        Set<LeaveQuota> leaveQuotas = user.getLeaveQuotas();
+
+            Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+            while(leaveQuotaIterator.hasNext()){
+                LeaveQuota currentQuota = leaveQuotaIterator.next();
+                if(currentQuota instanceof MaternityLeave){
+                    MaternityLeave y = (MaternityLeave)currentQuota;
+                    y.setLeavesTaken((int)duration);
+                    break;
+                }
+            }
+
+
     }
 }
