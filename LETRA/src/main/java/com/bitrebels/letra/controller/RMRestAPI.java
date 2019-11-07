@@ -31,7 +31,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/rm")
 @Configuration
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class RMRestAPI {
 
 	@Autowired

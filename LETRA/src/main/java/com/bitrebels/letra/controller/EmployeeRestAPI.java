@@ -30,7 +30,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/emp")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class EmployeeRestAPI {
 	
 	@Autowired
@@ -91,7 +91,7 @@ public class EmployeeRestAPI {
 		//working days between leave start date and leave end date
 		int duration = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
 
-		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType(), leaveForm.getSetDate(),
+		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType().toLowerCase(), leaveForm.getSetDate(),
 				leaveForm.getFinishDate() , leaveForm.getDescription(), duration);
 
 		leaveReqRepo.save(leaveRequest);
