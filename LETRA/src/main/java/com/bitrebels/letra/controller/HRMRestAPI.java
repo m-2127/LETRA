@@ -10,6 +10,7 @@ import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.Date.FindDatesBetween;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.HolidayReturn;
@@ -52,6 +53,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	LeaveQuotaRepository leaveQuotaRepo;
+
+	@Autowired
+	FindDatesBetween findDatesBetween;
 	
 	@Autowired
 	ProjectRepository projectRepo;
@@ -216,30 +220,37 @@ public class HRMRestAPI {
 
 	@PostMapping("/hrmleaveresponse")
 	@PreAuthorize("hasRole('HRM')")
-	public void hrmRespondToLeave(@Valid @RequestBody LeaveResponse leaveResponse){
+	public void hrmRespondToLeave(@Valid @RequestBody HRMLeaveResponse hrmLeaveResponse){
 
 		Long hrmId = userService.authenticatedUser();
 		String hrmName = userRepo.findById(hrmId).get().getName();
-		List<String> dates = leaveResponse.getDates();
 
-		Leave leave = leaveRepo.findLeaveByLeaveRequest(leaveReqRepo.findById(leaveResponse.getLeaveReqId()).get());
+		long leaveReqId = hrmLeaveResponse.getLeaveReqId();
+		LeaveRequest leaveRequest = leaveReqRepo.findById(leaveReqId).get();
 
-		leave = leaveResponseService.saveLeaveDates(dates , leave);
+		List<LocalDate> dates = new ArrayList<>();
+		dates.add(leaveRequest.getSetDate());
+		dates.add(leaveRequest.getFinishDate());
+
+		Leave leave = leaveRepo.findLeaveByLeaveRequest(leaveReqRepo.findById(hrmLeaveResponse.getLeaveReqId()).get());
+
+		leave = leaveResponseService.saveLeaveDatesofHRM(dates , leave);
 
 
-		leave.getDescription().add(new Description(leaveResponse.getDescription(), hrmName));
+		leave.getDescription().add(new Description(hrmLeaveResponse.getDescription(), hrmName));
 
-		Long userId = leaveResponse.getEmployeeID();
+		Long userId = hrmLeaveResponse.getEmployeeID();
 		User user = userRepo.findById(userId).get();
 
 		leaveRepo.save(leave);
 
-		updateQuota.updateQuota(leaveResponse.getLeaveType(), dates.size(), user);
+		updateQuota.updateMaternityQuota( findDatesBetween.getNoOfDaysBetween(leaveRequest.getSetDate(),
+									leaveRequest.getFinishDate()) , user);
 
 		//sending notification to employee who requesteed the leave
-		String sendingTopic = "topicRM"+ hrmId + "EMP" + userId;
-		Notification notification = new Notification(sendingTopic , user.getName() , leaveResponse.isApproval(),leave.getId());
-		notificationService.sendToManagersTopic(notification);
+//		String sendingTopic = "topicRM"+ hrmId + "EMP" + userId;
+//		Notification notification = new Notification(sendingTopic , user.getName() , hrmLeaveResponse.isApproval(),leave.getId());
+//		notificationService.sendToManagersTopic(notification);
 
 
 		leaveRepo.save(leave);

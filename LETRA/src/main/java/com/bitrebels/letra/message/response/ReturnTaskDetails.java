@@ -16,13 +16,20 @@ public class ReturnTaskDetails {
 
     int progress;
 
-    public ReturnTaskDetails(long taskId, String name, LocalDate startDate, LocalDate finishDate, int duration, int progress) {
+    String status;
+
+    String employee;
+
+    public ReturnTaskDetails(long taskId, String name, LocalDate startDate, LocalDate finishDate, int duration,
+                             int progress, String status, String employee) {
         this.taskId = taskId;
         this.name = name;
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.duration = duration;
         this.progress = progress;
+        this.status = status;
+        this.employee = employee;
     }
 
     public long getTaskId() {
@@ -71,5 +78,21 @@ public class ReturnTaskDetails {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
     }
 }

@@ -434,7 +434,7 @@ public class RMRestAPI {
 		return rmHomePagesSet;
 	}
 
-	@GetMapping("/projectdetails ")
+	@GetMapping("/projectdetails")
 	@PreAuthorize("hasRole('RM')")
 	public ReturnProjectDetails returnProjectDetails()  {
 
@@ -446,7 +446,7 @@ public class RMRestAPI {
 						project.getStatus().toString());
 	}
 
-	@GetMapping("/taskdetails ")
+	@GetMapping("/taskdetails")
 	@PreAuthorize("hasRole('RM')")
 	public Set<ReturnTaskDetails> returnTaskDetails()  {
 
@@ -461,9 +461,11 @@ public class RMRestAPI {
 		while(taskIterator.hasNext()){
 			Task task = taskIterator.next();
 			task.getStatus().toString();
+			String empname = userRepo.findById(task.getEmployee().getEmployeeId()).get().getName();
 
 			ReturnTaskDetails returnTaskDetails = new ReturnTaskDetails(task.getId(),task.getTaskName(),
-					task.getTaskStartDate(),task.getTaskEndDate(),task.getHours(),task.getProgress());
+					task.getTaskStartDate(),task.getTaskEndDate(),task.getHours(),task.getProgress(),
+					task.getStatus().toString(),empname);
 
 			returnTaskSet.add(returnTaskDetails);
 
