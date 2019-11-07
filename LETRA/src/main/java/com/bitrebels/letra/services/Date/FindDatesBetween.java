@@ -20,4 +20,13 @@ public class FindDatesBetween {
                 .mapToObj(i -> startDate.plusDays(i))
                 .collect(Collectors.toSet());
     }
+
+    public static long getNoOfDaysBetween(
+            LocalDate startDate, LocalDate endDate) {
+
+        return ChronoUnit.DAYS.between(startDate, endDate);
+
+    }
+
+
 }

@@ -136,7 +136,7 @@ public class ApplyLeave {
     public void applyLeaveForMaternity(LeaveForm leaveForm , LeaveRequest leaveRequest){
 
         Progress progress;
-        List<Long> progressId = new ArrayList<>();
+        List<Long> progressList = new ArrayList<>();
 
         Long employeeId = userService.authenticatedUser();
 
@@ -163,7 +163,7 @@ public class ApplyLeave {
         progressRepo.save(progress);
         leaveReqRepo.save(leaveRequest);
 
-        progressId.add(progress.getProgressId());
+        progressList.add(progress.getProgressId());
 
 
         //notification received by HRM
