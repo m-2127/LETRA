@@ -400,7 +400,7 @@ public class RMRestAPI {
 	}
 
 	@PostMapping("/reset")
-	@PreAuthorize("hasRole('RM')")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
 
 		User user = userRepo.findById(userService.authenticatedUser()).get();
