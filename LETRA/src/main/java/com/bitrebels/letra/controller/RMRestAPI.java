@@ -406,8 +406,6 @@ public class RMRestAPI {
 		User user = userRepo.findById(userService.authenticatedUser()).get();
 		String password = resetform.getPassword();
 
-		resetPassword.setNewPassword(password, user);
-
 		return resetPassword.setNewPassword(password, user);
 	}
 
