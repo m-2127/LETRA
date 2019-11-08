@@ -14,13 +14,19 @@ public class LeaveForm {
 	@NotBlank
 	private String leaveType;
 	
+//	@NotNull
+//	@JsonDeserialize(using = DateHandler.class)
+//	private LocalDate setDate;
+//
+//	@NotNull
+//	@JsonDeserialize(using = DateHandler.class)
+//	private LocalDate finishDate;
+
 	@NotNull
-	@JsonDeserialize(using = DateHandler.class)
-	private LocalDate setDate;
-	
+	private String setDate;
+
 	@NotNull
-	@JsonDeserialize(using = DateHandler.class)
-	private LocalDate finishDate;
+	private String finishDate;
 	
 	@NotBlank
 	private String description;
@@ -39,19 +45,19 @@ public class LeaveForm {
 		this.leaveType = leaveType;
 	}
 
-	public LocalDate getSetDate() {
+	public String getSetDate() {
 		return setDate;
 	}
 
-	public void setSetDate(LocalDate setDate) {
+	public void setSetDate(String setDate) {
 		this.setDate = setDate;
 	}
 
-	public LocalDate getFinishDate() {
+	public String getFinishDate() {
 		return finishDate;
 	}
 
-	public void setFinishDate(LocalDate finishDate) {
+	public void setFinishDate(String finishDate) {
 		this.finishDate = finishDate;
 	}
 

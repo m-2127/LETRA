@@ -122,6 +122,7 @@ public class RMRestAPI {
 			Timestamp timestamp = new Timestamp(new Date().getTime());
 			task.setUpdateTime(timestamp);
 			task.setProject(project);
+			task.setStatus(Status.DEVELOPMENT);
 			taskRepo.save(task);
 		}
 		project.setTask(tasks);
@@ -461,12 +462,19 @@ public class RMRestAPI {
 		while(taskIterator.hasNext()){
 			Task task = taskIterator.next();
 			task.getStatus().toString();
-			String empname = userRepo.findById(task.getEmployee().getEmployeeId()).get().getName();
+
+
 
 			ReturnTaskDetails returnTaskDetails = new ReturnTaskDetails(task.getId(),task.getTaskName(),
 					task.getTaskStartDate(),task.getTaskEndDate(),task.getHours(),task.getProgress(),
-					task.getStatus().toString(),empname);
+					task.getStatus().toString()/*,empname*/);
 
+			if(task.getEmployee() != null) {
+				long employeeId = task.getEmployee().getEmployeeId();
+				String empname = userRepo.findById(employeeId).get().getName();
+				returnTaskDetails.setEmployee(empname);
+				returnTaskDetails.setEmployeeId(employeeId);
+			}
 			returnTaskSet.add(returnTaskDetails);
 
 		}

@@ -10,6 +10,7 @@ import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.AnnualRepo;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.ApplyLeaveService.ApplyLeave;
+import com.bitrebels.letra.services.Date.DateToLocalDate;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.HolidayReturn;
@@ -84,15 +85,23 @@ public class EmployeeRestAPI {
 	@Autowired
 	ApplyLeave applyLeave;
 
+	@Autowired
+	DateToLocalDate dateToLocalDate;
+
 	@PostMapping("/applyleave")
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
 
-		//working days between leave start date and leave end date
-		int duration = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
+		LocalDate leaveStart = dateToLocalDate.convertStringLocalDate(leaveForm.getSetDate().substring(0,10));
+		LocalDate leaveEnd = dateToLocalDate.convertStringLocalDate(leaveForm.getFinishDate().substring(0,10));
 
-		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType().toLowerCase(), leaveForm.getSetDate(),
-				leaveForm.getFinishDate() , leaveForm.getDescription(), duration);
+
+
+		//working days between leave start date and leave end date
+		int duration = leaveTracker.countWorkingDays(leaveStart,leaveEnd);
+
+		LeaveRequest leaveRequest = new LeaveRequest(leaveForm.getLeaveType().toLowerCase(), leaveStart,
+				leaveEnd, leaveForm.getDescription(), duration);
 
 		leaveReqRepo.save(leaveRequest);
 
@@ -127,7 +136,7 @@ public class EmployeeRestAPI {
 				Long rmId  = project.getRm().getRmId();
 				leave.getReportingManager().add(rmRepository.findById(rmId).get());
 				Set<Task> tasks = taskRepo.findTaskByEmployeeAndProject(employee, project);
-				applyLeave.applyLeave(leaveForm, leaveRequest, tasks , rmId);
+				applyLeave.applyLeave(leaveForm, leaveRequest, tasks , rmId,leaveStart,leaveEnd );
 			}
 		}
 
