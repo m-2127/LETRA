@@ -1,12 +1,8 @@
 package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.*;
-import com.bitrebels.letra.message.response.HRMReportDetails;
-import com.bitrebels.letra.message.response.HolidayDisplayReturn;
-import com.bitrebels.letra.message.response.ResponseMessage;
-import com.bitrebels.letra.message.response.ReturnDetails;
+import com.bitrebels.letra.message.response.*;
 import com.bitrebels.letra.model.*;
-import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
@@ -127,9 +123,12 @@ public class HRMRestAPI {
 				registrationRequest.getGender());
 		user.setHrManager(hrManager);
 		Set<Role> roles = new HashSet<>();
-		Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+		Role userRole1 = roleRepository.findByName(RoleName.ROLE_USER)
 				.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-		roles.add(userRole);
+		roles.add(userRole1);
+		Role userRole2 = roleRepository.findByName(RoleName.ROLE_EMPLOYEE)
+				.orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
+		roles.add(userRole2);
 
 		user.setRoles(roles);
 
@@ -339,6 +338,43 @@ public class HRMRestAPI {
 
 		}
 		return projectsDetails;
+	}
+
+	@GetMapping("/homepage")
+	@PreAuthorize("hasRole('HRM')")
+	public Set<HRMNotificationDetails> homePages() {
+
+		Set<LeaveRequest> leaveRequestSet = leaveReqRepo.findByLeaveTypeAndFinishDateAfter("maternity",
+										LocalDate.now());
+
+		Iterator<LeaveRequest> leavesReqIterator  = leaveRequestSet.iterator();
+
+		Set<HRMNotificationDetails> hrmHomePageSet = new HashSet<>();
+
+		while(leavesReqIterator.hasNext()){
+			LeaveRequest leaveReq = leavesReqIterator.next();
+			Leave leave = leaveRepo.findByLeaveRequest(leaveReq);
+			long employeeId = leave.getEmployee().getEmployeeId();
+
+			LocalDate leaveStart = leaveReq.getSetDate();
+			LocalDate leaveEnd = leaveReq.getFinishDate();
+
+			String name =  userRepo.findById(employeeId).get().getName();
+			String leaveType = leaveReq.getLeaveType();
+
+			String leaveStatus = leave.getStatus().toString();
+
+			if(leaveStatus.equalsIgnoreCase("approved")){
+				leaveStatus = "ONGOING";
+			}
+
+			HRMNotificationDetails hrmHomePage = new HRMNotificationDetails(employeeId,leaveReq.getLeaveReqId(),
+					name,leaveType,leaveStart,leaveEnd,leaveStatus);
+
+			hrmHomePageSet.add(hrmHomePage);
+		}
+
+		return hrmHomePageSet;
 	}
 
 }

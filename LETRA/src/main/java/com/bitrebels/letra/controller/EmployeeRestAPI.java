@@ -140,7 +140,7 @@ public class EmployeeRestAPI {
 			}
 		}
 
-		return new ResponseEntity<>(new ResponseMessage("Leave applied successfully"), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseMessage("Leave Applied Successfully"), HttpStatus.OK);
 	}
 	
 	@GetMapping("/leavequota")

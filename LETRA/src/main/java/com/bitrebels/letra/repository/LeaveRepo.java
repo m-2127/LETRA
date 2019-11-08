@@ -25,9 +25,13 @@ public interface LeaveRepo extends JpaRepository<Leave, Long> {
     Set<Leave> findByLeaveDates_DateBetweenAndEmployeeAndApproval(
             LocalDate startDate, LocalDate endDate, Employee employee,boolean b);
 
+    Set<Leave> findByStatus(LeaveStatus status);
+
     Leave findLeaveByLeaveRequest(LeaveRequest leaveRequest);
 
     Set<Leave> findLeavesByEmployee(Employee employee);
 
     List<Leave> findByReportingManagerAndStatus(ReportingManager reportingManager, LeaveStatus status);
+
+    Leave findByLeaveRequest(LeaveRequest leaveRequest);
 }
