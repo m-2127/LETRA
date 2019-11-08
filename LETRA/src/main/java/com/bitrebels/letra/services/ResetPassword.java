@@ -27,12 +27,12 @@ public class ResetPassword {
 
 
 
-    public ResponseEntity<?> setNewPassword(String password, User user) {
+    public ResponseEntity<?> setNewPassword(String currentpass, String newpass, User user) {
 
-        boolean passmatch = passwordEncoder().matches(password,user.getPassword());
+        boolean passmatch = passwordEncoder().matches(currentpass,user.getPassword());
 
         if(passmatch){
-            user.setPassword(passwordEncoder().encode(password));
+            user.setPassword(passwordEncoder().encode(newpass));
             userService.save(user);
 
             return new ResponseEntity<>(new ResponseMessage("Password changed successfully"), HttpStatus.OK);

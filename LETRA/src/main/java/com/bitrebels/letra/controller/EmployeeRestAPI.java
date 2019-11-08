@@ -2,6 +2,7 @@ package com.bitrebels.letra.controller;
 
 import com.bitrebels.letra.message.request.HRMReport;
 import com.bitrebels.letra.message.request.LeaveForm;
+import com.bitrebels.letra.message.request.PasswordReset;
 import com.bitrebels.letra.message.request.ResetForm;
 import com.bitrebels.letra.message.response.*;
 import com.bitrebels.letra.model.*;
@@ -205,12 +206,13 @@ public class EmployeeRestAPI {
 
 	@PostMapping("/reset")
 	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
+	public ResponseEntity<?> setNewPassword(@Valid @RequestBody PasswordReset passwordReset) {
 
 		User user = userRepo.findById(userService.authenticatedUser()).get();
-		String password = resetform.getPassword();
+		String currentpass = passwordReset.getCurrentpassword();
+		String newpass = passwordReset.getNewpassword();
 
-		return resetPassword.setNewPassword(password, user);
+		return resetPassword.setNewPassword(currentpass,newpass, user);
 	}
 
 	@GetMapping("/selectnotification")
