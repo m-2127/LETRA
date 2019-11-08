@@ -48,7 +48,8 @@ public class ApplyLeave {
     @Autowired
     RMRepository rmRepository;
 
-    public void applyLeave(LeaveForm leaveForm , LeaveRequest leaveRequest, Set<Task> tasks , long rmId ){
+    public void applyLeave(LeaveForm leaveForm , LeaveRequest leaveRequest, Set<Task> tasks , long rmId,
+                           LocalDate leaveStart, LocalDate leaveEnd){
 
         Progress progress = null;
         List<Long> progressId = new ArrayList<>();
@@ -60,7 +61,7 @@ public class ApplyLeave {
         ReportingManager manager = rmRepository.findById(rmId).get();
 
         //working days between leave start date and leave end date
-        int workingDays = leaveTracker.countWorkingDays(leaveForm.getSetDate(),leaveForm.getFinishDate());
+        int workingDays = leaveTracker.countWorkingDays(leaveStart,leaveEnd);
 
         Long employeeId = userService.authenticatedUser();
         Employee employee = employeeRepository.findById(employeeId).get();

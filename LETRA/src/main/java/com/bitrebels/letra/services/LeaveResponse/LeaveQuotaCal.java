@@ -44,6 +44,12 @@ public class LeaveQuotaCal {
          sickLeave = new SickLeave();
          leaveQuotas = new HashSet<>();
 
+         annualLeave.setUser(user);
+         casualLeave.setUser(user);
+         noPayLeave.setUser(user);
+         sickLeave.setUser(user);
+         maternityLeave.setUser(user);
+
          leaveQuotas.add(annualLeave);
          leaveQuotas.add(sickLeave);
          leaveQuotas.add(noPayLeave);
