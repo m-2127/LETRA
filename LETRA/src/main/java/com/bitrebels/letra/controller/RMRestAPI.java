@@ -400,15 +400,15 @@ public class RMRestAPI {
 		taskRepo.save(task);
 	}
 
-	@PostMapping("/reset")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
-
-		User user = userRepo.findById(userService.authenticatedUser()).get();
-		String password = resetform.getPassword();
-
-		return resetPassword.setNewPassword(password, user);
-	}
+//	@PostMapping("/reset")
+//	@PreAuthorize("hasRole('USER')")
+//	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
+//
+//		User user = userRepo.findById(userService.authenticatedUser()).get();
+//		String password = resetform.getPassword();
+//
+//		return resetPassword.setNewPassword(password, user);
+//	}
 
 	@GetMapping("/homepage")
 	@PreAuthorize("hasRole('RM')")

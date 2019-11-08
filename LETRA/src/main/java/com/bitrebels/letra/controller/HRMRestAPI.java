@@ -6,6 +6,7 @@ import com.bitrebels.letra.model.*;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
+import com.bitrebels.letra.services.Date.DateToLocalDate;
 import com.bitrebels.letra.services.Date.FindDatesBetween;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
@@ -43,6 +44,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	HolidayReturn holidayReturn;
+
+	@Autowired
+	DateToLocalDate dateToLocalDate;
 
 	@Autowired
 	RMRepository rmRepo;
@@ -198,19 +202,21 @@ public class HRMRestAPI {
 	@PostMapping("/setholidays")
 	@PreAuthorize("hasRole('HRM')")
 	public void setHolidays(@RequestBody HolidaySet holidaySet){
-		List<Holiday> holidays = holidaySet.getHolidays();
+		List<ApplyHoliday> holidays = holidaySet.getHolidaySet();
 
-		Iterator<Holiday> iterable = holidays.iterator();
+		Iterator<ApplyHoliday> iterable = holidays.iterator();
 
 		while(iterable.hasNext()){
-			Holiday holiday = iterable.next();
+			ApplyHoliday holiday = iterable.next();
 			if(holiday.equals(holidays.get(0)))
 			{
 				continue;
 			}
-			holiday = new Holiday(holiday.getDate(), holiday.getDescription());
 
-			holidayRepo.save(holiday);
+			Holiday tempHoliday = new Holiday(dateToLocalDate.convertStringLocalDate(holiday.getStart()),
+							holiday.getTitle());
+
+			holidayRepo.save(tempHoliday);
 
 		}
 
@@ -235,10 +241,7 @@ public class HRMRestAPI {
 
 		leave = leaveResponseService.saveLeaveDatesofHRM(dates , leave);
 
-
-		leave.getDescription().add(new Description(hrmLeaveResponse.getDescription(), hrmName));
-
-		Long userId = hrmLeaveResponse.getEmployeeID();
+		Long userId = leave.getEmployee().getEmployeeId();
 		User user = userRepo.findById(userId).get();
 
 		leaveRepo.save(leave);
@@ -255,15 +258,15 @@ public class HRMRestAPI {
 		leaveRepo.save(leave);
 	}
 
-	@PostMapping("/reset")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
-
-		User user = userRepo.findById(userService.authenticatedUser()).get();
-		String password = resetform.getPassword();
-
-		return resetPassword.setNewPassword(password, user);
-	}
+//	@PostMapping("/reset")
+//	@PreAuthorize("hasRole('USER')")
+//	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
+//
+//		User user = userRepo.findById(userService.authenticatedUser()).get();
+//		String password = resetform.getPassword();
+//
+//		return resetPassword.setNewPassword(password, user);
+//	}
 
 	@PostMapping("/report")
 	@PreAuthorize("hasRole('HRM')")
