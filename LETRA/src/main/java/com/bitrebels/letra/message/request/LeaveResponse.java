@@ -9,7 +9,7 @@ public class  LeaveResponse {
 
     private String leaveType;
 
-    private long employeeID;
+    private long employeeId;
 
     private String description;
 
@@ -42,12 +42,12 @@ public class  LeaveResponse {
         this.leaveType = leaveType;
     }
 
-    public long getEmployeeID() {
-        return employeeID;
+    public long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(long employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public boolean isApproval() {

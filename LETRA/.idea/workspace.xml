@@ -3,10 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="49c9adfc-3ae7-4c19-aca9-05f1e42e97dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/HolidaySet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/HolidaySet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/UpdateTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/UpdateTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/LeaveResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/LeaveResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/LeaveQuotaCal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/LeaveQuotaCal.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,8 +37,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1656">
-              <caret line="419" column="35" selection-start-line="419" selection-start-column="35" selection-end-line="419" selection-end-column="35" />
+            <state relative-caret-position="338">
+              <caret line="138" column="37" lean-forward="true" selection-start-line="138" selection-start-column="37" selection-end-line="138" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -47,19 +47,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Project.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/LeaveQuotaCal.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="34" column="17" lean-forward="true" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
+            <state relative-caret-position="271">
+              <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Status.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="44">
-              <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+            <state relative-caret-position="286">
+              <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -67,8 +67,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/HRMProjectDetails.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="44">
-              <caret line="2" column="30" selection-start-line="2" selection-start-column="30" selection-end-line="2" selection-end-column="30" />
+            <state relative-caret-position="141">
+              <caret line="25" column="5" lean-forward="true" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
               <folding>
                 <element signature="e#467#468#0" expanded="true" />
                 <element signature="e#494#495#0" expanded="true" />
@@ -78,64 +78,16 @@
                 <element signature="e#638#639#0" expanded="true" />
                 <element signature="e#692#693#0" expanded="true" />
                 <element signature="e#738#739#0" expanded="true" />
-                <element signature="e#773#774#0" expanded="true" />
-                <element signature="e#804#805#0" expanded="true" />
-                <element signature="e#852#853#0" expanded="true" />
-                <element signature="e#892#893#0" expanded="true" />
-                <element signature="e#925#926#0" expanded="true" />
-                <element signature="e#954#955#0" expanded="true" />
-                <element signature="e#998#999#0" expanded="true" />
-                <element signature="e#1034#1035#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/HRMNotificationDetails.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="23" selection-start-line="23" selection-end-line="23" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#854#855#0" expanded="true" />
-                <element signature="e#887#888#0" expanded="true" />
-                <element signature="e#937#938#0" expanded="true" />
-                <element signature="e#981#982#0" expanded="true" />
-                <element signature="e#1016#1017#0" expanded="true" />
-                <element signature="e#1049#1050#0" expanded="true" />
-                <element signature="e#1099#1100#0" expanded="true" />
-                <element signature="e#1143#1144#0" expanded="true" />
-                <element signature="e#1182#1183#0" expanded="true" />
-                <element signature="e#1217#1218#0" expanded="true" />
-                <element signature="e#1273#1274#0" expanded="true" />
-                <element signature="e#1321#1322#0" expanded="true" />
-                <element signature="e#1357#1358#0" expanded="true" />
-                <element signature="e#1389#1390#0" expanded="true" />
-                <element signature="e#1439#1440#0" expanded="true" />
-                <element signature="e#1481#1482#0" expanded="true" />
-                <element signature="e#1521#1522#0" expanded="true" />
-                <element signature="e#1554#1555#0" expanded="true" />
-                <element signature="e#1609#1610#0" expanded="true" />
-                <element signature="e#1653#1654#0" expanded="true" />
-                <element signature="e#1691#1692#0" expanded="true" />
-                <element signature="e#1722#1723#0" expanded="true" />
-                <element signature="e#1773#1774#0" expanded="true" />
-                <element signature="e#1813#1814#0" expanded="true" />
-                <element signature="e#1846#1847#0" expanded="true" />
-                <element signature="e#1875#1876#0" expanded="true" />
-                <element signature="e#1919#1920#0" expanded="true" />
-                <element signature="e#1955#1956#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="97">
-              <caret line="451" column="27" selection-start-line="451" selection-start-column="27" selection-end-line="451" selection-end-column="27" />
+            <state relative-caret-position="308">
+              <caret line="176" column="60" lean-forward="true" selection-start-line="176" selection-start-column="60" selection-end-line="176" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -144,19 +96,40 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/UpdateTask.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/UpdateQuota.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="748">
-              <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+            <state relative-caret-position="-176">
+              <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/LeaveResponse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="107" column="13" lean-forward="true" selection-start-line="107" selection-start-column="13" selection-end-line="107" selection-end-column="13" />
+            <state relative-caret-position="88">
+              <caret line="5" column="14" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="208" selection-start-line="208" selection-end-line="208" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/leavequota/LeaveQuota.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="638">
+              <caret line="38" column="18" lean-forward="true" selection-start-line="38" selection-start-column="18" selection-end-line="38" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -164,21 +137,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/ReturnTaskDetails.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="242">
+            <state relative-caret-position="374">
               <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
               <folding>
                 <element signature="e#1995#1996#0" expanded="true" />
                 <element signature="e#2028#2029#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/RMHomePage.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="44">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -197,7 +161,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="diga1" />
+        <entry key="$PROJECT_DIR$/.." value="diga2" />
       </map>
     </option>
   </component>
@@ -207,7 +171,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/RMNotificationDetails.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/RMHomePage.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveQuota/HRMReport.java" />
         <option value="$PROJECT_DIR$/src/main/resources/twilio.yml" />
@@ -237,7 +200,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/Date/DateToLocalDate.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/LeaveForm.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/ApplyLeaveService/ApplyLeave.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/LeaveQuotaCal.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/ReturnTaskDetails.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/repository/LeaveRequestRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/repository/LeaveRepo.java" />
@@ -246,8 +208,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/HRMNotificationDetails.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/PasswordReset.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/ResetPassword.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/ApplyHoliday.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/HRMLeaveResponse.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/HolidaySet.java" />
@@ -258,6 +218,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/HRMProjectDetails.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/LeaveQuotaCal.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/LeaveResponse.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" />
       </list>
     </option>
   </component>
@@ -414,6 +378,16 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="letra" type="462c0819:PsiDirectoryNode" />
               <item name="message" type="462c0819:PsiDirectoryNode" />
+              <item name="request" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Letra" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LETRA" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="letra" type="462c0819:PsiDirectoryNode" />
+              <item name="message" type="462c0819:PsiDirectoryNode" />
               <item name="response" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -451,6 +425,25 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="letra" type="462c0819:PsiDirectoryNode" />
+              <item name="repository" type="462c0819:PsiDirectoryNode" />
+              <item name="leavequotarepo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Letra" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LETRA" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="letra" type="462c0819:PsiDirectoryNode" />
+              <item name="security" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Letra" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LETRA" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="letra" type="462c0819:PsiDirectoryNode" />
               <item name="services" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -474,7 +467,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1573280431034" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1573290979606" />
     <property name="last_opened_file_path" value="D:/FCM-Spring-boot-API-master" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -614,13 +607,6 @@
       <workItem from="1573112262914" duration="2808000" />
       <workItem from="1573128123118" duration="8790000" />
       <workItem from="1573184669811" duration="20375000" />
-    </task>
-    <task id="LOCAL-00090" summary="repo commits">
-      <created>1572857194869</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1572857194869</updated>
     </task>
     <task id="LOCAL-00091" summary="models">
       <created>1572857219399</created>
@@ -958,7 +944,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573213160307</updated>
     </task>
-    <option name="localTasksCounter" value="139" />
+    <task id="LOCAL-00139" summary="hrm project details">
+      <created>1573280686174</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1573280686174</updated>
+    </task>
+    <option name="localTasksCounter" value="140" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -967,11 +960,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="430963000" />
+    <option name="totallyTimeSpent" value="438888000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49386084" visible="true" weight="0.21073826" />
       <window_info id="Structure" order="1" sideWeight="0.5070994" side_tool="true" weight="0.23221476" />
@@ -983,7 +975,7 @@
       <window_info id="Web" order="7" sideWeight="0.50613916" side_tool="true" weight="0.2590604" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3287858" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.35470667" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.35470667" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39972714" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -1048,7 +1040,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="HRM return details &#10;employees,projects,rms" />
     <MESSAGE value="Return Details" />
     <MESSAGE value="renamed" />
     <MESSAGE value="added gender" />
@@ -1073,30 +1064,10 @@
     <MESSAGE value="date to localdate" />
     <MESSAGE value="HRM notification" />
     <MESSAGE value="password reset" />
-    <option name="LAST_COMMIT_MESSAGE" value="password reset" />
+    <MESSAGE value="hrm project details" />
+    <option name="LAST_COMMIT_MESSAGE" value="hrm project details" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/LeaveResponse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="5" column="14" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/LeaveRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="24" column="10" lean-forward="true" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/RMNotificationDetails.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="18" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/ResetPassword.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="228">
@@ -1135,13 +1106,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/HRMLeaveResponse.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1250,13 +1214,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/leavequota/LeaveQuota.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="18" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/leavequota/MaternityLeave.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
@@ -1299,16 +1256,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="232" lean-forward="true" selection-start-line="232" selection-end-line="232" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/repository/LeaveRequestRepository.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -1344,13 +1291,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/User.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="27" column="19" selection-start-line="27" selection-start-column="19" selection-end-line="27" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UserServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="506">
@@ -1379,44 +1319,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/UpdateTask.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Project.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="748">
-          <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+        <state relative-caret-position="638">
+          <caret line="34" column="17" lean-forward="true" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Status.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="107" column="13" lean-forward="true" selection-start-line="107" selection-start-column="13" selection-end-line="107" selection-end-column="13" />
+        <state relative-caret-position="44">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/HRMLeaveResponse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="97">
-          <caret line="451" column="27" selection-start-line="451" selection-start-column="27" selection-end-line="451" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/ReturnTaskDetails.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-          <folding>
-            <element signature="e#1995#1996#0" expanded="true" />
-            <element signature="e#2028#2029#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="44">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/HRMNotificationDetails.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
+        <state relative-caret-position="506">
           <caret line="23" selection-start-line="23" selection-end-line="23" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1452,10 +1378,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/UpdateTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="880">
+          <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2134">
+          <caret line="107" column="13" lean-forward="true" selection-start-line="107" selection-start-column="13" selection-end-line="107" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/ReturnTaskDetails.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+          <folding>
+            <element signature="e#1995#1996#0" expanded="true" />
+            <element signature="e#2028#2029#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/response/HRMProjectDetails.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" column="30" selection-start-line="2" selection-start-column="30" selection-end-line="2" selection-end-column="30" />
+        <state relative-caret-position="141">
+          <caret line="25" column="5" lean-forward="true" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
           <folding>
             <element signature="e#467#468#0" expanded="true" />
             <element signature="e#494#495#0" expanded="true" />
@@ -1465,39 +1416,72 @@
             <element signature="e#638#639#0" expanded="true" />
             <element signature="e#692#693#0" expanded="true" />
             <element signature="e#738#739#0" expanded="true" />
-            <element signature="e#773#774#0" expanded="true" />
-            <element signature="e#804#805#0" expanded="true" />
-            <element signature="e#852#853#0" expanded="true" />
-            <element signature="e#892#893#0" expanded="true" />
-            <element signature="e#925#926#0" expanded="true" />
-            <element signature="e#954#955#0" expanded="true" />
-            <element signature="e#998#999#0" expanded="true" />
-            <element signature="e#1034#1035#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="23" column="13" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/LeaveQuotaCal.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1656">
-          <caret line="419" column="35" selection-start-line="419" selection-start-column="35" selection-end-line="419" selection-end-column="35" />
+        <state relative-caret-position="338">
+          <caret line="138" column="37" lean-forward="true" selection-start-line="138" selection-start-column="37" selection-end-line="138" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Project.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/leavequota/LeaveQuota.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="34" column="17" lean-forward="true" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
+        <state relative-caret-position="638">
+          <caret line="38" column="18" lean-forward="true" selection-start-line="38" selection-start-column="18" selection-end-line="38" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/model/Status.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/UpdateQuota.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+        <state relative-caret-position="-176">
+          <caret line="17" column="16" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/message/request/LeaveResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="5" column="14" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="208" selection-start-line="208" selection-end-line="208" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="176" column="60" lean-forward="true" selection-start-line="176" selection-start-column="60" selection-end-line="176" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

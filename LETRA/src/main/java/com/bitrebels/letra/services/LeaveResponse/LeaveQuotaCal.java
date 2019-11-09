@@ -5,6 +5,7 @@ import com.bitrebels.letra.model.Leave;
 import com.bitrebels.letra.model.User;
 import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.UserRepository;
+import com.bitrebels.letra.repository.leavequotarepo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,21 @@ public class LeaveQuotaCal {
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    AnnualRepo annualRepo;
+
+    @Autowired
+    CasualRepo casualRepo;
+
+    @Autowired
+    MaternityRepo maternityRepo;
+
+    @Autowired
+    SickRepo sickRepo;
+
+    @Autowired
+    NoPayRepo noPayRepo;
 
     int month, quarter;
 
@@ -70,6 +86,12 @@ public class LeaveQuotaCal {
         }
 
         user.setLeaveQuotas(leaveQuotas);
+
+        annualRepo.save(annualLeave);
+        casualRepo.save(casualLeave);
+        maternityRepo.save(maternityLeave);
+        sickRepo.save(sickLeave);
+        noPayRepo.save(noPayLeave);
 
         return user;
 

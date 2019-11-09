@@ -3,7 +3,6 @@
 import com.bitrebels.letra.message.request.*;
 import com.bitrebels.letra.message.response.*;
 import com.bitrebels.letra.model.*;
-import com.bitrebels.letra.model.Firebase.Notification;
 import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.Date.FindDatesBetween;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 
 @RestController
@@ -194,7 +192,7 @@ public class RMRestAPI {
 
 		leaveRepo.save(leave);//added reporting manager to leave because I need to get the sizeof the list of reporting managers
 
-		Long userId = leaveResponse.getEmployeeID();
+		Long userId = leaveResponse.getEmployeeId();
 		User user = userRepo.findById(userId).get();
 
 		if(leave.getReportingManager().size() != 2 ){//this runs when the initial manager responses
@@ -226,6 +224,7 @@ public class RMRestAPI {
 //				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
 //				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
 //				notificationService.sendToManagersTopic(notification);
+				leave.setStatus(LeaveStatus.APPROVED);
 
 				updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
 			}

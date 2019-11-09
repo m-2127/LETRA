@@ -149,30 +149,66 @@ public class EmployeeRestAPI {
 	public ResponseEntity<?> viewDetails(){
 
 		long employeeId = userService.authenticatedUser();
-		Employee employee = employeeRepository.findById(employeeId).get();
 		List<LeaveQuota> leaveQuotas = leaveQuotaRepo.findByUser(userRepo.findById(employeeId).get());
-		Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+		Iterator<LeaveQuota> leaveQuotaIterator1 = leaveQuotas.iterator();
 
-		while(leaveQuotaIterator.hasNext()){
+		List<LeaveQuota> returningLeaveQuota = new ArrayList<>();
 
-			LeaveQuota leaveQuota = leaveQuotaIterator.next();
-			if(leaveQuota instanceof AnnualLeave){
+		while(leaveQuotaIterator1.hasNext()) {
+
+			LeaveQuota leaveQuota = leaveQuotaIterator1.next();
+
+			if (leaveQuota instanceof AnnualLeave) {
+				returningLeaveQuota.add(leaveQuota);
 				leaveQuota.setId(1l);
 			}
-			else if(leaveQuota instanceof CasualLeave){
+		}
+		Iterator<LeaveQuota> leaveQuotaIterator2 = leaveQuotas.iterator();
+		while(leaveQuotaIterator2.hasNext()) {
+
+			LeaveQuota leaveQuota = leaveQuotaIterator2.next();
+
+			if(leaveQuota instanceof CasualLeave){
+				returningLeaveQuota.add(leaveQuota);
 				leaveQuota.setId(2l);
 			}
-			else if(leaveQuota instanceof MaternityLeave){
+		}
+		Iterator<LeaveQuota> leaveQuotaIterator3 = leaveQuotas.iterator();
+		while(leaveQuotaIterator3.hasNext()) {
+
+			LeaveQuota leaveQuota = leaveQuotaIterator3.next();
+
+			if(leaveQuota instanceof MaternityLeave){
+				returningLeaveQuota.add(leaveQuota);
 				leaveQuota.setId(3l);
 			}
-			else if(leaveQuota instanceof NoPayLeave){
+		}
+
+		Iterator<LeaveQuota> leaveQuotaIterator4 = leaveQuotas.iterator();
+		while(leaveQuotaIterator4.hasNext()) {
+
+			LeaveQuota leaveQuota = leaveQuotaIterator4.next();
+
+			if(leaveQuota instanceof NoPayLeave){
+				returningLeaveQuota.add(leaveQuota);
 				leaveQuota.setId(4l);
 			}
-			else{
+		}
+
+		Iterator<LeaveQuota> leaveQuotaIterator5 = leaveQuotas.iterator();
+		while(leaveQuotaIterator5.hasNext()) {
+
+			LeaveQuota leaveQuota = leaveQuotaIterator5.next();
+
+			if (leaveQuota instanceof SickLeave) {
+				returningLeaveQuota.add(leaveQuota);
 				leaveQuota.setId(5l);
 			}
 		}
-		return new ResponseEntity<>(new EmployeeQuotaHome(leaveQuotas), HttpStatus.OK);
+
+
+
+		return new ResponseEntity<>(new EmployeeQuotaHome(returningLeaveQuota), HttpStatus.OK);
 
 	}
 
