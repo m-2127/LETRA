@@ -20,8 +20,6 @@ public class UpdateTask {
 
     private String status;
 
-    private String deviceToken;
-
     @NotNull
     @JsonDeserialize(using = DateHandler.class)
     private LocalDate startdate;
@@ -62,14 +60,6 @@ public class UpdateTask {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getDeviceToken() {
-        return deviceToken;
-    }
-
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
     }
 
     public LocalDate getStartdate() {

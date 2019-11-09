@@ -5,8 +5,7 @@ import java.util.List;
 
 public class HolidaySet {
 
-    private List<ApplyHoliday> holidaySet
-            = new ArrayList<>();
+    private List<ApplyHoliday> holidaySet ;
 
     public List<ApplyHoliday> getHolidaySet() {
         return holidaySet;

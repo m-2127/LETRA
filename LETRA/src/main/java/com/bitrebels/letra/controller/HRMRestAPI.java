@@ -201,17 +201,18 @@ public class HRMRestAPI {
 
 	@PostMapping("/setholidays")
 	@PreAuthorize("hasRole('HRM')")
-	public void setHolidays(@RequestBody HolidaySet holidaySet){
+	public  List<ApplyHoliday> setHolidays(@RequestBody HolidaySet holidaySet){
 		List<ApplyHoliday> holidays = holidaySet.getHolidaySet();
 
 		Iterator<ApplyHoliday> iterable = holidays.iterator();
 
 		while(iterable.hasNext()){
 			ApplyHoliday holiday = iterable.next();
-			if(holiday.equals(holidays.get(0)))
+			if(holiday.getTitle().equalsIgnoreCase("event 1"))
 			{
 				continue;
 			}
+			System.out.println(holiday.getStart());
 
 			Holiday tempHoliday = new Holiday(dateToLocalDate.convertStringLocalDate(holiday.getStart()),
 							holiday.getTitle());
@@ -220,24 +221,27 @@ public class HRMRestAPI {
 
 		}
 
+		return holidays;
 //		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
 	}
 
 	@PostMapping("/hrmleaveresponse")
 	@PreAuthorize("hasRole('HRM')")
-	public void hrmRespondToLeave(@Valid @RequestBody HRMLeaveResponse hrmLeaveResponse){
+	public void hrmRespondToLeave(@RequestParam Map<String, String> requestParams){
+
 
 		Long hrmId = userService.authenticatedUser();
 		String hrmName = userRepo.findById(hrmId).get().getName();
 
-		long leaveReqId = hrmLeaveResponse.getLeaveReqId();
+		Long leaveReqId = Long.parseLong(requestParams.get("leaveReqId"));
+
 		LeaveRequest leaveRequest = leaveReqRepo.findById(leaveReqId).get();
 
 		List<LocalDate> dates = new ArrayList<>();
 		dates.add(leaveRequest.getSetDate());
 		dates.add(leaveRequest.getFinishDate());
 
-		Leave leave = leaveRepo.findLeaveByLeaveRequest(leaveReqRepo.findById(hrmLeaveResponse.getLeaveReqId()).get());
+		Leave leave = leaveRepo.findLeaveByLeaveRequest(leaveReqRepo.findById(leaveReqId).get());
 
 		leave = leaveResponseService.saveLeaveDatesofHRM(dates , leave);
 
@@ -379,5 +383,44 @@ public class HRMRestAPI {
 
 		return hrmHomePageSet;
 	}
+
+	@GetMapping("/projectdetails")
+	@PreAuthorize("hasRole('HRM')")
+	public Set<HRMProjectDetails> projectDetails() {
+
+
+		List<Project> projectList =projectRepo.findAll();
+
+		Iterator<Project> projectIterator = projectList.iterator();
+
+		Set<HRMProjectDetails> hrmProjectDetailSet = new HashSet<>();
+
+		while(projectIterator.hasNext()){
+
+			int totalhours = 0 , completedhours = 0 , progress = 0;
+
+			Project project = projectIterator.next();
+			String projectName = project.getName();
+			String managerName = userRepository.findById(project.getRm().getRmId()).get().getName();
+			String status = project.getStatus().toString();
+
+			Set<Task> taskSet = project.getTask();
+			Iterator<Task> taskIterator = taskSet.iterator();
+
+			while(taskIterator.hasNext()){
+				Task task = taskIterator.next();
+				totalhours += task.getHours();
+				completedhours += task.getProgress();
+			}
+
+			progress = Math.round((completedhours/totalhours)*100);
+
+			HRMProjectDetails hrmProjectDetails = new HRMProjectDetails(projectName,managerName,progress,status);
+			hrmProjectDetailSet.add(hrmProjectDetails);
+
+		}
+		return hrmProjectDetailSet;
+	}
+
 
 }
