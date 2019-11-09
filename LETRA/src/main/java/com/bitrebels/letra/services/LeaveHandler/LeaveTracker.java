@@ -40,7 +40,7 @@ public class LeaveTracker {
             return 0.0;
         }
         else{
-            workingDays = countWorkingDays(firstDate,secondDate);
+            workingDays = countWorkingDays(firstDate,secondDate.minusDays(1l));
         }
 
         double requiredWork = countHours(workingDays, status);
@@ -64,8 +64,9 @@ public class LeaveTracker {
             //this is if the task ends before the leave start date
             workingDays = 0;
         }
-        else if(taskEndDate.isAfter(leaveEndDate)){
-            workingDays = countWorkingDays(leaveEndDate,taskEndDate);
+//        else if(taskEndDate.isAfter(leaveEndDate))
+        else{
+            workingDays = countWorkingDays(leaveEndDate.plusDays(1l),taskEndDate);
         }
 
         return countHours(workingDays, status);
@@ -84,7 +85,7 @@ public class LeaveTracker {
         finalCal.set(finalDate.getYear(), finalDate.getMonthValue()-1, finalDate.getDayOfMonth());
 
         if (initialCal.getTimeInMillis() == finalCal.getTimeInMillis()) {
-            return 0;
+            return 1;
         }
 
         if (initialCal.getTimeInMillis() > finalCal.getTimeInMillis()) {
@@ -114,8 +115,12 @@ public class LeaveTracker {
                                          double remainingWork, double availableTime , int workingDays,
                                          Status status, LocalDate leaveEndDate, LocalDate taskEndDate) {
         //workdays parameter in this method is the number of workdays within applied leave range
+
+
         boolean preCondition = false;
+        double noOfleaveDays = countHours(workingDays , status);
         double workDaysInHours = countHours(workingDays , status);
+
         double availableLeaveHours = 0.0;
 
         if(actualProgressHours>=requiredProgressHours){
@@ -134,6 +139,7 @@ public class LeaveTracker {
                         requiredProgressHours += 4.9;
                         availableLeaveHours +=4.9;
                         workDaysInHours -= 4.9;
+
                     }else if(status.equals(Status.MAINTENANCE) && diff>=2.1){
                         requiredProgressHours += 2.1;
                         availableLeaveHours +=2.1;
@@ -142,19 +148,21 @@ public class LeaveTracker {
                         requiredProgressHours += diff;
                         availableLeaveHours += diff;
                         workDaysInHours -= diff;
+
                     }
                     if(workDaysInHours<=0.0){
                         return availableLeaveHours;
                     }
                 }
 
-                if(availableTime>=remainingWork){
-                    return workDaysInHours;
-                }else{
+                if(availableTime>=remainingWork){//maximum hours is returned if he has time to complete the work after returning from leave
+                    return noOfleaveDays;
+                }else{//check OT
                     if(status.equals(Status.DEVELOPMENT)&& taskEndDate.isAfter(leaveEndDate)){
                         availableTime = recalculateOfAvailableTime(leaveEndDate,taskEndDate);
                         if(availableTime>=remainingWork){
-                            return workDaysInHours;
+
+                            return noOfleaveDays;
                         }
                      }
                         return availableLeaveHours;
@@ -184,7 +192,7 @@ public class LeaveTracker {
 
 
     public double currentProgress(LocalDate leaveStartDate , int actualCurrentProgress, Timestamp lastUpdate,
-                               Status status, int totalHoursOfTheTask){
+                               Status status, int totalHoursOfTheTask,LocalDate taskStart){
         /* This method is used to calculate the number of hours that have been worked till the start date of
         leave but not updated to the database. That is the work done + the work which will be done till the
          start date of the leave. Returns the total number of hours completed as at the start date of the leave
@@ -199,8 +207,13 @@ public class LeaveTracker {
         int daysSinceLastUpdate = countWorkingDays(lastUpdateDate, dateOfLeave);
 
         if(status.equals(Status.DEVELOPMENT)) {
+            double currentProgress;
+            if(lastUpdateDate.isBefore(taskStart)){
+                currentProgress = countWorkingDays(taskStart,leaveStartDate)*4.9 + actualCurrentProgress;
+            }else{
+                currentProgress = daysSinceLastUpdate *4.9 + actualCurrentProgress;
+            }
 
-            double currentProgress = daysSinceLastUpdate *4.9 + actualCurrentProgress;
 
             if( currentProgress >= totalHoursOfTheTask ) {
                 return totalHoursOfTheTask;
@@ -209,7 +222,13 @@ public class LeaveTracker {
             }
         }
         else{
-            double currentProgress = daysSinceLastUpdate *2.1 + actualCurrentProgress;
+
+            double currentProgress;
+            if(lastUpdateDate.isBefore(taskStart)){
+                currentProgress = countWorkingDays(taskStart,leaveStartDate)*2.1 + actualCurrentProgress;
+            }else{
+                currentProgress = daysSinceLastUpdate *2.1 + actualCurrentProgress;
+            }
 
             if( currentProgress >= totalHoursOfTheTask ) {
                 return totalHoursOfTheTask;
@@ -222,7 +241,7 @@ public class LeaveTracker {
     /*This method is used to check whether work can be completed within the remainingDays
     * (remainingDays = leaveEndDate-taskEndDate)*/
     public double recalculateOfAvailableTime(LocalDate leaveEndDate, LocalDate taskEndDate){
-            return countWorkingDays(leaveEndDate,taskEndDate)*6.0;
+            return countWorkingDays(leaveEndDate.plusDays(1l),taskEndDate)*6.0;
 
     }
 

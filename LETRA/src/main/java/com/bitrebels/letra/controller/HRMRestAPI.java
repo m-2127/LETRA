@@ -11,6 +11,7 @@ import com.bitrebels.letra.services.Date.FindDatesBetween;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.HolidayReturn;
+import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
 import com.bitrebels.letra.services.LeaveQuota.HRMLeaveReport;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveResponse.LeaveQuotaCal;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.*;
 
 @RestController
@@ -41,6 +43,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	PasswordEncoder encoder;
+
+	@Autowired
+	LeaveTracker leaveTracker;
 
 	@Autowired
 	HolidayReturn holidayReturn;
@@ -124,7 +129,7 @@ public class HRMRestAPI {
 		// Creating user's account
 		User user = new User(registrationRequest.getName(), registrationRequest.getEmail(),
 				encoder.encode(registrationRequest.getMobilenumber()), registrationRequest.getMobilenumber(),
-				registrationRequest.getGender());
+				registrationRequest.getGender().toLowerCase());
 		user.setHrManager(hrManager);
 		Set<Role> roles = new HashSet<>();
 		Role userRole1 = roleRepository.findByName(RoleName.ROLE_USER)
@@ -225,7 +230,7 @@ public class HRMRestAPI {
 //		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
 	}
 
-	@PostMapping("/hrmleaveresponse")
+	@GetMapping("/hrmleaveresponse")
 	@PreAuthorize("hasRole('HRM')")
 	public void hrmRespondToLeave(@RequestParam Map<String, String> requestParams){
 
@@ -247,6 +252,10 @@ public class HRMRestAPI {
 
 		Long userId = leave.getEmployee().getEmployeeId();
 		User user = userRepo.findById(userId).get();
+
+		leave.setStatus(LeaveStatus.APPROVED);
+		leaveRequest.setStatus(LeaveStatus.APPROVED);
+		leave.setApproval(true);
 
 		leaveRepo.save(leave);
 
@@ -367,7 +376,7 @@ public class HRMRestAPI {
 			LocalDate leaveEnd = leaveReq.getFinishDate();
 
 			String name =  userRepo.findById(employeeId).get().getName();
-			String leaveType = leaveReq.getLeaveType();
+			String leaveType = leaveReq.getLeaveType().toUpperCase();
 
 			String leaveStatus = leave.getStatus().toString();
 
@@ -422,5 +431,31 @@ public class HRMRestAPI {
 		return hrmProjectDetailSet;
 	}
 
+	@GetMapping("/projectdetails1")
+	@PreAuthorize("hasRole('HRM')")
+	public void proje() {
+
+
+
+		int result = leaveTracker.countWorkingDays(LocalDate.of(2019, Month.NOVEMBER, 11),
+				LocalDate.of(2019, Month.NOVEMBER, 11));
+
+//		int result =holidayRepo.countByDateBetween(LocalDate.of(2019, Month.NOVEMBER, 10),
+//				LocalDate.of(2019, Month.NOVEMBER, 15));
+
+//		System.out.println(result);
+		int x =4;
+		modai(x);
+		System.out.println(x);
+
+	}
+
+	public void modai(int x){
+		while(x>0){
+			x--;
+			System.out.println(x);
+
+		}
+	}
 
 }

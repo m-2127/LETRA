@@ -201,6 +201,7 @@ public class RMRestAPI {
 			//description is a separate entity because one leave can have many descriptions(if two managers there can be
 			// two descriptions).
 			leave.getDescription().add(new Description(leaveResponse.getDescription(),managerName));
+			System.out.println(leaveResponse.getDescription());
 			leave.setApproval(leaveResponse.isApproval());
 
 			if(leaveResponse.isApproval()) {//this condtion is when rm approves the leave

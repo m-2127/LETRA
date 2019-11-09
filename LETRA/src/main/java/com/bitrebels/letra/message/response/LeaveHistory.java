@@ -14,9 +14,9 @@ public class LeaveHistory {
 
     int duration;
 
-    Set<Description> descriptions = new HashSet<>();
+    Set<String> descriptions = new HashSet<>();
 
-    Set<LeaveDates> leaveDates = new HashSet<>();
+    Set<String> leaveDates = new HashSet<>();
 
     public LeaveHistory(long leaveId, String leaveType, int duration) {
         this.leaveId = leaveId;
@@ -48,19 +48,19 @@ public class LeaveHistory {
         this.duration = duration;
     }
 
-    public Set<Description> getDescriptions() {
+    public Set<String> getDescriptions() {
         return descriptions;
     }
 
-    public void setDescriptions(Set<Description> descriptions) {
+    public void setDescriptions(Set<String> descriptions) {
         this.descriptions = descriptions;
     }
 
-    public Set<LeaveDates> getLeaveDates() {
+    public Set<String> getLeaveDates() {
         return leaveDates;
     }
 
-    public void setLeaveDates(Set<LeaveDates> leaveDates) {
+    public void setLeaveDates(Set<String> leaveDates) {
         this.leaveDates = leaveDates;
     }
 }

@@ -129,7 +129,7 @@ public class EmployeeRestAPI {
 		Iterator<Project> projectIterator  = employee.getProject().iterator();
 
 		if(leaveForm.getLeaveType().equalsIgnoreCase("maternity") ){
-			applyLeave.applyLeaveForMaternity(leaveForm, leaveRequest);
+			applyLeave.applyLeaveForMaternity(leaveForm, leaveRequest,leave);
 		}
 		else {
 			while (projectIterator.hasNext()) {
@@ -278,12 +278,28 @@ public class EmployeeRestAPI {
 		while(leaveIterator.hasNext()){
 			Leave temp = leaveIterator.next();
 			Set<Description> descriptions = temp.getDescription();
+
+			Iterator<Description> descriptionIterator = descriptions.iterator();
+
+			Set<String> finalDescription = new HashSet<>();
+			Set<String> finalDates = new HashSet<>();
+
+			while(descriptionIterator.hasNext()){
+				finalDescription.add(descriptionIterator.next().getDescription());
+			}
+
 			Set<LeaveDates> leaveDates = temp.getLeaveDates();
+
+			Iterator<LeaveDates> leaveDatesIterator = leaveDates.iterator();
+
+			while(leaveDatesIterator.hasNext()){
+				finalDates.add(leaveDatesIterator.next().getDate().toString());
+			}
 
 			LeaveHistory leaveHistory = new LeaveHistory(temp.getId(),temp.getLeaveType(),temp.getDuration());
 
-			leaveHistory.setDescriptions(descriptions);
-			leaveHistory.setLeaveDates(leaveDates);
+			leaveHistory.setDescriptions(finalDescription);
+			leaveHistory.setLeaveDates(finalDates);
 
 			leaveHistories.add(leaveHistory);
 		}

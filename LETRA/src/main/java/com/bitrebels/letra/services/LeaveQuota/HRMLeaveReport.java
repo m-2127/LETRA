@@ -68,7 +68,7 @@ public class HRMLeaveReport {
 
     public HRMReportDetails addLeave(Set<Leave> leaveSet){
 
-        int annual=4,casual=3,sick=5,nopay=6;
+        int annual=0,casual=0,sick=0,nopay=0;
 
         Iterator<Leave> leaveIterator = leaveSet.iterator();
 

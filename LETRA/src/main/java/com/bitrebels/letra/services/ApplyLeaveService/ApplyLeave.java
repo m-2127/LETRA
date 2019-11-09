@@ -22,6 +22,9 @@ public class ApplyLeave {
     TopicService topicService;
 
     @Autowired
+    LeaveRepo leaveRepo;
+
+    @Autowired
     LeaveRequestRepository leaveReqRepo;
 
     @Autowired
@@ -91,8 +94,8 @@ public class ApplyLeave {
                     continue;
                 }
 
-                if(leaveType.equalsIgnoreCase("annual") || leaveType.equalsIgnoreCase("casual")
-                        || leaveType.equalsIgnoreCase("nopay")) {
+                if(leaveType.equalsIgnoreCase("annual leave") || leaveType.equalsIgnoreCase("casual leave")
+                        || leaveType.equalsIgnoreCase("nopay leave")) {
 
                     progress = acnTypeLeaves.calculateRecommendation(task, workingDays, leaveRequest);
                     if(progress==null){
@@ -134,16 +137,29 @@ public class ApplyLeave {
         }
     }
 
-    public void applyLeaveForMaternity(LeaveForm leaveForm , LeaveRequest leaveRequest){
+    public void applyLeaveForMaternity(LeaveForm leaveForm , LeaveRequest leaveRequest,Leave leave){
 
         Progress progress;
         List<Long> progressList = new ArrayList<>();
 
         Long employeeId = userService.authenticatedUser();
+        Employee employee = employeeRepository.findById(employeeId).get();
+
+        leaveRequest.setEmployee(employee);
+        leave.setEmployee(employee);
+
+        leave.setStatus(LeaveStatus.PENDING);
+        leaveRequest.setStatus(LeaveStatus.PENDING);
+
+        leave.setLeaveType(leaveForm.getLeaveType().toLowerCase());
 
         User user = userRepo.findById(employeeId).get();
 
+
+
         long leaveReqId = leaveRequest.getLeaveReqId();
+
+
 
 //        if(user.getDeviceToken() == null){
 //            user.setDeviceToken(leaveForm.getDeviceToken());
@@ -162,6 +178,11 @@ public class ApplyLeave {
         progress.setLeaveRequest(leaveRequest);
         leaveRequest.getProgressSet().add(progress);//Here it is a progress SET because 1 leave can have at most two progresses(i.e. employee working in two projects)
         progressRepo.save(progress);
+
+        leave.setLeaveRequest(leaveRequest);
+        leaveRequest.setLeave(leave);
+
+        leaveRepo.save(leave);
         leaveReqRepo.save(leaveRequest);
 
         progressList.add(progress.getProgressId());

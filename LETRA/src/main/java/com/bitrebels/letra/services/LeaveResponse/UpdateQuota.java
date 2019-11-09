@@ -19,7 +19,7 @@ public class UpdateQuota {
 
         Set<LeaveQuota> leaveQuotas = user.getLeaveQuotas();
 
-        if(leaveType.equalsIgnoreCase("annual")){
+        if(leaveType.equalsIgnoreCase("annual leave")){
             Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
             while(leaveQuotaIterator.hasNext()){
                 LeaveQuota currentQuota = leaveQuotaIterator.next();
@@ -32,7 +32,7 @@ public class UpdateQuota {
             }
 
         }
-        else if(leaveType.equalsIgnoreCase("casual")){
+        else if(leaveType.equalsIgnoreCase("casual leave")){
             Iterator<LeaveQuota> leaveQuotaIterator = user.getLeaveQuotas().iterator();
             while(leaveQuotaIterator.hasNext()){
                 LeaveQuota currentQuota = leaveQuotaIterator.next();
@@ -45,7 +45,7 @@ public class UpdateQuota {
             }
 
         }
-        else if(leaveType.equalsIgnoreCase("sick")){
+        else if(leaveType.equalsIgnoreCase("sick leave")){
             Iterator<LeaveQuota> leaveQuotaIterator = user.getLeaveQuotas().iterator();
             while(leaveQuotaIterator.hasNext()){
                 LeaveQuota currentQuota = leaveQuotaIterator.next();

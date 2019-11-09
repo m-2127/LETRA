@@ -57,7 +57,7 @@ public class ACNTypeLeaves {
          if(taskStartDate.isBefore(leaveStartDate)) {
              //tested
              currentProgressHours = leaveTracker.currentProgress(leaveStartDate, task.getProgress(),
-                     task.getUpdateTime(), task.getStatus(),task.getHours());
+                     task.getUpdateTime(), task.getStatus(),task.getHours(),taskStartDate);
          }else{
              currentProgressHours = 0.0;
          }

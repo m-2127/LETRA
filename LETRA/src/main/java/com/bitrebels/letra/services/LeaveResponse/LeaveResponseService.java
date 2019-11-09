@@ -22,7 +22,7 @@ public class LeaveResponseService {
             LocalDate localDate = LocalDate.parse(date);
             LeaveDates temp = new LeaveDates(localDate);
             leave.getLeaveDates().add(temp);
-            leaveDatesRepo.save(temp);
+          //  leaveDatesRepo.save(temp);
         }
 
         return leave;
