@@ -274,7 +274,6 @@ public class RMRestAPI {
 		Project project = projectRepo.findByRm(reportingManager).get();
 
 		List<Long> addedEmployees = employeeAllocation.getAddedEmp();
-	//	List<Long> deletedEmployess = employeeAllocation.getDeletedEmp();
 
 		updateProject.addEmployees(reportingManager, project, addedEmployees);
 		updateProject.updateProjectStatusAndTasks(employeeAllocation.getStatus(),project);
@@ -388,8 +387,11 @@ public class RMRestAPI {
 	@PreAuthorize("hasRole('RM')")
 	public void addNewTask(@RequestBody AddNewTask addNewTask){
 
+		//creating task
 		Task task = new Task(addNewTask.getName(),addNewTask.getStartdate(),addNewTask.getDescription(),addNewTask.getDuration());
+
 		String status = addNewTask.getStatus();
+
 		if(status.equalsIgnoreCase("development")){
 			task.setStatus(Status.DEVELOPMENT);
 		}

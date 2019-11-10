@@ -115,9 +115,4 @@ public class PasswordResetRestAPI {
 		}
 	}
 
-	// Going to reset page without a token redirects to login page
-//	@ExceptionHandler(MissingServletRequestParameterException.class)
-//	public ResponseEntity<?> handleMissingParams(MissingServletRequestParameterException ex) {
-//		return new ModelAndView("redirect:login");
-//	}
 }

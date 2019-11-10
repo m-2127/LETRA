@@ -211,7 +211,6 @@ public class HRMRestAPI {
 			{
 				continue;
 			}
-			System.out.println(holiday.getStart());
 
 			Holiday tempHoliday = new Holiday(dateToLocalDate.convertStringLocalDate(holiday.getStart()),
 							holiday.getTitle());
@@ -221,7 +220,6 @@ public class HRMRestAPI {
 		}
 
 		return holidays;
-//		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
 	}
 
 	@GetMapping("/hrmleaveresponse")

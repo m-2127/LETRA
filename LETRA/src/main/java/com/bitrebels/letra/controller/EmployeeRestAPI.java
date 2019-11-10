@@ -343,18 +343,6 @@ public class EmployeeRestAPI {
 			}
 		}
 
-//	//	Iterator<Leave> secondleaveIterator = leaveSet.iterator();
-//
-//		while(firstleaveIterator.hasNext()){
-//
-////			Leave leave = firstleaveIterator.next();
-//			long leaveReqId = leave.getLeaveRequest().getLeaveReqId();
-//			LeaveRequest leaveRequest = leaveReqRepo.findById(leaveReqId).get();
-//
-//
-//
-//		}
-
 		return empHomePageSet;
 
 	}

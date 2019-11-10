@@ -115,7 +115,7 @@ public class LeaveTracker {
         return actualWorkingDays;
     }
 
-    public double availableHoursForLeave(double actualProgressHours, double requiredProgressHours,
+    public double  availableHoursForLeave(double actualProgressHours, double requiredProgressHours,
                                          double remainingWork, double availableTime , int workingDays,
                                          Status status, LocalDate leaveEndDate, LocalDate taskEndDate) {
         //workdays parameter in this method is the number of workdays within applied leave range

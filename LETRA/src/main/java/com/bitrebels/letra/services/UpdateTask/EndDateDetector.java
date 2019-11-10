@@ -50,6 +50,7 @@ public class EndDateDetector {
         of the project of the current task*/
         Set<Task> currentTask = findOtherTask(employee, taskId);
         //the current task set above includes all tasks of the user except for the current task
+
         if(currentTask.isEmpty()){
             datePointer = finalCal(status);
         }else {
@@ -90,8 +91,7 @@ public class EndDateDetector {
             boolean holidaychecker = holidayRepo.existsHolidayByDate(datePointer);
 
             //duration indicates the maximum number of times this loop can iterate
-            System.out.println(completedWorkHours);
-            System.out.println(durationHours);
+
             while((!isWorkCompleted()) && (duration>0)) {
 
                 if (datePointerCal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY &&
@@ -105,7 +105,7 @@ public class EndDateDetector {
                     } else if (/*set ==2 && */status == Status.MAINTENANCE) {
                         completedWorkHours += 2.1;
                     }
-                    System.out.println(completedWorkHours);
+
                 }
                 datePointerCal.add(Calendar.DAY_OF_MONTH, 1);
 
@@ -130,8 +130,9 @@ public class EndDateDetector {
         }
 
         public LocalDate datePointer(Set<Task> currentTask,LocalDate previousEndDate,Task task, Status status){
+
         for (Task otherTask : currentTask) {
-            System.out.println(otherTask.getId());
+
             int days_1 ;
             //-2 to remove the days inclusive of previousenddate and othertask start date
             if(previousEndDate!=null) {
@@ -146,13 +147,11 @@ public class EndDateDetector {
             }
 
             if (otherTask.getTaskEndDate().isBefore(task.getTaskStartDate())) {
-                System.out.println("shit 2");
                 continue;
             }
 
             if((task.getTaskStartDate().isEqual(otherTask.getTaskEndDate()))){
                 if(addDay(datePointer,1,/*2,*/status)){
-                    System.out.println("shit 3");
                     return datePointer;
                 }
             }
@@ -161,19 +160,15 @@ public class EndDateDetector {
 
                 days_1 = leaveTracker.countWorkingDays(task.getTaskStartDate(), otherTask.getTaskEndDate());
             //    days_2 = leaveTracker.countWorkingDays(task.getTaskStartDate(), otherTask.getTaskStartDate());
-                System.out.println(days_1);
 
                 if(addDay(datePointer,days_1,/*2,*/status)){
-                    System.out.println("shit 4");
                     return datePointer;
-
                 }
             }
 
             if(otherTask.getTaskStartDate().isAfter(task.getTaskStartDate())){
                 days_1 = leaveTracker.countWorkingDays(otherTask.getTaskStartDate(), otherTask.getTaskEndDate());
                 if(addDay(datePointer,days_1,/*2,*/status)){
-                    System.out.println("shit 5");
                     return datePointer;
                 }
             }

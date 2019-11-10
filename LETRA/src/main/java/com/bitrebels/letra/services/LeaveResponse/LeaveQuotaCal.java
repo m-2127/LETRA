@@ -125,6 +125,7 @@ public class LeaveQuotaCal {
 
                 }
             }
+
             Iterator<LeaveQuota> leaveQuotaIterator2 = currentUserLeaveQuotas.iterator();
             while(leaveQuotaIterator2.hasNext()) {
 
@@ -194,7 +195,6 @@ public class LeaveQuotaCal {
 
 
     public void setQuotaAnnually(int x, int y,User user){
-        System.out.println(annualLeave.getTotalLeaves());
 
         annualLeave.setTotalLeaves(x);
         annualLeave.setRemainingLeaves(x);

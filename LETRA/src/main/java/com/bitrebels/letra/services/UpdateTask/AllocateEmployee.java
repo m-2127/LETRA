@@ -56,17 +56,13 @@ public class AllocateEmployee {
         Set<Project> project = new HashSet<Project>();
         project.add(actualProject);
 
-       // Task actualTask = taskRepo.findById(updateTask.getTaskId()).get();
-      //  Set<Task> task = new HashSet<Task>();
-       // task.add(actualTask);
-
         ReportingManager actualManager = rmRepo.getOne(rmId);
         Set<ReportingManager> manager = new HashSet<>();
         manager.add(actualManager);
 
         Optional<Employee> optionalemployee = employeeRepo.findById(updateTask.getEmployeeId());
-        //if the user is not currently working on a project
 
+        //if the user is not currently working on a project
         if (!optionalemployee.isPresent()) {
             Optional<User> optionaluser = userRepo.findById(updateTask.getEmployeeId());
             if(optionaluser.isPresent()) {
@@ -74,13 +70,9 @@ public class AllocateEmployee {
                 Role userRole = roleRepo.findByName(RoleName.ROLE_EMPLOYEE).get();
                 user.getRoles().add(userRole);
                 employee = new Employee(project, manager, user.getId());
-             //   employee.setTasks(task);
 
-
-            //    actualTask.setEmployee(employee);//adding employee to task
                 actualManager.getEmployees().add(employee);//adding the employee to RM
 
-                //             employeeRepo.save(employee);
                 userRepo.save(user);
             }
         }
@@ -90,25 +82,17 @@ public class AllocateEmployee {
                 employee = optionalemployee.get();
                 employee.getProject().add(actualProject);
                 employee.getManagers().add(actualManager);
-            //   employee.getTasks().add(actualTask);
 
-          // actualTask.setEmployee(employee);//adding employee to task
             actualManager.getEmployees().add(employee);//adding the employee to RM
-
- //           employeeRepo.save(employee);
 
         }
 
         actualProject.getEmployeeSet().add(employee);
         actualManager.getEmployees().add(employee);
-        //find user
-        User user = userRepo.findById(employee.getEmployeeId()).get();
-        //subscribing RM to employees topic
-//        String topic = "EmpTopic-" + employee.getEmployeeId() + "-RM-"+ rmId ;
-//        topicService.subscribe(updateTask.getDeviceToken(),topic,user);
+
 
         return employee ;
-        //return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
+
 
     }
 }
