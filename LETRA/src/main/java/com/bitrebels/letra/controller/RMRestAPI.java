@@ -187,6 +187,7 @@ public class RMRestAPI {
 		String managerName = userRepo.findById(rmId).get().getName();
 
 		//retrieving dates from frontend using leaveResponse
+		//from the leaveaccept dialog box
 		List<String> dates = leaveResponse.getDates();
 
 		leave = leaveRepo.findLeaveByLeaveRequest(leaveRequestRepo.findById(leaveResponse.getLeaveReqId()).get());
@@ -208,7 +209,6 @@ public class RMRestAPI {
 			leave.getDescription().add(description);
 			description.setLeave(leave);
 
-			System.out.println(leaveResponse.getDescription());
 			leave.setApproval(leaveResponse.isApproval());
 
 			if(leaveResponse.isApproval()) {//this condtion is when rm approves the leave
@@ -228,6 +228,7 @@ public class RMRestAPI {
 			if(leave.getNoOfManagers() == 1  && leave.getStatus()==LeaveStatus.PENDING){//pending=approved
 
 				leave.setStatus(LeaveStatus.APPROVED);
+				leave.getLeaveRequest().setStatus(LeaveStatus.APPROVED);
 
 				updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
 			}
@@ -241,9 +242,16 @@ public class RMRestAPI {
 
 				if(leaveResponse.isApproval()) {//checks if the second manger approved
 					leave.setStatus(LeaveStatus.APPROVED);
-					int duration = leaveResponseService.updateDatesWithCurrentResponse(leave.getLeaveDates() , dates , leave);
-					leave.setDuration(duration);
-					updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
+					leave.getLeaveRequest().setStatus(LeaveStatus.APPROVED);
+					leave.getLeaveRequest().setStatus(LeaveStatus.REJECTED);
+					int duration = leaveResponseService.updateDatesWithCurrentResponse(leave.getLeaveDates(), dates, leave);
+					if (duration == 0) {
+						leave.setStatus(LeaveStatus.REJECTED);
+						leave.getLeaveRequest().setStatus(LeaveStatus.REJECTED);
+					} else {
+						leave.setDuration(duration);
+						updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size(), user);
+					}
 				}
 				else{
 					leave.setStatus(LeaveStatus.REJECTED);
@@ -288,30 +296,6 @@ public class RMRestAPI {
 
 	}
 
-      @GetMapping("/holidayreport")
-      @PreAuthorize("hasRole('RM')")
-      public void holidayReport(){
-
-//          Long userId = userService.authenticatedUser();
-//
-//          ReportingManager rm = rmRepo.findById(1l).get();
-//          Project project = rm.getProject();
-//
-//          List<Employee> employeeList = employeeRepo.findByProject(project);
-//		  Employee employee = employeeRepo.findById(2l).get();
-//
-//          managerPDF.pdfGenerator(employeeList,userRepo,rm , project);
-//
-//
-//          //List<Leave> leave = leaveRepo.findByEmployeeAndDatesBetween(employee,LocalDate.of(2019,5,10),LocalDate.of(2019,7,13));
-//          List<Leave> leave = leaveRepo.findByLeaveDates_DateBetweenAndEmployeeAndReportingManager(
-//          		LocalDate.of(2019,5,10), LocalDate.of(2019,7,13),employee,rm);
-//          Iterator<Leave> leaveIterator = leave.iterator();
-//				 while(leaveIterator.hasNext()) {
-//				 	Leave leave1 = leaveIterator.next();
-//			  System.out.println(leave1.getDescription() + "\n " + leave1.getLeaveType() +" \n" + leave1.getEmployee().getEmployeeId());
-//		  }
-	  }
 
 	@GetMapping("/returnemployees1")//returns all employees of the project
 	@PreAuthorize("hasRole('RM')")
@@ -427,15 +411,6 @@ public class RMRestAPI {
 		taskRepo.save(task);
 	}
 
-//	@PostMapping("/reset")
-//	@PreAuthorize("hasRole('USER')")
-//	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
-//
-//		User user = userRepo.findById(userService.authenticatedUser()).get();
-//		String password = resetform.getPassword();
-//
-//		return resetPassword.setNewPassword(password, user);
-//	}
 
 	@GetMapping("/homepage")
 	@PreAuthorize("hasRole('RM')")

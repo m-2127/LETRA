@@ -149,10 +149,6 @@ public class HRMRestAPI {
 
 		user = leaveQuotaCal.updateQuotaOnRegistration(user);
 
-		//subscribing HRM to user topic
-//        String topic = "UserTopic" + user.getId() + "HRM"+ hrmId  ;
-//        topicService.subscribe(registrationRequest.getDeviceToken(),topic,user);
-
 		userRepository.save(user);
 
 		return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
@@ -268,35 +264,18 @@ public class HRMRestAPI {
 		updateQuota.updateMaternityQuota( findDatesBetween.getNoOfDaysBetween(leaveRequest.getSetDate(),
 									leaveRequest.getFinishDate()) , user);
 
-		//sending notification to employee who requesteed the leave
-//		String sendingTopic = "topicRM"+ hrmId + "EMP" + userId;
-//		Notification notification = new Notification(sendingTopic , user.getName() , hrmLeaveResponse.isApproval(),leave.getId());
-//		notificationService.sendToManagersTopic(notification);
-
-
 		leaveRepo.save(leave);
 	}
-
-//	@PostMapping("/reset")
-//	@PreAuthorize("hasRole('USER')")
-//	public ResponseEntity<?> setNewPassword(@Valid @RequestBody ResetForm resetform) {
-//
-//		User user = userRepo.findById(userService.authenticatedUser()).get();
-//		String password = resetform.getPassword();
-//
-//		return resetPassword.setNewPassword(password, user);
-//	}
 
 	@PostMapping("/report")
 	@PreAuthorize("hasRole('HRM')")
 	public HRMReportDetails report(@RequestBody HRMReport hrmReport){
 
 		long projectId = hrmReport.getProjectId();
+		long employeeId = hrmReport.getEmployeeId();
 
 		LocalDate startDate = hrmReport.getStartDate();
 		LocalDate endDate = hrmReport.getFinishDate();
-
-		long employeeId = hrmReport.getEmployeeId();
 
 		Set<Leave> leaveSet = hrmLeaveReport.selectLeaves(employeeId,projectId,startDate,endDate,hrmReport);
 
@@ -453,33 +432,6 @@ public class HRMRestAPI {
 		BigDecimal bd = BigDecimal.valueOf(value);
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.doubleValue();
-	}
-
-	@GetMapping("/projectdetails1")
-	@PreAuthorize("hasRole('HRM')")
-	public void proje() {
-
-
-
-		int result = leaveTracker.countWorkingDays(LocalDate.of(2019, Month.NOVEMBER, 11),
-				LocalDate.of(2019, Month.NOVEMBER, 11));
-
-//		int result =holidayRepo.countByDateBetween(LocalDate.of(2019, Month.NOVEMBER, 10),
-//				LocalDate.of(2019, Month.NOVEMBER, 15));
-
-//		System.out.println(result);
-		int x =4;
-		modai(x);
-		System.out.println(x);
-
-	}
-
-	public void modai(int x){
-		while(x>0){
-			x--;
-			System.out.println(x);
-
-		}
 	}
 
 }

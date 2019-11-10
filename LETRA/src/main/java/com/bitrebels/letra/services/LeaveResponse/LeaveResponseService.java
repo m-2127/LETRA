@@ -21,7 +21,7 @@ public class LeaveResponseService {
     @Autowired
     LeaveRepo leaveRepo;
 
-    public Leave saveLeaveDates(List<String> dates , Leave leave){
+    public void saveLeaveDates(List<String> dates , Leave leave){
         for(String date : dates) {
             LocalDate localDate = LocalDate.parse(date);
             LeaveDates temp = new LeaveDates(localDate);
@@ -29,7 +29,7 @@ public class LeaveResponseService {
           //  leaveDatesRepo.save(temp);
         }
 
-        return leave;
+        leaveRepo.save(leave);
     }
 
     public Leave saveLeaveDatesofHRM(List<LocalDate> dates , Leave leave){

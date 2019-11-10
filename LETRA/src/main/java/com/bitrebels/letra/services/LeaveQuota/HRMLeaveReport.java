@@ -9,6 +9,7 @@ import com.bitrebels.letra.model.ReportingManager;
 import com.bitrebels.letra.repository.EmployeeRepository;
 import com.bitrebels.letra.repository.LeaveRepo;
 import com.bitrebels.letra.repository.ProjectRepository;
+import com.bitrebels.letra.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,9 @@ public class HRMLeaveReport {
     @Autowired
     EmployeeRepository employeeRepo;
 
+    @Autowired
+    UserRepository userRepo;
+
     public Set<Leave> selectLeaves(long employeeString, long projectString , LocalDate startDate,
                                    LocalDate endDate, HRMReport hrmReport){
 
@@ -40,6 +44,7 @@ public class HRMLeaveReport {
                 long projectId = hrmReport.getProjectId();
                 Project project = projectRepo.findById(projectId).get();
                 ReportingManager rm = project.getRm();
+                System.out.println(userRepo.findById(rm.getRmId()).get().getName());
                 leaveSet = leaveRepo.findByLeaveDates_DateBetweenAndReportingManagerAndApproval(startDate,
                         endDate,rm,true);
             }
@@ -76,16 +81,16 @@ public class HRMLeaveReport {
             Leave currentLeave = leaveIterator.next();
             String leaveType = currentLeave.getLeaveType();
 
-                if(leaveType.equalsIgnoreCase("annual")){
+                if(leaveType.equalsIgnoreCase("annual leave")){
                     annual += currentLeave.getDuration();
                 }
-                else if(leaveType.equalsIgnoreCase("casual")){
+                else if(leaveType.equalsIgnoreCase("casual leave")){
                     casual += currentLeave.getDuration();
                 }
-                else if(leaveType.equalsIgnoreCase("sick")){
+                else if(leaveType.equalsIgnoreCase("sick leave")){
                     sick += currentLeave.getDuration();
                 }
-                else if(leaveType.equalsIgnoreCase("nopay")){
+                else if(leaveType.equalsIgnoreCase("no pay")){
                     nopay += currentLeave.getDuration();
                 }
                 else{
