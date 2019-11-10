@@ -200,7 +200,10 @@ public class RMRestAPI {
 
 			//description is a separate entity because one leave can have many descriptions(if two managers there can be
 			// two descriptions).
-			leave.getDescription().add(new Description(leaveResponse.getDescription(),managerName));
+			Description description = new Description(leaveResponse.getDescription(),managerName);
+			leave.getDescription().add(description);
+			description.setLeave(leave);
+
 			System.out.println(leaveResponse.getDescription());
 			leave.setApproval(leaveResponse.isApproval());
 
@@ -210,7 +213,7 @@ public class RMRestAPI {
 				//even the leave is approved it is set to pending because for the leave to be approved the other RM
 				// should also approve the leave
 				leave.setStatus(LeaveStatus.PENDING);
-				leave.setDuration(leave.getLeaveDates().size());
+				leave.setDuration(dates.size());
 			}
 			else{
 				leave.setStatus(LeaveStatus.REJECTED);
@@ -233,13 +236,15 @@ public class RMRestAPI {
 		}
 		else{//this works only for the second manager
 			if(leave.getStatus() == LeaveStatus.PENDING){//here it checks if the previous manager has approved
-				leave.getDescription().add(new Description(leaveResponse.getDescription() , managerName));
+				Description description2 = new Description(leaveResponse.getDescription() , managerName);
+				leave.getDescription().add(description2);
+				description2.setLeave(leave);
 				leave.setApproval(leaveResponse.isApproval());
 
 				if(leaveResponse.isApproval()) {//checks if the second manger approved
 					leave.setStatus(LeaveStatus.APPROVED);
-					leaveResponseService.updateDatesWithCurrentResponse(leave.getLeaveDates() , dates , leave);
-					leave.setDuration(leave.getLeaveDates().size());
+					int duration = leaveResponseService.updateDatesWithCurrentResponse(leave.getLeaveDates() , dates , leave);
+					leave.setDuration(duration);
 					updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
 				}
 				else{
