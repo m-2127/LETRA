@@ -113,26 +113,7 @@ public class LeaveQuotaCal {
 
             Set<LeaveQuota> currentUserLeaveQuotas = currentUser.getLeaveQuotas();
 
-        //    Iterator<LeaveQuota> leaveQuotaIterator = currentUserLeaveQuotas.iterator();
 
-//            while(leaveQuotaIterator.hasNext()){
-//                LeaveQuota leaveQuota = leaveQuotaIterator.next();
-//                if(leaveQuota instanceof AnnualLeave){
-//                    annualLeave = (AnnualLeave) leaveQuota;
-//                }
-//                else if(leaveQuota instanceof CasualLeave){
-//                    casualLeave = (CasualLeave) leaveQuota;
-//                }
-//                else if(leaveQuota instanceof MaternityLeave){
-//                    maternityLeave = (MaternityLeave) leaveQuota;
-//                }
-//                else if(leaveQuota instanceof NoPayLeave){
-//                    noPayLeave = (NoPayLeave) leaveQuota;
-//                }
-//                else{
-//                    sickLeave = (SickLeave) leaveQuota;
-//                }
-//            }
             Iterator<LeaveQuota> leaveQuotaIterator1 = currentUserLeaveQuotas.iterator();
 
             while(leaveQuotaIterator1.hasNext()) {
@@ -229,14 +210,6 @@ public class LeaveQuotaCal {
 
         noPayLeave.setLeavesTaken(0);
         maternityLeave.setLeavesTaken(0);
-
-//        leaveQuotas.add(annualLeave);
-//        leaveQuotas.add(sickLeave);
-//        leaveQuotas.add(noPayLeave);
-//        leaveQuotas.add(maternityLeave);
-//        leaveQuotas.add(casualLeave);
-
-//        user.setLeaveQuotas(leaveQuotas);
 
         annualRepo.save(annualLeave);
         casualRepo.save(casualLeave);

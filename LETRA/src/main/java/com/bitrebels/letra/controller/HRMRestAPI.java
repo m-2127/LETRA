@@ -160,8 +160,6 @@ public class HRMRestAPI {
 
 		long hrmId  = userService.authenticatedUser();
 
-		System.out.println(userRepo.findById(hrmId).get().getName());
-
 		leaveQuotaCal.updateQuotaAnnually(hrmRepo.findById(hrmId).get());
 
 		return new ResponseEntity<>(new ResponseMessage("Leave Quota updated successfully!"), HttpStatus.OK);
