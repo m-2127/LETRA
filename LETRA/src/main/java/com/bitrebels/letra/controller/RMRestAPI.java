@@ -7,6 +7,7 @@ import com.bitrebels.letra.repository.*;
 import com.bitrebels.letra.repository.leavequotarepo.LeaveQuotaRepository;
 import com.bitrebels.letra.services.Date.FindDatesBetween;
 import com.bitrebels.letra.services.FireBase.NotificationService;
+import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
 import com.bitrebels.letra.services.LeaveQuota.ManagerPDF;
 import com.bitrebels.letra.services.LeaveResponse.UpdateQuota;
@@ -52,6 +53,9 @@ public class RMRestAPI {
 
 	@Autowired
 	UserRepository userRepo;
+
+	@Autowired
+	LeaveTracker leaveTracker;
 
 	@Autowired
 	RMRepository rmRepo;
@@ -218,17 +222,11 @@ public class RMRestAPI {
 			else{
 				leave.setStatus(LeaveStatus.REJECTED);
 				leave.getLeaveRequest().setStatus(LeaveStatus.REJECTED);
-				//sending notification to employee who requested the leave
-//				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-//				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
-//				notificationService.sendToManagersTopic(notification);
+
 			}
 
 			if(leave.getNoOfManagers() == 1  && leave.getStatus()==LeaveStatus.PENDING){//pending=approved
-				//sending notification to employee who requested the leave
-//				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-//				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
-//				notificationService.sendToManagersTopic(notification);
+
 				leave.setStatus(LeaveStatus.APPROVED);
 
 				updateQuota.updateQuota(leaveResponse.getLeaveType(), leave.getLeaveDates().size() , user);
@@ -251,10 +249,7 @@ public class RMRestAPI {
 					leave.setStatus(LeaveStatus.REJECTED);
 					leave.getLeaveRequest().setStatus(LeaveStatus.REJECTED);
 				}
-				//sending notification to employee who requested the leave
-//				String sendingTopic = "topicRM-"+ rmId + "-EMP-" + userId;
-//				Notification notification = new Notification(sendingTopic , rmId+"" , leaveResponse.isApproval() , leave.getId());
-//				notificationService.sendToManagersTopic(notification);
+
 			}
 		}
 
@@ -365,13 +360,38 @@ public class RMRestAPI {
 		Long leaveReqId = Long.parseLong(requestParams.get("leaveReqId"));
 		LeaveRequest leaveRequest = leaveRequestRepo.findById(leaveReqId).get();
 		long employeeId = leaveRequest.getEmployee().getEmployeeId();
-		String name = userRepo.findById(employeeId).get().getName();
+		User user = userRepo.findById(employeeId).get();
+		String name = user.getName();
 
 		ReportingManager manager = rmRepo.findById(userService.authenticatedUser()).get();
 		Set<Progress> progresses = progressRepo.findProgressByLeaveRequestAndManager(leaveRequest, manager);
 
-		Set<LocalDate> localDates = findDatesBetween.getDatesBetween(leaveRequest.getSetDate(),
-									leaveRequest.getFinishDate().plusDays(1));
+		int remaining = leaveTracker.remainingLeavesInQuota(user.getLeaveQuotas(),leaveRequest);
+
+		Set<LocalDate> localDates = new HashSet<>();
+
+
+
+		if(remaining==0){
+			localDates = null;
+		}
+		else if(remaining==1){
+			localDates.add(leaveRequest.getSetDate());
+		}else{
+
+			LocalDate param=leaveRequest.getSetDate();
+			for(int i=1; i < remaining ; i++){
+				param = leaveRequest.getSetDate().plusDays(1l);
+			}
+
+			if(param.isAfter(leaveRequest.getFinishDate())){
+				param = leaveRequest.getFinishDate();
+			}
+
+			localDates = findDatesBetween.getDatesBetween(leaveRequest.getSetDate(),
+					param.plusDays(1));
+		}
+
 
 		RMNotificationDetails response  = new RMNotificationDetails(leaveRequest , progresses , employeeId , name );
 		response.setDates(localDates);

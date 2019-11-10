@@ -38,7 +38,7 @@ public class ResetPassword {
             return new ResponseEntity<>(new ResponseMessage("Password changed successfully"), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(new ResponseMessage("The old password did not match"), HttpStatus.OK);
+            return new ResponseEntity<>(new ResponseMessage("The old password did not match"), HttpStatus.BAD_REQUEST);
         }
 
     }

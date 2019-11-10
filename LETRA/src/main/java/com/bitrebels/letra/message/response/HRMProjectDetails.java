@@ -6,11 +6,11 @@ public class HRMProjectDetails {
 
     private String managerName;
 
-    private int progress;
+    private double progress;
 
     private String status;
 
-    public HRMProjectDetails(String projectName, String managerName, int progress, String status) {
+    public HRMProjectDetails(String projectName, String managerName, double progress, String status) {
         this.name = projectName;
         this.managerName = managerName;
         this.progress = progress;
@@ -33,11 +33,11 @@ public class HRMProjectDetails {
         this.managerName = managerName;
     }
 
-    public int getProgress() {
+    public double getProgress() {
         return progress;
     }
 
-    public void setProgress(int progress) {
+    public void setProgress(double progress) {
         this.progress = progress;
     }
 

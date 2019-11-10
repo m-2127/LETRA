@@ -11,6 +11,7 @@ import com.bitrebels.letra.services.Date.FindDatesBetween;
 import com.bitrebels.letra.services.FireBase.NotificationService;
 import com.bitrebels.letra.services.FireBase.TopicService;
 import com.bitrebels.letra.services.HolidayReturn;
+import com.bitrebels.letra.services.LeaveHandler.ACNTypeLeaves;
 import com.bitrebels.letra.services.LeaveHandler.LeaveTracker;
 import com.bitrebels.letra.services.LeaveQuota.HRMLeaveReport;
 import com.bitrebels.letra.services.LeaveResponse.LeaveResponseService;
@@ -26,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
@@ -40,6 +43,9 @@ public class HRMRestAPI {
 
 	@Autowired
 	RoleRepository roleRepository;
+
+	@Autowired
+	ACNTypeLeaves acnTypeLeaves;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -406,7 +412,7 @@ public class HRMRestAPI {
 
 		while(projectIterator.hasNext()){
 
-			int totalhours = 0 , completedhours = 0 , progress = 0;
+			int totalhours = 0 , completedhours = 0 ;double progress = 0;
 
 			Project project = projectIterator.next();
 			String projectName = project.getName();
@@ -421,14 +427,32 @@ public class HRMRestAPI {
 				totalhours += task.getHours();
 				completedhours += task.getProgress();
 			}
+			System.out.println(totalhours);
+			System.out.println(completedhours);
 
-			progress = Math.round((completedhours/totalhours)*100);
+			double cal= (Double.valueOf(completedhours)/totalhours);
+
+
+			System.out.println(cal);
+			double val = round(cal,4);
+			progress = val*100;
+
+
+			progress = round(progress,3);
 
 			HRMProjectDetails hrmProjectDetails = new HRMProjectDetails(projectName,managerName,progress,status);
 			hrmProjectDetailSet.add(hrmProjectDetails);
 
 		}
 		return hrmProjectDetailSet;
+	}
+
+	public static double round(double value, int places) {
+		if (places < 0) throw new IllegalArgumentException();
+
+		BigDecimal bd = BigDecimal.valueOf(value);
+		bd = bd.setScale(places, RoundingMode.HALF_UP);
+		return bd.doubleValue();
 	}
 
 	@GetMapping("/projectdetails1")
