@@ -154,21 +154,15 @@ public class HRMRestAPI {
 		return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
 	}
 
-	@PostMapping("/addquota")
+	@GetMapping("/addquota")
 	@PreAuthorize("hasRole('HRM')")
-	public ResponseEntity<?> addLeaveQuota(@Valid @RequestBody LeaveQuotaForm leaveQuota) {
+	public ResponseEntity<?> addLeaveQuota() {
 
-		AnnualLeave annualLeave = leaveQuota.getAnnualLeave();
-		CasualLeave casualLeave = leaveQuota.getCasualLeave();
-		SickLeave sickLeave = leaveQuota.getSickLeave();
-		MaternityLeave maternityLeave = leaveQuota.getMaternityLeave();
-		NoPayLeave noPayLeave = leaveQuota.getNoPayLeave();
+		long hrmId  = userService.authenticatedUser();
 
-		leaveQuotaRepo.save(annualLeave);
-		leaveQuotaRepo.save(casualLeave);
-		leaveQuotaRepo.save(sickLeave);
-		leaveQuotaRepo.save(maternityLeave);
-		leaveQuotaRepo.save(noPayLeave);
+		System.out.println(userRepo.findById(hrmId).get().getName());
+
+		leaveQuotaCal.updateQuotaAnnually(hrmRepo.findById(hrmId).get());
 
 		return new ResponseEntity<>(new ResponseMessage("Leave Quota updated successfully!"), HttpStatus.OK);
 
