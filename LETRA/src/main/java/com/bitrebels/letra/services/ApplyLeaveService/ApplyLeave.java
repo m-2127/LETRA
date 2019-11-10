@@ -34,6 +34,9 @@ public class ApplyLeave {
     UserService userService;
 
     @Autowired
+    LeaveTracker leaveTracker;
+
+    @Autowired
     EmployeeRepository employeeRepository;
 
     @Autowired
@@ -44,9 +47,6 @@ public class ApplyLeave {
 
     @Autowired
     NotificationService notificationService;
-
-    @Autowired
-    LeaveTracker leaveTracker;
 
     @Autowired
     RMRepository rmRepository;
@@ -95,7 +95,7 @@ public class ApplyLeave {
                 }
 
                 if(leaveType.equalsIgnoreCase("annual leave") || leaveType.equalsIgnoreCase("casual leave")
-                        || leaveType.equalsIgnoreCase("nopay leave")) {
+                        || leaveType.equalsIgnoreCase("no pay")) {
 
                     progress = acnTypeLeaves.calculateRecommendation(task, workingDays, leaveRequest);
                     if(progress==null){
@@ -103,7 +103,10 @@ public class ApplyLeave {
                     }
                 }
                 else {
+                    int remainingLeaves = leaveTracker.remainingLeavesInQuota(user.getLeaveQuotas(),leaveRequest);
                     progress = new Progress();
+                    progress.setAvailableDaysForLeave(remainingLeaves);
+
                 }
 
                 progress.setManager(manager);

@@ -1,17 +1,21 @@
 package com.bitrebels.letra.services.LeaveHandler;
 
 
-import com.bitrebels.letra.model.LeaveRequest;
-import com.bitrebels.letra.model.Progress;
-import com.bitrebels.letra.model.Status;
-import com.bitrebels.letra.model.Task;
+import com.bitrebels.letra.model.*;
+import com.bitrebels.letra.model.leavequota.AnnualLeave;
+import com.bitrebels.letra.model.leavequota.CasualLeave;
+import com.bitrebels.letra.model.leavequota.LeaveQuota;
+import com.bitrebels.letra.model.leavequota.NoPayLeave;
 import com.bitrebels.letra.repository.ProgressRepo;
+import com.bitrebels.letra.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.Set;
 
 @Service
 public class ACNTypeLeaves {
@@ -21,6 +25,9 @@ public class ACNTypeLeaves {
 
     @Autowired
     ProgressRepo progressRepo;
+
+    @Autowired
+    UserRepository userRepo;
 
     protected LocalDate leaveStartDate;
     protected LocalDate leaveEndDate;
@@ -86,6 +93,16 @@ public class ACNTypeLeaves {
         requiredProgressHours = round(requiredProgressHours , 3);
         remainingWorkInHours = round(remainingWorkInHours , 3);
         hoursOfWorkAvailable = round(hoursOfWorkAvailable , 3);
+
+        User user = userRepo.findById(leaveRequest.getEmployee().getEmployeeId()).get();
+
+        Set<LeaveQuota> leaveQuotas = user.getLeaveQuotas();
+
+        int remainingNoOfLeavesInTheQuota = leaveTracker.remainingLeavesInQuota(leaveQuotas,leaveRequest);
+
+        if(remainingNoOfLeavesInTheQuota<availableDaysForLeave){
+            availableDaysForLeave = remainingNoOfLeavesInTheQuota;
+        }
 
         Progress progress = new Progress(currentProgressHours, requiredProgressHours, remainingWorkInHours ,
                 hoursOfWorkAvailable,availableDaysForLeave , task.getTaskName());

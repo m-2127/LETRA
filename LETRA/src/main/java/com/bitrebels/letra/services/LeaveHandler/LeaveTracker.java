@@ -1,7 +1,9 @@
 
 package com.bitrebels.letra.services.LeaveHandler;
 
+import com.bitrebels.letra.model.LeaveRequest;
 import com.bitrebels.letra.model.Status;
+import com.bitrebels.letra.model.leavequota.*;
 import com.bitrebels.letra.repository.HolidayRepo;
 import com.bitrebels.letra.repository.LeaveRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Set;
 
 
 @Service
@@ -265,6 +269,60 @@ public class LeaveTracker {
             else{
                 return workingDays*0;
             }
+        }
+
+        public int remainingLeavesInQuota(Set<LeaveQuota> leaveQuotas, LeaveRequest leaveRequest){
+
+            int remainingNoOfLeavesInTheQuota=0;
+
+            if(leaveRequest.getLeaveType().equalsIgnoreCase("annual leave")){
+                Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+                while(leaveQuotaIterator.hasNext()){
+                    LeaveQuota currentQuota = leaveQuotaIterator.next();
+                    if(currentQuota instanceof AnnualLeave){
+                        AnnualLeave y = (AnnualLeave)currentQuota;
+                        remainingNoOfLeavesInTheQuota = y.getRemainingLeaves();
+                        break;
+                    }
+                }
+
+            }
+            else if(leaveRequest.getLeaveType().equalsIgnoreCase("casual leave")){
+                Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+                while(leaveQuotaIterator.hasNext()){
+                    LeaveQuota currentQuota = leaveQuotaIterator.next();
+                    if(currentQuota instanceof CasualLeave){
+                        CasualLeave y = (CasualLeave)currentQuota;
+                        remainingNoOfLeavesInTheQuota = y.getRemainingLeaves();
+                        break;
+                    }
+                }
+
+            }
+            else if(leaveRequest.getLeaveType().equalsIgnoreCase("sick leave")){
+                Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+                while(leaveQuotaIterator.hasNext()){
+                    LeaveQuota currentQuota = leaveQuotaIterator.next();
+                    if(currentQuota instanceof SickLeave){
+                        SickLeave y = (SickLeave) currentQuota;
+                        remainingNoOfLeavesInTheQuota = y.getRemainingLeaves();
+                        break;
+                    }
+                }
+
+            }
+            else{
+                Iterator<LeaveQuota> leaveQuotaIterator = leaveQuotas.iterator();
+                while(leaveQuotaIterator.hasNext()){
+                    LeaveQuota currentQuota = leaveQuotaIterator.next();
+                    if(currentQuota instanceof NoPayLeave){
+                        remainingNoOfLeavesInTheQuota = 0;
+                        break;
+                    }
+                }
+
+            }
+            return remainingNoOfLeavesInTheQuota;
         }
 
 }
