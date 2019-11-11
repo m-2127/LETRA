@@ -229,16 +229,11 @@ public class HRMRestAPI {
 		}
 
 		return holidays;
-//		int days = holidayRepo.countByDateBetween(LocalDate.of(2019,6,10),LocalDate.of(2019,6,13));
 	}
 
 	@GetMapping("/hrmleaveresponse")
 	@PreAuthorize("hasRole('HRM')")
 	public void hrmRespondToLeave(@RequestParam Map<String, String> requestParams){
-
-
-		Long hrmId = userService.authenticatedUser();
-		String hrmName = userRepo.findById(hrmId).get().getName();
 
 		Long leaveReqId = Long.parseLong(requestParams.get("leaveReqId"));
 
@@ -406,17 +401,11 @@ public class HRMRestAPI {
 				totalhours += task.getHours();
 				completedhours += task.getProgress();
 			}
-			System.out.println(totalhours);
-			System.out.println(completedhours);
 
 			double cal= (Double.valueOf(completedhours)/totalhours);
 
-
-			System.out.println(cal);
 			double val = round(cal,4);
 			progress = val*100;
-
-
 			progress = round(progress,3);
 
 			HRMProjectDetails hrmProjectDetails = new HRMProjectDetails(projectName,managerName,progress,status);

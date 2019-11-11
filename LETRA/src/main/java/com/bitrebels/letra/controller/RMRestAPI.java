@@ -274,7 +274,7 @@ public class RMRestAPI {
 		Project project = projectRepo.findByRm(reportingManager).get();
 
 		List<Long> addedEmployees = employeeAllocation.getAddedEmp();
-	//	List<Long> deletedEmployess = employeeAllocation.getDeletedEmp();
+
 
 		updateProject.addEmployees(reportingManager, project, addedEmployees);
 		updateProject.updateProjectStatusAndTasks(employeeAllocation.getStatus(),project);
