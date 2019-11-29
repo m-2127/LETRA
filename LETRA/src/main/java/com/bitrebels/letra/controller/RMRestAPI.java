@@ -111,6 +111,22 @@ public class RMRestAPI {
 	@Autowired
 	FindDatesBetween findDatesBetween;
 
+	@PostMapping("/updateProject")//update project tab - edit project details button
+	@PreAuthorize("hasRole('RM')")
+	public ResponseEntity<?> updateProject(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
+
+		Long rmId = userService.authenticatedUser();
+		ReportingManager reportingManager = rmRepo.findById(rmId).get();
+		Project project = projectRepo.findByRm(reportingManager).get();
+
+		List<Long> addedEmployees = employeeAllocation.getAddedEmp();
+
+		updateProject.addEmployees(reportingManager, project, addedEmployees);
+		updateProject.updateProjectStatusAndTasks(employeeAllocation.getStatus(),project);
+
+		return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
+	}
+
 	@PostMapping("/addproject")//new project tab
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody ProjectForm projectForm) {
@@ -265,6 +281,7 @@ public class RMRestAPI {
 
 	}
 
+<<<<<<< Updated upstream
 	@PostMapping("/updateProject")//update project tab - edit project details button
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> updateProject(@Valid @RequestBody EmployeeAllocation employeeAllocation) {
@@ -282,6 +299,8 @@ public class RMRestAPI {
 		return new ResponseEntity<>(new ResponseMessage("Employee  added successfully!"), HttpStatus.OK);
 	}
 	
+=======
+>>>>>>> Stashed changes
 	@GetMapping("/viewproject")
 	@PreAuthorize("hasRole('RM')")
 	public ResponseEntity<?> viewproject(){
@@ -296,6 +315,14 @@ public class RMRestAPI {
 
 	}
 
+<<<<<<< Updated upstream
+=======
+      @GetMapping("/holidayreport")
+      @PreAuthorize("hasRole('RM')")
+      public void holidayReport(){
+
+	  }
+>>>>>>> Stashed changes
 
 	@GetMapping("/returnemployees1")//returns all employees of the project
 	@PreAuthorize("hasRole('RM')")
@@ -411,7 +438,10 @@ public class RMRestAPI {
 		taskRepo.save(task);
 	}
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 	@GetMapping("/homepage")
 	@PreAuthorize("hasRole('RM')")
 	public Set<RMHomePage> homePages() {

@@ -116,6 +116,84 @@ public class HRMRestAPI {
 	@Autowired
 	HRMLeaveReport hrmLeaveReport;
 
+	@GetMapping("/hrmleaveresponse")
+	@PreAuthorize("hasRole('HRM')")
+	public void hrmRespondToLeave(@RequestParam Map<String, String> requestParams){
+
+		Long leaveReqId = Long.parseLong(requestParams.get("leaveReqId"));
+
+		LeaveRequest leaveRequest = leaveReqRepo.findById(leaveReqId).get();
+
+		List<LocalDate> dates = new ArrayList<>();
+		dates.add(leaveRequest.getSetDate());
+		dates.add(leaveRequest.getFinishDate());
+
+		Leave leave = leaveRepo.findLeaveByLeaveRequest(leaveReqRepo.findById(leaveReqId).get());
+
+		leave = leaveResponseService.saveLeaveDatesofHRM(dates , leave);
+
+		Long userId = leave.getEmployee().getEmployeeId();
+		User user = userRepo.findById(userId).get();
+
+		leave.setStatus(LeaveStatus.APPROVED);
+		leaveRequest.setStatus(LeaveStatus.APPROVED);
+		leave.setApproval(true);
+
+		//leaveRepo.save(leave);
+
+		updateQuota.updateMaternityQuota( findDatesBetween.getNoOfDaysBetween(leaveRequest.getSetDate(),
+				leaveRequest.getFinishDate()) , user);
+
+		leaveRepo.save(leave);
+	}
+
+	@GetMapping("/projectdetails")
+	@PreAuthorize("hasRole('HRM')")
+	public Set<HRMProjectDetails> projectDetails() {
+
+		List<Project> projectList =projectRepo.findAll();
+
+		Iterator<Project> projectIterator = projectList.iterator();
+
+		Set<HRMProjectDetails> hrmProjectDetailSet = new HashSet<>();
+
+		while(projectIterator.hasNext()){
+
+			int totalhours = 0 , completedhours = 0 ; double progress = 0;
+
+			Project project = projectIterator.next();
+			String projectName = project.getName();
+			String managerName = userRepository.findById(project.getRm().getRmId()).get().getName();
+			String status = project.getStatus().toString();
+
+			Set<Task> taskSet = project.getTask();
+			Iterator<Task> taskIterator = taskSet.iterator();
+
+			while(taskIterator.hasNext()){
+				Task task = taskIterator.next();
+				totalhours += task.getHours();
+				completedhours += task.getProgress();
+			}
+			//System.out.println(totalhours);
+			//System.out.println(completedhours);
+
+			double cal= (Double.valueOf(completedhours)/totalhours);
+
+
+			//System.out.println(cal);
+			double val = round(cal,4);
+			progress = val*100;
+
+
+			progress = round(progress,3);
+
+			HRMProjectDetails hrmProjectDetails = new HRMProjectDetails(projectName,managerName,progress,status);
+			hrmProjectDetailSet.add(hrmProjectDetails);
+
+		}
+		return hrmProjectDetailSet;
+	}
+
 	@PostMapping("/manageusers")
 	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationForm registrationRequest) {
@@ -231,6 +309,7 @@ public class HRMRestAPI {
 		return holidays;
 	}
 
+<<<<<<< Updated upstream
 	@GetMapping("/hrmleaveresponse")
 	@PreAuthorize("hasRole('HRM')")
 	public void hrmRespondToLeave(@RequestParam Map<String, String> requestParams){
@@ -262,6 +341,8 @@ public class HRMRestAPI {
 		leaveRepo.save(leave);
 	}
 
+=======
+>>>>>>> Stashed changes
 	@PostMapping("/report")
 	@PreAuthorize("hasRole('HRM')")
 	public HRMReportDetails report(@RequestBody HRMReport hrmReport){
@@ -373,6 +454,7 @@ public class HRMRestAPI {
 		return hrmHomePageSet;
 	}
 
+<<<<<<< Updated upstream
 	@GetMapping("/projectdetails")
 	@PreAuthorize("hasRole('HRM')")
 	public Set<HRMProjectDetails> projectDetails() {
@@ -415,6 +497,8 @@ public class HRMRestAPI {
 		return hrmProjectDetailSet;
 	}
 
+=======
+>>>>>>> Stashed changes
 	public static double round(double value, int places) {
 		if (places < 0) throw new IllegalArgumentException();
 

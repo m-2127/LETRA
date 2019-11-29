@@ -86,7 +86,8 @@ public class UpdateQuota {
                     break;
                 }
             }
-
+        user.setLeaveQuotas(leaveQuotas);
+        userRepo.save(user);
 
     }
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="607017f6-6c01-498d-90d4-f57dd73695cb" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/LETRA/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/LETRA/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LETRA/Letra.iml" beforeDir="false" afterPath="$PROJECT_DIR$/LETRA/Letra.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LETRA/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/LETRA/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LETRA/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/LETRA/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LETRA/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/LETRA/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LETRA/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/LETRA/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LETRA/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/LETRA/target/classes/application.properties" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1TQLVOtguFh0ZzS2S02i2suTSxP" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/LETRA" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="607017f6-6c01-498d-90d4-f57dd73695cb" name="Default Changelist" comment="" />
+      <created>1573387406031</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1573387406031</updated>
+      <workItem from="1573387432893" duration="260000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

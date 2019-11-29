@@ -89,6 +89,50 @@ public class EmployeeRestAPI {
 	@Autowired
 	DateToLocalDate dateToLocalDate;
 
+	@GetMapping("/leavehistory")
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	public ResponseEntity<?> leaveHistory(){
+
+		long employeeId = userService.authenticatedUser();
+		Employee employee = employeeRepository.findById(employeeId).get();
+		Set<Leave> leaveSet = employee.getLeave();
+
+		Iterator<Leave> leaveIterator = leaveSet.iterator();
+
+		List<LeaveHistory> leaveHistories = new ArrayList<>();
+
+		while(leaveIterator.hasNext()){
+			Leave temp = leaveIterator.next();
+			Set<Description> descriptions = temp.getDescription();
+
+			Iterator<Description> descriptionIterator = descriptions.iterator();
+
+			Set<String> finalDescription = new HashSet<>();
+			Set<String> finalDates = new HashSet<>();
+
+			while(descriptionIterator.hasNext()){
+				finalDescription.add(descriptionIterator.next().getDescription());
+			}
+
+			Set<LeaveDates> leaveDates = temp.getLeaveDates();
+
+			Iterator<LeaveDates> leaveDatesIterator = leaveDates.iterator();
+
+			while(leaveDatesIterator.hasNext()){
+				finalDates.add(leaveDatesIterator.next().getDate().toString());
+			}
+
+			LeaveHistory leaveHistory = new LeaveHistory(temp.getId(),temp.getLeaveType(),temp.getDuration());
+
+			leaveHistory.setDescriptions(finalDescription);
+			leaveHistory.setLeaveDates(finalDates);
+
+			leaveHistories.add(leaveHistory);
+		}
+
+		return new ResponseEntity<>(leaveHistories , HttpStatus.OK);
+	}
+
 	@PostMapping("/applyleave")
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	public ResponseEntity<?> applyLeave(@Valid @RequestBody LeaveForm leaveForm){
@@ -261,50 +305,6 @@ public class EmployeeRestAPI {
 		Leave leave = leaveRepo.findById(leaveId).get();
 
 		return new ResponseEntity<>(new EmpNotificationDetails(leave , rmName), HttpStatus.BAD_REQUEST);
-	}
-
-	@GetMapping("/leavehistory")
-	@PreAuthorize("hasRole('EMPLOYEE')")
-	public ResponseEntity<?> leaveHistory(){
-
-		long employeeId = userService.authenticatedUser();
-		Employee employee = employeeRepository.findById(employeeId).get();
-		Set<Leave> leaveSet = employee.getLeave();
-
-		Iterator<Leave> leaveIterator = leaveSet.iterator();
-
-		List<LeaveHistory> leaveHistories = new ArrayList<>();
-
-		while(leaveIterator.hasNext()){
-			Leave temp = leaveIterator.next();
-			Set<Description> descriptions = temp.getDescription();
-
-			Iterator<Description> descriptionIterator = descriptions.iterator();
-
-			Set<String> finalDescription = new HashSet<>();
-			Set<String> finalDates = new HashSet<>();
-
-			while(descriptionIterator.hasNext()){
-				finalDescription.add(descriptionIterator.next().getDescription());
-			}
-
-			Set<LeaveDates> leaveDates = temp.getLeaveDates();
-
-			Iterator<LeaveDates> leaveDatesIterator = leaveDates.iterator();
-
-			while(leaveDatesIterator.hasNext()){
-				finalDates.add(leaveDatesIterator.next().getDate().toString());
-			}
-
-			LeaveHistory leaveHistory = new LeaveHistory(temp.getId(),temp.getLeaveType(),temp.getDuration());
-
-			leaveHistory.setDescriptions(finalDescription);
-			leaveHistory.setLeaveDates(finalDates);
-
-			leaveHistories.add(leaveHistory);
-		}
-
-		return new ResponseEntity<>(leaveHistories , HttpStatus.OK);
 	}
 
 	@GetMapping("/holidays")

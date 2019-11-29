@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< Updated upstream
     <list default="true" id="49c9adfc-3ae7-4c19-aca9-05f1e42e97dc" name="Default Changelist" comment="" />
+=======
+    <list default="true" id="49c9adfc-3ae7-4c19-aca9-05f1e42e97dc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/EmployeeRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/UpdateQuota.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveResponse/UpdateQuota.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+    </list>
+>>>>>>> Stashed changes
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +63,11 @@
       </MavenImportingSettings>
     </option>
   </component>
+<<<<<<< Updated upstream
   <component name="ProjectId" id="1TR40dqGZNJ8W9PmC8472okf1im" />
+=======
+  <component name="ProjectId" id="1TQMBB1E3mLQkTS5Jd7MvNGUU5x" />
+>>>>>>> Stashed changes
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -62,8 +78,13 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+<<<<<<< Updated upstream
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1573383043768" />
     <property name="last_opened_file_path" value="D:/FCM-Spring-boot-API-master" />
+=======
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1573372114040" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+>>>>>>> Stashed changes
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -143,6 +164,16 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="ServiceViewManager">
+    <option name="allServicesViewState">
+      <serviceView>
+        <treeState>
+          <expand />
+          <select />
+        </treeState>
+      </serviceView>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -203,8 +234,19 @@
       <workItem from="1573112262914" duration="2808000" />
       <workItem from="1573128123118" duration="8790000" />
       <workItem from="1573184669811" duration="20375000" />
+<<<<<<< Updated upstream
       <workItem from="1573409510104" duration="2036000" />
       <workItem from="1573441736452" duration="60281000" />
+=======
+      <workItem from="1573387730452" duration="10666000" />
+    </task>
+    <task id="LOCAL-00095" summary="project">
+      <created>1572857319644</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1572857319644</updated>
+>>>>>>> Stashed changes
     </task>
     <task id="LOCAL-00096" summary="rmhomepage">
       <created>1572861292550</created>
@@ -598,8 +640,12 @@
     <MESSAGE value="everything is working except description leave approval" />
     <MESSAGE value="leave recommendation done" />
     <MESSAGE value="RM respnse" />
+<<<<<<< Updated upstream
     <MESSAGE value="HRM project details done" />
     <option name="LAST_COMMIT_MESSAGE" value="HRM project details done" />
+=======
+    <option name="LAST_COMMIT_MESSAGE" value="RM respnse" />
+>>>>>>> Stashed changes
   </component>
   <component name="masterDetails">
     <states>
