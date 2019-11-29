@@ -13,6 +13,9 @@
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
     </list>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -64,7 +67,11 @@
     </option>
   </component>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   <component name="ProjectId" id="1TR40dqGZNJ8W9PmC8472okf1im" />
+=======
+  <component name="ProjectId" id="1TQMBB1E3mLQkTS5Jd7MvNGUU5x" />
+>>>>>>> Stashed changes
 =======
   <component name="ProjectId" id="1TQMBB1E3mLQkTS5Jd7MvNGUU5x" />
 >>>>>>> Stashed changes
@@ -79,8 +86,13 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1573383043768" />
     <property name="last_opened_file_path" value="D:/FCM-Spring-boot-API-master" />
+=======
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1573372114040" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+>>>>>>> Stashed changes
 =======
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1573372114040" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -235,9 +247,12 @@
       <workItem from="1573128123118" duration="8790000" />
       <workItem from="1573184669811" duration="20375000" />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       <workItem from="1573409510104" duration="2036000" />
       <workItem from="1573441736452" duration="60281000" />
 =======
+=======
+>>>>>>> Stashed changes
       <workItem from="1573387730452" duration="10666000" />
     </task>
     <task id="LOCAL-00095" summary="project">
@@ -645,6 +660,9 @@
     <option name="LAST_COMMIT_MESSAGE" value="HRM project details done" />
 =======
     <option name="LAST_COMMIT_MESSAGE" value="RM respnse" />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   </component>
   <component name="masterDetails">
