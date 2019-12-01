@@ -311,6 +311,7 @@ public class HRMRestAPI {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	@GetMapping("/hrmleaveresponse")
 	@PreAuthorize("hasRole('HRM')")
 	public void hrmRespondToLeave(@RequestParam Map<String, String> requestParams){
@@ -342,6 +343,8 @@ public class HRMRestAPI {
 		leaveRepo.save(leave);
 	}
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -459,6 +462,7 @@ public class HRMRestAPI {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	@GetMapping("/projectdetails")
 	@PreAuthorize("hasRole('HRM')")
 	public Set<HRMProjectDetails> projectDetails() {
@@ -501,6 +505,8 @@ public class HRMRestAPI {
 		return hrmProjectDetailSet;
 	}
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
