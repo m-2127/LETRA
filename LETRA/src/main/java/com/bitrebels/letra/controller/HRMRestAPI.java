@@ -154,7 +154,7 @@ public class HRMRestAPI {
 		return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
 	}
 
-	@PostMapping("/addquota")
+	@GetMapping("/addquota")
 	@PreAuthorize("hasRole('HRM')")
 	public ResponseEntity<?> addLeaveQuota(@Valid @RequestBody LeaveQuotaForm leaveQuota) {
 

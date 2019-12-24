@@ -48,7 +48,7 @@ public class AuthRestAPIs {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		String jwt = jwtProvider.generateJwtToken(authentication);
-//		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
 		UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
 		String name = userRepo.findById(userPrinciple.getId()).get().getName();
 
