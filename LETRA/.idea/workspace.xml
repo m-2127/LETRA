@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="49c9adfc-3ae7-4c19-aca9-05f1e42e97dc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/AuthRestAPIs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/AuthRestAPIs.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/HRMRestAPI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/security/WebSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/UpdateTask/AllocateEmployee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Letra.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Letra.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/controller/RMRestAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bitrebels/letra/services/LeaveTracker.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -227,14 +227,16 @@
       <workItem from="1576139018035" duration="2236000" />
       <workItem from="1576627579714" duration="5757000" />
       <workItem from="1576769206250" duration="577000" />
-      <workItem from="1577096598697" duration="1115000" />
-    </task>
-    <task id="LOCAL-00096" summary="rmhomepage">
-      <created>1572861292550</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1572861292550</updated>
+      <workItem from="1577096598697" duration="2631000" />
+      <workItem from="1577259132120" duration="1219000" />
+      <workItem from="1577261104857" duration="3519000" />
+      <workItem from="1577532264488" duration="1186000" />
+      <workItem from="1577612441966" duration="806000" />
+      <workItem from="1577617520560" duration="987000" />
+      <workItem from="1577619122776" duration="606000" />
+      <workItem from="1578465814681" duration="697000" />
+      <workItem from="1579147581236" duration="447000" />
+      <workItem from="1580259320477" duration="1039000" />
     </task>
     <task id="LOCAL-00097" summary="rmhomepage">
       <created>1572877618561</created>
@@ -572,7 +574,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573372483944</updated>
     </task>
-    <option name="localTasksCounter" value="145" />
+    <task id="LOCAL-00145" summary="sql error corrected">
+      <created>1577209180195</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1577209180196</updated>
+    </task>
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -584,7 +593,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="leave application details" />
     <MESSAGE value="commented firebase notification" />
     <MESSAGE value="report" />
     <MESSAGE value="added" />
@@ -609,17 +617,22 @@
     <MESSAGE value="leave recommendation done" />
     <MESSAGE value="RM respnse" />
     <MESSAGE value="HRM project details done" />
-    <option name="LAST_COMMIT_MESSAGE" value="HRM project details done" />
+    <MESSAGE value="sql error corrected" />
+    <option name="LAST_COMMIT_MESSAGE" value="sql error corrected" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="393" y="5" key="CommitChangelistDialog2" timestamp="1577209172226">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="393" y="5" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1577209172226" />
     <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1576133134605">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1576133134605" />
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1576132982504">
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1579147583671">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1576132982504" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1579147583671" />
   </component>
   <component name="masterDetails">
     <states>

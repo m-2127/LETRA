@@ -242,7 +242,7 @@ public class RMRestAPI {
 
 				if(leaveResponse.isApproval()) {//checks if the second manger approved
 					leave.setStatus(LeaveStatus.APPROVED);
-					leave.getLeaveRequest().setStatus(LeaveStatus.APPROVED);
+				//	leave.getLeaveRequest().setStatus(LeaveStatus.APPROVED);
 					leave.getLeaveRequest().setStatus(LeaveStatus.REJECTED);
 					int duration = leaveResponseService.updateDatesWithCurrentResponse(leave.getLeaveDates(), dates, leave);
 					if (duration == 0) {
